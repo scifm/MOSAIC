@@ -1,0 +1,5 @@
+#!/bin/bash
+# Agent-facing entry point: `swarm digest`, `swarm submit`, ...
+# Runs the main checkout's code and environment from any worktree.
+MAIN="${MOIRE_MAIN:-$(cd "$(dirname "$0")/../.." && pwd)}"
+exec uv run --project "$MAIN" --no-sync python -m mosaic.swarm "$@"

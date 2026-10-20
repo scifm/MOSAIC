@@ -1,0 +1,14 @@
+[deps]
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+EDCore = "67ba95b5-0c7c-4a9c-9737-2f4756a96b17"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+MomentumED = "2c2e6bdd-50a7-494a-93d8-6f138df00727"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+
+[compat]
+ArgParse = "1.2"
+CUDA = "6"
+JSON3 = "1.14"
+julia = "1.10"

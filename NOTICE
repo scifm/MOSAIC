@@ -1,0 +1,9 @@
+MOSAIC builds on third-party software.
+
+MomentumED.jl (EDCore and MomentumED)
+  https://github.com/Zou-Bo/MomentumED.jl
+  Copyright (c) 2025 Zou Bo, MIT License.
+  Not included in this repository. scripts/setup_solver.sh fetches it at commit
+  40400d4ebc6eea5456276f3fcd1c6637736ea2dd into julia/deps/ and applies
+  julia/patches/MomentumED-40400d4.patch (described in julia/patches/README.md).
+  The patched files remain under the MomentumED.jl license.

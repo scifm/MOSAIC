@@ -1,0 +1,60 @@
+{
+ "schema_version": "1",
+ "config_hash": "diag_ll0_trivial_3x4",
+ "campaign_id": "qerr-fhs-crosscheck",
+ "seed": 113,
+ "lattice": {
+  "n_k": 12,
+  "n_shells": 0,
+  "g_units": "b_M"
+ },
+ "wavefunction": {
+  "n_a": 3,
+  "a_n": [
+   {
+    "re": 1.0,
+    "im": 0.0
+   },
+   {
+    "re": 0.0,
+    "im": 0.0
+   },
+   {
+    "re": 0.0,
+    "im": 0.0
+   }
+  ],
+  "norm_convention": "renormalize_post"
+ },
+ "form_factor": {
+  "symmetry": "C3_hard",
+  "W_G": [
+   {
+    "shell": 0,
+    "idx": 0,
+    "G_int": [
+     0,
+     0
+    ],
+    "coef": {
+     "re": 1.0,
+     "im": 0.0
+    }
+   }
+  ]
+ },
+ "ed_solver_params": {
+  "n_basis": null,
+  "filling": null,
+  "extra": {
+   "d_l": 0.0,
+   "D_l": 0.1,
+   "W0": 2.6935473741771965,
+   "nk1": 3,
+   "nk2": 4,
+   "qmax": 6,
+   "chern_quantization_threshold": 0.2
+  }
+ },
+ "energy_unit": "W0"
+}

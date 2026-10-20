@@ -1,0 +1,162 @@
+{
+ "38bb": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w2",
+  "R_min": 1.2127614687187716,
+  "req_id": "20261015T074821.260Z_ctrl-b_req_38bb",
+  "s21_hash": "ed651410651ab81aa4c087672318712ff0ae04ef587be0f2a973805ff16d384a"
+ },
+ "cb3e": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w2",
+  "R_min": 1.2089226046923962,
+  "req_id": "20261015T074825.967Z_ctrl-b_req_cb3e",
+  "s21_hash": "70a77e523c084d3c916ff4302bb404ed610ce0873d3427e4331ea198f50cebc5"
+ },
+ "6389": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w2",
+  "R_min": 1.2086642684909459,
+  "req_id": "20261015T091118.615Z_ctrl-b_req_6389",
+  "s21_hash": "b5785783995ffecb1899c49e6cfd791f990394ffb78c11f6dae6ac6c1221d2b3"
+ },
+ "9162": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w2",
+  "R_min": 1.2028708234029513,
+  "req_id": "20261015T074832.996Z_ctrl-b_req_9162",
+  "s21_hash": "1e5ad7589bf2b7bb792f0f478f92de647f79330c4a1b49e3c81f71012b26642d"
+ },
+ "e0ec": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w2",
+  "R_min": 1.1911202049480323,
+  "req_id": "20261015T074818.924Z_ctrl-b_req_e0ec",
+  "s21_hash": "e15410827aed6b185b6d80013dcba0c04d704a691ddd456b29069478e79744a8"
+ },
+ "6852": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w3",
+  "R_min": 1.7379797245728414,
+  "req_id": "20261015T112350.834Z_ctrl-b_req_6852",
+  "s21_hash": "44ceb626bf589bfa328c95ef97df0e112dc3f1d2856729d9b779bcfe4a53449e"
+ },
+ "9539": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w3",
+  "R_min": 1.7175511700181212,
+  "req_id": "20261015T110043.572Z_ctrl-b_req_9539",
+  "s21_hash": "265875b3dc39d89ac224ac8004ad0ae852b4a3a3b17272057bd419ecffa7d633"
+ },
+ "24a9": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w3",
+  "R_min": 1.7014114568328866,
+  "req_id": "20261015T112351.970Z_ctrl-b_req_24a9",
+  "s21_hash": "2194b93d6ea99e31331fc17981008ea3280e9f97380ca139de4b813c584f216d"
+ },
+ "7f0b": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w3",
+  "R_min": 1.6885493455065064,
+  "req_id": "20261015T110042.399Z_ctrl-b_req_7f0b",
+  "s21_hash": "b29ddb646373a9a4605cd87581bba671eb268adf93d159803b47c9248931e80c"
+ },
+ "1d93": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w3",
+  "R_min": 1.657755446678211,
+  "req_id": "20261015T100910.809Z_ctrl-b_req_1d93",
+  "s21_hash": "5d62d0e265b8ac2a8c6bc917b726400e73a0dab3ef82003551ef4b61c2809c01"
+ },
+ "b022": {
+  "arm": "swarm",
+  "agent": "swarm-e",
+  "parent": "w2",
+  "R_min": 1.5135312408125408,
+  "req_id": "20261015T105206.937Z_swarm-e_req_b022",
+  "s21_hash": "1b89d29365417efcc9383e46ea247e6a8c5839b1c55797c23cfc03c1a24f9ea1"
+ },
+ "d3d5": {
+  "arm": "swarm",
+  "agent": "swarm-e",
+  "parent": "w2",
+  "R_min": 1.5037305536636854,
+  "req_id": "20261015T124043.698Z_swarm-e_req_d3d5",
+  "s21_hash": "719df964c5dfe9be4ab351a02bb3ded1fd547ef27495ec00b6703abc5b217302"
+ },
+ "6cbf": {
+  "arm": "swarm",
+  "agent": "swarm-e",
+  "parent": "w2",
+  "R_min": 1.5021681970544796,
+  "req_id": "20261015T124033.089Z_swarm-e_req_6cbf",
+  "s21_hash": "66775f59461944785219355f92b3b7c153c0b24d27d919126afcfe28f43bc7e9"
+ },
+ "b449": {
+  "arm": "swarm",
+  "agent": "swarm-e",
+  "parent": "w2",
+  "R_min": 1.4865601886482656,
+  "req_id": "20261015T114549.963Z_swarm-e_req_b449",
+  "s21_hash": "eb54edd519f801d2478009fe86b2fc9576ba2681f3ba2341ec6e8ac12af72079"
+ },
+ "4908": {
+  "arm": "swarm",
+  "agent": "swarm-e",
+  "parent": "w2",
+  "R_min": 1.4830972835859608,
+  "req_id": "20261015T105151.622Z_swarm-e_req_4908",
+  "s21_hash": "71a29acfa30191f8a3406f0d60dffa3e2348fef386a7303a4008390431961638"
+ },
+ "a6a0": {
+  "arm": "swarm",
+  "agent": "swarm-a",
+  "parent": "w3",
+  "R_min": 10.55625075280301,
+  "req_id": "20261015T100253.838Z_swarm-a_req_a6a0",
+  "s21_hash": "9797666c44302fdd631e5330d581f1552949f92944ed75972d0f1ead6e480964"
+ },
+ "7a22": {
+  "arm": "swarm",
+  "agent": "swarm-a",
+  "parent": "w3",
+  "R_min": 10.441390713628936,
+  "req_id": "20261015T100241.529Z_swarm-a_req_7a22",
+  "s21_hash": "600801b7df0744b71a117858cb1cfb305d86c43a1765c3962184b6dabe852d42"
+ },
+ "32ea": {
+  "arm": "swarm",
+  "agent": "swarm-a",
+  "parent": "w3",
+  "R_min": 10.265392834153802,
+  "req_id": "20261015T100247.697Z_swarm-a_req_32ea",
+  "s21_hash": "cdda4a83886f6a165fbab018867c91e975f83fe741950b15b182fa11552b93d6"
+ },
+ "bf0d": {
+  "arm": "swarm",
+  "agent": "swarm-a",
+  "parent": "w3",
+  "R_min": 10.169625688833003,
+  "req_id": "20261015T094845.965Z_swarm-a_req_bf0d",
+  "s21_hash": "e12d835460b93c9bf99c004c41ad62b3bf40b3b4e25b0939e77a5ad7b2b9b9d8"
+ },
+ "259e": {
+  "arm": "swarm",
+  "agent": "swarm-a",
+  "parent": "w3",
+  "R_min": 10.141473723690662,
+  "req_id": "20261015T094839.739Z_swarm-a_req_259e",
+  "s21_hash": "6473cd14b52193278be7e3f9a27813db1efa100c7b2b0d69be67c835e934da83"
+ }
+}

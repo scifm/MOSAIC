@@ -1,0 +1,245 @@
+{
+ "lll": {
+  "M2": 1.0,
+  "clusters": {
+   "conv46": {
+    "chern": 1,
+    "gap": 0.0001749298146215077,
+    "hash": "eff42c4ae37a4dd4e0617a667b4b3bde7f03ee3f61919388ed8564d42400d3c4",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 20.331087991720747,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 3.644359255561627e-19,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "r46": {
+    "chern": 1,
+    "gap": 0.0001749298146215124,
+    "hash": "519e05c73ef4bc92b6d9f36b44a8cf2b876ecd67c5867b4f8ba78ea3c80f75d0",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 20.33108677159364,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 8.350686068743333e-19,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "r56": {
+    "chern": 1,
+    "gap": 0.00018173817812481462,
+    "hash": "a8529da2d0e0b148a8f044e405725ee3df89336c1e621bff99288f586949a70c",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 19.96695931279575,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 7.179133623572229e-19,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "s21": {
+    "chern": null,
+    "gap": 0.0001827175887085771,
+    "hash": "395fa08a3c1d57d6d849d5707f94d495f0b9c0ade93bfd2629e8bb603b6ce3a5",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 19.51493470837133,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 1.5517643593698782e-18,
+    "state": "FAILED_LOGICAL",
+    "verdict": "PASS"
+   },
+   "s21c": {
+    "chern": null,
+    "gap": 0.0001827175887085717,
+    "hash": "d6118165d4f0c99c43b14be6015c64f4046b5c4acd9348d26b2f7e07df9574a0",
+    "pes": {
+     "NA": 3,
+     "entanglement_gap": 18.033089175752256,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 1.5871809244769487e-18,
+    "state": "FAILED_LOGICAL",
+    "verdict": "PASS"
+   }
+  },
+  "role": "diagnostic"
+ },
+ "w2": {
+  "M2": 2.5,
+  "clusters": {
+   "conv46": {
+    "chern": 1,
+    "gap": 0.0003095498414040907,
+    "hash": "8b2d282ed40194a745d2a01cd6c43ad3e7a08a073e69cc634f892206b3954156",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 21.26931653475854,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 4.5919686673327986e-14,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "r46": {
+    "chern": 1,
+    "gap": 0.00030954984140409223,
+    "hash": "7742bf4a554b2012b53fcf56cf517222c751013d6828eb8272fbbb9ed09395eb",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 21.269316268020727,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 4.592449395588057e-14,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "r56": {
+    "chern": 1,
+    "gap": 0.00032164085634399896,
+    "hash": "e349a491571902e020c75dc4b38a5ca3863b1e50481e41fbab13c0ead043cc17",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 20.94980107000587,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 8.260363769204055e-16,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "s21": {
+    "chern": null,
+    "gap": 0.0003227105310457806,
+    "hash": "91693d12fac9cc5b4ffceba08e110eab44c2684213bc50c56dc7d73ab3e34fbd",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 20.510167494604637,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 3.1773794038284908e-18,
+    "state": "FAILED_LOGICAL",
+    "verdict": "PASS"
+   },
+   "s21c": {
+    "chern": null,
+    "gap": 0.00032271017557684536,
+    "hash": "646610a5c44244f77be41cdf05c3c1d89a8451a2243a53e756d59b66b20cb6d4",
+    "pes": {
+     "NA": 3,
+     "entanglement_gap": 19.124963926508936,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 3.615295437558964e-18,
+    "state": "FAILED_LOGICAL",
+    "verdict": "PASS"
+   }
+  },
+  "role": "parent"
+ },
+ "w3": {
+  "M2": 3.6287499999999993,
+  "clusters": {
+   "conv46": {
+    "chern": 1,
+    "gap": 0.000438226868441535,
+    "hash": "6a2007266d80661ee619d332a49a543e491ee44560412a4e90d54c67b96091cb",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 22.057083896891683,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 4.41903701337024e-12,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "r46": {
+    "chern": 1,
+    "gap": 0.00043822686844153825,
+    "hash": "1e924e5e7977937565def4c356c02781848e9ab66f04ab1897159317b8d967ee",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 22.057082181257293,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 4.419028363628601e-12,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "r56": {
+    "chern": 1,
+    "gap": 0.00045514953671853465,
+    "hash": "09cf9dc0927db19c5cb0144952b790599f0f733c07c9fd7b74f96c78591daf4a",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 21.69381131386548,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 8.656443868934771e-13,
+    "state": "COMPLETED",
+    "verdict": "PASS"
+   },
+   "s21": {
+    "chern": null,
+    "gap": 0.00045713996524654715,
+    "hash": "87198b838faa2cce219261641d9d5057453aecd744f2c37a980c78181c5cca0a",
+    "pes": {
+     "NA": 2,
+     "entanglement_gap": 21.242287293563898,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 4.830348318527497e-16,
+    "state": "FAILED_LOGICAL",
+    "verdict": "PASS"
+   },
+   "s21c": {
+    "chern": null,
+    "gap": 0.0004571326005218581,
+    "hash": "9971e82e4ea0028c95eedb3330593338a1a58d13f883c8bd299e5e36f53455f5",
+    "pes": {
+     "NA": 3,
+     "entanglement_gap": 19.807114388233252,
+     "informative": true,
+     "matched": true
+    },
+    "reasons": [],
+    "splitting": 4.851160447437127e-16,
+    "state": "FAILED_LOGICAL",
+    "verdict": "PASS"
+   }
+  },
+  "role": "parent"
+ }
+}

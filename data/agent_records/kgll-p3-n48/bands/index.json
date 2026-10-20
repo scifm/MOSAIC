@@ -1,0 +1,82 @@
+{
+ "2ffb": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w1c",
+  "R_min": 7.448172899867013,
+  "req_id": "20261014T235541.400Z_ctrl-b_req_2ffb",
+  "s21_hash": "37088808e703d4b9bfbfff9217702e65e46889f552bea2cd7f05e3eeb7fc4653"
+ },
+ "fbd0": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w1c",
+  "R_min": 7.411755187908531,
+  "req_id": "20261014T235523.731Z_ctrl-b_req_fbd0",
+  "s21_hash": "18199daaa254292552fb1ccb0ea2fa18b40fe5205986c3658aff3bcb101eb1c7"
+ },
+ "6ed4": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w1c",
+  "R_min": 7.404596320671811,
+  "req_id": "20261014T235551.083Z_ctrl-b_req_6ed4",
+  "s21_hash": "bc0391767be02b393ea34b2f194b7cd95481df589b763e0316af8477385bc1b4"
+ },
+ "7742": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w1c",
+  "R_min": 7.380472935019177,
+  "req_id": "20261014T235620.627Z_ctrl-b_req_7742",
+  "s21_hash": "4b29ac3e1874945843bc0ad388c6e9f1441a0fe359d96b0a8d0854f0ec743f2d"
+ },
+ "8765": {
+  "arm": "control",
+  "agent": "ctrl-b",
+  "parent": "w1c",
+  "R_min": 7.376174160177691,
+  "req_id": "20261015T003017.889Z_ctrl-b_req_8765",
+  "s21_hash": "d008e4735de3f18d500f63fb79407369f539b425fdb0e2b0ccac576587cded07"
+ },
+ "e92a": {
+  "arm": "swarm",
+  "agent": "swarm-z",
+  "parent": "w1c",
+  "R_min": 16.049251822546733,
+  "req_id": "20261014T224429.748Z_swarm-z_req_e92a",
+  "s21_hash": "6ae9538922b27546547adb2f3ff361e4d80316ae7f341bcb8423f66caf6b6383"
+ },
+ "ae65": {
+  "arm": "swarm",
+  "agent": "swarm-z",
+  "parent": "w1c",
+  "R_min": 16.014835797168594,
+  "req_id": "20261014T231745.520Z_swarm-z_req_ae65",
+  "s21_hash": "e98851c893adacfa50e871f62d85b18728f1d391d448579adda8ff7bf8308bcc"
+ },
+ "0114": {
+  "arm": "swarm",
+  "agent": "swarm-z",
+  "parent": "w1c",
+  "R_min": 16.000517268050306,
+  "req_id": "20261014T224118.251Z_swarm-z_req_0114",
+  "s21_hash": "0cf0f6f8f08a581e2dbecfd28d852afd83f8ac4c5d2555aa49b18daae04e7e4d"
+ },
+ "d7f2": {
+  "arm": "swarm",
+  "agent": "swarm-z",
+  "parent": "w1c",
+  "R_min": 15.992551421483626,
+  "req_id": "20261014T202654.383Z_swarm-z_req_d7f2",
+  "s21_hash": "752831064c05a447905aa7f33ce6c7abf4a473ffaf3d0171ca261b9d4d5eb415"
+ },
+ "f596": {
+  "arm": "swarm",
+  "agent": "swarm-z",
+  "parent": "w1c",
+  "R_min": 15.986082746360482,
+  "req_id": "20261014T224447.226Z_swarm-z_req_f596",
+  "s21_hash": "78942f005c7d4d3dd5019fd707cb73ed008e8b3f5827f1ab3f559473ac2641e8"
+ }
+}

@@ -1,0 +1,211 @@
+# Campaign kgll-p3-n5 as run: parent w1c, 5 shared agents, 2 private controls.
+# Derived from configs/swarm_kgll_ll0.yaml.
+# Site-specific values are placeholders: Slurm partitions (cpu, gpu-h100, gpu-a100), the julia and claude
+# binaries, and agent_deny_read (the campaigns hid the analysis folders and development history from the agents).
+swarm_id: kgll-p3-n5
+root: runs_swarm/kgll-p3-n5
+worktree_root: ../mosaic-wt/kgll-p3-n5
+arms:
+  swarm:
+    mode: shared
+    agents:
+    - swarm-a
+    - swarm-b
+    - swarm-c
+    - swarm-d
+    - swarm-e
+  control:
+    mode: private
+    agents:
+    - ctrl-a
+    - ctrl-b
+mission: swarm/missions/kgll-p3-boundary/mission.md
+regime:
+  template_ed_input: swarm/templates/ll0_template.json
+  a_n:
+  - 1
+  - 0
+  - 0
+  pin_static: true
+parents:
+  w1c:
+    ed_input: swarm/parents/w1c_p3.json
+  lll:
+    shells:
+    - '0'
+    - '0'
+    - '0'
+    - '0'
+    - '0'
+    - '0'
+    - '0'
+    - '0'
+    role: diagnostic
+lll_parent: lll
+clusters:
+  s21:
+    symcluster: 1
+    n_k: 21
+    tier: cpu
+    ed_accuracy: search
+    chern: skip
+    pes_na: 2
+    deformation_overrides:
+      g_cutoff: 8
+  s21c:
+    symcluster: 1
+    n_k: 21
+    tier: cpu
+    ed_accuracy: confirm
+    chern: skip
+    pes_na: 3
+    deformation_overrides:
+      g_cutoff: 8
+  r46:
+    nk1: 4
+    nk2: 6
+    tier: cpu
+    ed_accuracy: confirm
+    chern: match_parent
+    pes_na: 2
+    pes_reference: lll
+    deformation_overrides:
+      g_cutoff: 8
+  r56:
+    nk1: 5
+    nk2: 6
+    tier: gpu
+    ed_accuracy: confirm
+    chern: match_parent
+    pes_na: 2
+    pes_reference: lll
+    deformation_overrides:
+      g_cutoff: 8
+  conv46:
+    nk1: 4
+    nk2: 6
+    tier: cpu
+    ed_accuracy: confirm
+    chern: match_parent
+    pes_na: 2
+    pes_reference: lll
+    extra_overrides:
+      qmax: 10
+    deformation_overrides:
+      n_mesh: 64
+      g_cutoff: 10
+stages:
+- name: screen
+  clusters:
+  - s21
+- name: confirm21
+  clusters:
+  - s21c
+  promote_min_R_gap: 1.02
+- name: r46
+  clusters:
+  - r46
+  promote_min_R_gap: 1.0
+- name: r56
+  clusters:
+  - r56
+  promote_min_R_gap: 1.0
+- name: converge
+  clusters:
+  - conv46
+  promote_min_R_gap: 1.05
+  promote_on:
+  - r46
+  - r56
+claims:
+- name: strong
+  all_clusters:
+  - s21
+  - r46
+  - r56
+  - conv46
+  min_R_gap:
+    r46: 1.1
+    r56: 1.1
+    conv46: 1.1
+- name: robust_positive
+  all_clusters:
+  - s21
+  - r46
+  - r56
+  - conv46
+  min_R_gap:
+    r46: 1.05
+    r56: 1.05
+    conv46: 1.05
+- name: suggestive
+  all_clusters:
+  - s21
+  - r46
+  - r56
+gates:
+  split_max: 0.1
+  pes_gap_pass: 0.5
+  pes_expected_counts: swarm/templates/pes_expected_counts.json
+  admissibility_min_ratio: 1.0e-06
+  admissibility_grid: 24
+  boundary:
+    spatial_g2_max: 21
+    momentum_r2_max: 4
+    alpha_max: 0.6
+    beta_max: 0.3
+    alpha_sum_max: 2.5
+    beta_sum_max: 2.0
+    m2k_max_ratio: 3.0
+quotas:
+  evaluations_per_agent: 500
+  max_in_flight_per_agent: 32
+deadline_utc: null
+broker:
+  backend: slurm
+  tick_seconds: 30
+  max_retries: 1
+  idle_exit_seconds: 600
+  julia: julia
+  solver_ref: HEAD
+  solver_version_prefix: moire-julia-ed@v0.9.1
+  tiers:
+    cpu:
+      partition: cpu,gpu-h100
+      reservation: null
+      qos: null
+      lanes: 8
+      threads: 4
+      mem: 64G
+      walltime: 04:00:00
+      max_jobs: 3
+      est_run_seconds: 300
+      lane_mode: persistent
+    gpu:
+      partition: gpu-h100,gpu-a100
+      lanes: 2
+      threads: 4
+      gpus: 2
+      mem: 64G
+      walltime: 08:00:00
+      max_jobs: 1
+      est_run_seconds: 600
+      lane_mode: persistent
+agent_job:
+  partition: cpu,gpu-h100
+  reservation: null
+  qos: null
+  cpus_per_agent: 2
+  mem_per_agent_gb: 4
+  walltime: 04:00:00
+  stagger_seconds: 60
+  claude: claude
+  model: null
+  permission_mode: auto
+  fallback_reservation: null
+  fallback_qos: null
+agent_base_ref: HEAD
+worktree_repo: null
+agent_deny_read: []
+agent_deny_bash:
+- git

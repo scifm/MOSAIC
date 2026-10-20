@@ -1,0 +1,496 @@
+{
+ "span": [
+  "2026-09-04",
+  "2026-10-07"
+ ],
+ "total": {
+  "input_tokens": 27209,
+  "cache_creation_input_tokens": 44743930,
+  "cache_read_input_tokens": 1586133443,
+  "output_tokens": 5573779,
+  "messages": 5050,
+  "all_tokens": 1636478361
+ },
+ "by_group": {
+  "development": {
+   "input_tokens": 22297,
+   "cache_creation_input_tokens": 33286695,
+   "cache_read_input_tokens": 1144487884,
+   "output_tokens": 3690972,
+   "messages": 2807,
+   "all_tokens": 1181487848
+  },
+  "swarm campaign kgll-p3-n20 / control arm": {
+   "input_tokens": 788,
+   "cache_creation_input_tokens": 3223455,
+   "cache_read_input_tokens": 84043485,
+   "output_tokens": 263789,
+   "messages": 340,
+   "all_tokens": 87531517
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm": {
+   "input_tokens": 4124,
+   "cache_creation_input_tokens": 8233780,
+   "cache_read_input_tokens": 357602074,
+   "output_tokens": 1619018,
+   "messages": 1903,
+   "all_tokens": 367458996
+  }
+ },
+ "by_member": {
+  "development :: interactive sessions": {
+   "input_tokens": 22297,
+   "cache_creation_input_tokens": 33286695,
+   "cache_read_input_tokens": 1144487884,
+   "output_tokens": 3690972,
+   "messages": 2807,
+   "all_tokens": 1181487848
+  },
+  "swarm campaign kgll-p3-n20 / control arm :: ctrl-a": {
+   "input_tokens": 434,
+   "cache_creation_input_tokens": 2136330,
+   "cache_read_input_tokens": 49324278,
+   "output_tokens": 133583,
+   "messages": 186,
+   "all_tokens": 51594625
+  },
+  "swarm campaign kgll-p3-n20 / control arm :: ctrl-b": {
+   "input_tokens": 354,
+   "cache_creation_input_tokens": 1087125,
+   "cache_read_input_tokens": 34719207,
+   "output_tokens": 130206,
+   "messages": 154,
+   "all_tokens": 35936892
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-a": {
+   "input_tokens": 248,
+   "cache_creation_input_tokens": 277303,
+   "cache_read_input_tokens": 21723748,
+   "output_tokens": 70592,
+   "messages": 110,
+   "all_tokens": 22071891
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-b": {
+   "input_tokens": 238,
+   "cache_creation_input_tokens": 558089,
+   "cache_read_input_tokens": 21585191,
+   "output_tokens": 86229,
+   "messages": 110,
+   "all_tokens": 22229747
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-c": {
+   "input_tokens": 206,
+   "cache_creation_input_tokens": 514230,
+   "cache_read_input_tokens": 17605836,
+   "output_tokens": 73423,
+   "messages": 95,
+   "all_tokens": 18193695
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-d": {
+   "input_tokens": 216,
+   "cache_creation_input_tokens": 296514,
+   "cache_read_input_tokens": 21368134,
+   "output_tokens": 99569,
+   "messages": 100,
+   "all_tokens": 21764433
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-e": {
+   "input_tokens": 166,
+   "cache_creation_input_tokens": 856536,
+   "cache_read_input_tokens": 11772190,
+   "output_tokens": 66468,
+   "messages": 79,
+   "all_tokens": 12695360
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-f": {
+   "input_tokens": 192,
+   "cache_creation_input_tokens": 250297,
+   "cache_read_input_tokens": 15720776,
+   "output_tokens": 63679,
+   "messages": 88,
+   "all_tokens": 16034944
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-g": {
+   "input_tokens": 208,
+   "cache_creation_input_tokens": 538181,
+   "cache_read_input_tokens": 17189409,
+   "output_tokens": 98353,
+   "messages": 98,
+   "all_tokens": 17826151
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-h": {
+   "input_tokens": 196,
+   "cache_creation_input_tokens": 237799,
+   "cache_read_input_tokens": 15074267,
+   "output_tokens": 71183,
+   "messages": 90,
+   "all_tokens": 15383445
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-i": {
+   "input_tokens": 178,
+   "cache_creation_input_tokens": 461515,
+   "cache_read_input_tokens": 13859282,
+   "output_tokens": 72713,
+   "messages": 82,
+   "all_tokens": 14393688
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-j": {
+   "input_tokens": 250,
+   "cache_creation_input_tokens": 557492,
+   "cache_read_input_tokens": 23164207,
+   "output_tokens": 77499,
+   "messages": 113,
+   "all_tokens": 23799448
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-k": {
+   "input_tokens": 188,
+   "cache_creation_input_tokens": 257295,
+   "cache_read_input_tokens": 16169489,
+   "output_tokens": 82700,
+   "messages": 85,
+   "all_tokens": 16509672
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-l": {
+   "input_tokens": 162,
+   "cache_creation_input_tokens": 223317,
+   "cache_read_input_tokens": 11876894,
+   "output_tokens": 73618,
+   "messages": 74,
+   "all_tokens": 12173991
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-m": {
+   "input_tokens": 192,
+   "cache_creation_input_tokens": 534230,
+   "cache_read_input_tokens": 15697177,
+   "output_tokens": 85359,
+   "messages": 89,
+   "all_tokens": 16316958
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-n": {
+   "input_tokens": 200,
+   "cache_creation_input_tokens": 254045,
+   "cache_read_input_tokens": 17632458,
+   "output_tokens": 67379,
+   "messages": 90,
+   "all_tokens": 17954082
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-o": {
+   "input_tokens": 228,
+   "cache_creation_input_tokens": 585346,
+   "cache_read_input_tokens": 21963354,
+   "output_tokens": 98338,
+   "messages": 107,
+   "all_tokens": 22647266
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-p": {
+   "input_tokens": 214,
+   "cache_creation_input_tokens": 510403,
+   "cache_read_input_tokens": 17759157,
+   "output_tokens": 84455,
+   "messages": 99,
+   "all_tokens": 18354229
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-q": {
+   "input_tokens": 168,
+   "cache_creation_input_tokens": 481401,
+   "cache_read_input_tokens": 13176976,
+   "output_tokens": 76311,
+   "messages": 78,
+   "all_tokens": 13734856
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-r": {
+   "input_tokens": 240,
+   "cache_creation_input_tokens": 284478,
+   "cache_read_input_tokens": 23093003,
+   "output_tokens": 87041,
+   "messages": 112,
+   "all_tokens": 23464762
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-s": {
+   "input_tokens": 260,
+   "cache_creation_input_tokens": 322406,
+   "cache_read_input_tokens": 27659403,
+   "output_tokens": 110975,
+   "messages": 123,
+   "all_tokens": 28093044
+  },
+  "swarm campaign kgll-p3-n20 / swarm arm :: swarm-t": {
+   "input_tokens": 174,
+   "cache_creation_input_tokens": 232903,
+   "cache_read_input_tokens": 13511123,
+   "output_tokens": 73134,
+   "messages": 81,
+   "all_tokens": 13817334
+  }
+ },
+ "by_model": {
+  "<synthetic>": {
+   "input_tokens": 0,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 0,
+   "messages": 9,
+   "all_tokens": 0
+  },
+  "claude-fable-5-1": {
+   "input_tokens": 17795,
+   "cache_creation_input_tokens": 14521194,
+   "cache_read_input_tokens": 309969159,
+   "output_tokens": 1535541,
+   "messages": 749,
+   "all_tokens": 326043689
+  },
+  "claude-opus-5": {
+   "input_tokens": 272,
+   "cache_creation_input_tokens": 912201,
+   "cache_read_input_tokens": 23954839,
+   "output_tokens": 125952,
+   "messages": 136,
+   "all_tokens": 24993264
+  },
+  "claude-opus-5-5": {
+   "input_tokens": 9142,
+   "cache_creation_input_tokens": 29310535,
+   "cache_read_input_tokens": 1252209445,
+   "output_tokens": 3912286,
+   "messages": 4156,
+   "all_tokens": 1285441408
+  }
+ },
+ "by_day": {
+  "2026-09-04": {
+   "input_tokens": 120,
+   "cache_creation_input_tokens": 610084,
+   "cache_read_input_tokens": 6159011,
+   "output_tokens": 50542,
+   "messages": 60,
+   "all_tokens": 6819757
+  },
+  "2026-09-09": {
+   "input_tokens": 7810,
+   "cache_creation_input_tokens": 1671581,
+   "cache_read_input_tokens": 122895734,
+   "output_tokens": 638907,
+   "messages": 387,
+   "all_tokens": 125214032
+  },
+  "2026-09-10": {
+   "input_tokens": 1834,
+   "cache_creation_input_tokens": 3709741,
+   "cache_read_input_tokens": 43715464,
+   "output_tokens": 133366,
+   "messages": 89,
+   "all_tokens": 47560405
+  },
+  "2026-09-11": {
+   "input_tokens": 804,
+   "cache_creation_input_tokens": 2848660,
+   "cache_read_input_tokens": 23071733,
+   "output_tokens": 78120,
+   "messages": 36,
+   "all_tokens": 25999317
+  },
+  "2026-09-13": {
+   "input_tokens": 130,
+   "cache_creation_input_tokens": 753348,
+   "cache_read_input_tokens": 3116290,
+   "output_tokens": 7205,
+   "messages": 5,
+   "all_tokens": 3876973
+  },
+  "2026-09-14": {
+   "input_tokens": 66,
+   "cache_creation_input_tokens": 755176,
+   "cache_read_input_tokens": 1588762,
+   "output_tokens": 1258,
+   "messages": 3,
+   "all_tokens": 2345262
+  },
+  "2026-09-17": {
+   "input_tokens": 1974,
+   "cache_creation_input_tokens": 408973,
+   "cache_read_input_tokens": 25950690,
+   "output_tokens": 185185,
+   "messages": 83,
+   "all_tokens": 26546822
+  },
+  "2026-09-18": {
+   "input_tokens": 2862,
+   "cache_creation_input_tokens": 2556955,
+   "cache_read_input_tokens": 54725258,
+   "output_tokens": 405274,
+   "messages": 127,
+   "all_tokens": 57690349
+  },
+  "2026-09-19": {
+   "input_tokens": 1652,
+   "cache_creation_input_tokens": 1911219,
+   "cache_read_input_tokens": 49815258,
+   "output_tokens": 121393,
+   "messages": 73,
+   "all_tokens": 51849522
+  },
+  "2026-09-21": {
+   "input_tokens": 815,
+   "cache_creation_input_tokens": 207658,
+   "cache_read_input_tokens": 2885798,
+   "output_tokens": 40243,
+   "messages": 28,
+   "all_tokens": 3134514
+  },
+  "2026-09-26": {
+   "input_tokens": 36,
+   "cache_creation_input_tokens": 115357,
+   "cache_read_input_tokens": 1590790,
+   "output_tokens": 42429,
+   "messages": 18,
+   "all_tokens": 1748612
+  },
+  "2026-09-27": {
+   "input_tokens": 140,
+   "cache_creation_input_tokens": 1106336,
+   "cache_read_input_tokens": 22011620,
+   "output_tokens": 82275,
+   "messages": 70,
+   "all_tokens": 23200371
+  },
+  "2026-09-28": {
+   "input_tokens": 38,
+   "cache_creation_input_tokens": 1456118,
+   "cache_read_input_tokens": 8266780,
+   "output_tokens": 16555,
+   "messages": 19,
+   "all_tokens": 9739491
+  },
+  "2026-09-30": {
+   "input_tokens": 372,
+   "cache_creation_input_tokens": 866603,
+   "cache_read_input_tokens": 38380210,
+   "output_tokens": 165587,
+   "messages": 183,
+   "all_tokens": 39412772
+  },
+  "2026-10-01": {
+   "input_tokens": 918,
+   "cache_creation_input_tokens": 4348761,
+   "cache_read_input_tokens": 174079770,
+   "output_tokens": 483069,
+   "messages": 416,
+   "all_tokens": 178912518
+  },
+  "2026-10-02": {
+   "input_tokens": 1480,
+   "cache_creation_input_tokens": 1473193,
+   "cache_read_input_tokens": 282037887,
+   "output_tokens": 520395,
+   "messages": 585,
+   "all_tokens": 284032955
+  },
+  "2026-10-03": {
+   "input_tokens": 46,
+   "cache_creation_input_tokens": 1244459,
+   "cache_read_input_tokens": 13335826,
+   "output_tokens": 25728,
+   "messages": 23,
+   "all_tokens": 14606059
+  },
+  "2026-10-04": {
+   "input_tokens": 70,
+   "cache_creation_input_tokens": 729036,
+   "cache_read_input_tokens": 23167167,
+   "output_tokens": 33911,
+   "messages": 34,
+   "all_tokens": 23930184
+  },
+  "2026-10-05": {
+   "input_tokens": 256,
+   "cache_creation_input_tokens": 2439765,
+   "cache_read_input_tokens": 38695583,
+   "output_tokens": 173063,
+   "messages": 129,
+   "all_tokens": 41308667
+  },
+  "2026-10-06": {
+   "input_tokens": 2548,
+   "cache_creation_input_tokens": 5906697,
+   "cache_read_input_tokens": 278290267,
+   "output_tokens": 1277575,
+   "messages": 1240,
+   "all_tokens": 285477087
+  },
+  "2026-10-07": {
+   "input_tokens": 3238,
+   "cache_creation_input_tokens": 9624210,
+   "cache_read_input_tokens": 372353545,
+   "output_tokens": 1091699,
+   "messages": 1442,
+   "all_tokens": 383072692
+  }
+ },
+ "development_by_session": {
+  "7b888220-ac7f-4429-98ce-3e297710e1ec": {
+   "input_tokens": 6488,
+   "cache_creation_input_tokens": 4877147,
+   "cache_read_input_tokens": 130491206,
+   "output_tokens": 711852,
+   "messages": 283,
+   "all_tokens": 136086693
+  },
+  "8cc651fd-29d5-424d-a48e-ad1e2cd3631d": {
+   "input_tokens": 815,
+   "cache_creation_input_tokens": 207658,
+   "cache_read_input_tokens": 2885798,
+   "output_tokens": 40243,
+   "messages": 28,
+   "all_tokens": 3134514
+  },
+  "8ef46907-b8bd-4919-b3fd-4f73e6e7bf2a": {
+   "input_tokens": 214,
+   "cache_creation_input_tokens": 2677811,
+   "cache_read_input_tokens": 31869190,
+   "output_tokens": 141259,
+   "messages": 107,
+   "all_tokens": 34688474
+  },
+  "911d2788-1b80-43fe-adc3-79166ca1751e": {
+   "input_tokens": 272,
+   "cache_creation_input_tokens": 912201,
+   "cache_read_input_tokens": 23954839,
+   "output_tokens": 125952,
+   "messages": 136,
+   "all_tokens": 24993264
+  },
+  "a58b8183-53d1-4c4f-986b-d7592cb20075": {
+   "input_tokens": 5250,
+   "cache_creation_input_tokens": 8403409,
+   "cache_read_input_tokens": 103747830,
+   "output_tokens": 480637,
+   "messages": 241,
+   "all_tokens": 112637126
+  },
+  "d8cc20de-7a9d-450b-b71b-e21f1ae86942": {
+   "input_tokens": 5242,
+   "cache_creation_input_tokens": 1032980,
+   "cache_read_input_tokens": 72844325,
+   "output_tokens": 302809,
+   "messages": 203,
+   "all_tokens": 74185356
+  },
+  "da40ea84-732d-4c83-b000-e948305be4e5": {
+   "input_tokens": 3342,
+   "cache_creation_input_tokens": 11431230,
+   "cache_read_input_tokens": 653640452,
+   "output_tokens": 1550940,
+   "messages": 1476,
+   "all_tokens": 666625964
+  },
+  "f998797a-62ff-4ba0-a75a-c892d114d9fa": {
+   "input_tokens": 674,
+   "cache_creation_input_tokens": 3744259,
+   "cache_read_input_tokens": 125054244,
+   "output_tokens": 337280,
+   "messages": 333,
+   "all_tokens": 129136457
+  }
+ }
+}

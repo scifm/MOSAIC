@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use MOSAIC, its solver or its data, please cite the paper below."
+title: "MOSAIC: Multi-agent Open-ended Scientific Analysis and Investigation through Collaboration"
+version: 1.0.0
+license: MIT
+repository-code: "https://github.com/ChangwenXu98/MOSAIC"
+authors:
+  - {family-names: Zhang, given-names: Yitong}
+  - {family-names: Xu, given-names: Changwen}
+  - {family-names: Li, given-names: Andrew Boshi}
+  - {family-names: Sarkar, given-names: Siddhartha}
+  - {family-names: Sun, given-names: Kai}
+  - {family-names: Viswanathan, given-names: Venkatasubramanian}
+preferred-citation:
+  type: article
+  title: "Agentic Swarms Discover Enhancement of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry"
+  authors:
+    - {family-names: Zhang, given-names: Yitong}
+    - {family-names: Xu, given-names: Changwen}
+    - {family-names: Li, given-names: Andrew Boshi}
+    - {family-names: Sarkar, given-names: Siddhartha}
+    - {family-names: Sun, given-names: Kai}
+    - {family-names: Viswanathan, given-names: Venkatasubramanian}
+  year: 2026
+references:
+  - type: software
+    title: MomentumED.jl
+    authors:
+      - {family-names: Zou, given-names: Bo}
+    repository-code: "https://github.com/Zou-Bo/MomentumED.jl"
+    license: MIT

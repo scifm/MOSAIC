@@ -1,0 +1,175 @@
+diff --git a/EDCore/Project.toml b/EDCore/Project.toml
+index 5a8b761..76dec9d 100644
+--- a/EDCore/Project.toml
++++ b/EDCore/Project.toml
+@@ -8,7 +8,7 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+ Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
+ 
+ [compat]
+-julia = "1.11"
++julia = "1.10"
+ Combinatorics = "1.0"
+ 
+ [extras]
+diff --git a/MomentumED/Project.toml b/MomentumED/Project.toml
+index 18bdef2..83c31c9 100644
+--- a/MomentumED/Project.toml
++++ b/MomentumED/Project.toml
+@@ -19,7 +19,7 @@ MomentumEDCUDAExt = "CUDA"
+ EDCore = "0.2.0"
+ KrylovKit = "0.10.0"
+ CUDA = "6"
+-julia = "1.11"
++julia = "1.10"
+ LinearAlgebra = "1"
+ SparseArrays = "1"
+ 
+diff --git a/MomentumED/ext/MomentumEDCUDAExt.jl b/MomentumED/ext/MomentumEDCUDAExt.jl
+index b8a9f33..d18141f 100644
+--- a/MomentumED/ext/MomentumEDCUDAExt.jl
++++ b/MomentumED/ext/MomentumEDCUDAExt.jl
+@@ -6,7 +6,7 @@ module MomentumEDCUDAExt
+     using LinearAlgebra
+ 
+     # global flags and parameters
+-    using MomentumED: CUDA_AVAILABLE, CUDA_KRYLOV_INPLACE_RESTART_CHUNKSIZE, CUDA_MEMORY_MONITOR
++    using MomentumED: CUDA_AVAILABLE, CUDA_KRYLOV_INPLACE_RESTART_CHUNKSIZE, CUDA_MEMORY_MONITOR, CUDA_KRYLOV_SHRINK_RELEASE, CUDA_KRYLOV_SHRINK_MINOR_GC
+     # using MomentumED.Methods: _check_linearmap_dims, _throw_cuda_unavailable
+ 
+     function __init__()
+@@ -317,7 +317,11 @@ module MomentumEDCUDAExt
+         state.r = KrylovKit.scale!!(r, β)
+ 
+         # add GPU memory cleanup here
+-        release_cuda(2)
++        if CUDA_KRYLOV_SHRINK_RELEASE[]
++            release_cuda(2)
++        elseif CUDA_KRYLOV_SHRINK_MINOR_GC[]
++            GC.gc(false)
++        end
+ 
+         return state
+     end
+diff --git a/MomentumED/src/MomentumED.jl b/MomentumED/src/MomentumED.jl
+index 25aa285..6443bbe 100644
+--- a/MomentumED/src/MomentumED.jl
++++ b/MomentumED/src/MomentumED.jl
+@@ -7,7 +7,7 @@ This module only sets sectors of total (crystal) momentum, also called blocks.
+ ```julia
+ # submodules
+ export EDCore
+-public Preparation, Methods, Analysis
++# public Preparation, Methods, Analysis  # patched: Julia 1.10 compat (was: public ...)
+ 
+ # main solving function
+ export EDsolve
+@@ -15,10 +15,10 @@ export EDsolve
+ # from EDCore
+ export MBS64, MBOperator
+ export HilbertSubspace, MBS64Vector, Scatter
+-public get_bits, get_body, index_fit
+-public isphysical, isupper, isdiagonal
++# public get_bits, get_body, index_fit  # patched: Julia 1.10 compat (was: public ...)
++# public isphysical, isupper, isdiagonal  # patched: Julia 1.10 compat (was: public ...)
+ export ED_bracket, ED_bracket_threaded
+-public ColexMBS64, ColexMBS64Mask
++# public ColexMBS64, ColexMBS64Mask  # patched: Julia 1.10 compat (was: public ...)
+ 
+ # preparation
+ export EDPara, ED_momentum_subspaces
+@@ -26,8 +26,8 @@ export ED_scatterlist_onebody
+ export ED_scatterlist_twobody
+ 
+ # methods
+-public SparseHmltMatrix, LinearMap
+-public release_cuda, CUDA_AVAILABLE, CUDA_KRYLOV_INPLACE_RESTART_CHUNKSIZE, CUDA_MEMORY_MONITOR
++# public SparseHmltMatrix, LinearMap  # patched: Julia 1.10 compat (was: public ...)
++# public release_cuda, CUDA_AVAILABLE, CUDA_KRYLOV_INPLACE_RESTART_CHUNKSIZE, CUDA_MEMORY_MONITOR  # patched: Julia 1.10 compat (was: public ...)
+ 
+ # analysis - reduced density matrix for entanglement spectrum
+ export PES_1rdm, PES_MomtBlocks, PES_MomtBlock_rdm
+@@ -38,8 +38,8 @@ export ED_connection_step, ED_connection_gaugefixing!
+ export ED_step_inner_prod
+ 
+ # environment variables
+-public PRINT_RECURSIVE_MOMENTUM_DIVISION
+-public PRINT_TWOBODY_SCATTER_PAIRS
++# public PRINT_RECURSIVE_MOMENTUM_DIVISION  # patched: Julia 1.10 compat (was: public ...)
++# public PRINT_TWOBODY_SCATTER_PAIRS  # patched: Julia 1.10 compat (was: public ...)
+ ```
+ """
+ module MomentumED
+@@ -51,7 +51,7 @@ module MomentumED
+ 
+     # submodules
+     export EDCore
+-    public Preparation, Methods, Analysis
++    # public Preparation, Methods, Analysis  # patched: Julia 1.10 compat (was: public ...)
+ 
+     # main solving function
+     export EDsolve
+@@ -59,10 +59,10 @@ module MomentumED
+     # from EDCore
+     export MBS64, MBOperator
+     export HilbertSubspace, MBS64Vector, Scatter
+-    public get_bits, get_body, index_fit
+-    public isphysical, isupper, isdiagonal
++    # public get_bits, get_body, index_fit  # patched: Julia 1.10 compat (was: public ...)
++    # public isphysical, isupper, isdiagonal  # patched: Julia 1.10 compat (was: public ...)
+     export ED_bracket, ED_bracket_threaded
+-    public ColexMBS64, ColexMBS64Mask
++    # public ColexMBS64, ColexMBS64Mask  # patched: Julia 1.10 compat (was: public ...)
+ 
+     # preparation
+     export EDPara, ED_momentum_subspaces
+@@ -70,8 +70,8 @@ module MomentumED
+     export ED_scatterlist_twobody
+ 
+     # methods
+-    public SparseHmltMatrix, LinearMap
+-    public release_cuda, CUDA_AVAILABLE, CUDA_KRYLOV_INPLACE_RESTART_CHUNKSIZE, CUDA_MEMORY_MONITOR
++    # public SparseHmltMatrix, LinearMap  # patched: Julia 1.10 compat (was: public ...)
++    # public release_cuda, CUDA_AVAILABLE, CUDA_KRYLOV_INPLACE_RESTART_CHUNKSIZE, CUDA_MEMORY_MONITOR  # patched: Julia 1.10 compat (was: public ...)
+ 
+     # analysis - reduced density matrix for entanglement spectrum
+     export PES_1rdm, PES_MomtBlocks, PES_MomtBlock_rdm
+@@ -82,8 +82,8 @@ module MomentumED
+     export ED_step_inner_prod
+ 
+     # environment variables
+-    public PRINT_RECURSIVE_MOMENTUM_DIVISION
+-    public PRINT_TWOBODY_SCATTER_PAIRS
++    # public PRINT_RECURSIVE_MOMENTUM_DIVISION  # patched: Julia 1.10 compat (was: public ...)
++    # public PRINT_TWOBODY_SCATTER_PAIRS  # patched: Julia 1.10 compat (was: public ...)
+ 
+     global PRINT_RECURSIVE_MOMENTUM_DIVISION::Bool = false
+     global PRINT_TWOBODY_SCATTER_PAIRS::Bool = false
+@@ -121,6 +121,8 @@ module MomentumED
+         export CUDA_AVAILABLE
+         export CUDA_KRYLOV_INPLACE_RESTART_CHUNKSIZE
+         export CUDA_MEMORY_MONITOR
++        export CUDA_KRYLOV_SHRINK_RELEASE
++        export CUDA_KRYLOV_SHRINK_MINOR_GC
+ 
+         using EDCore
+         using ..Preparation
+diff --git a/MomentumED/src/method/gpu_linear_map.jl b/MomentumED/src/method/gpu_linear_map.jl
+index f423c74..a97fde3 100644
+--- a/MomentumED/src/method/gpu_linear_map.jl
++++ b/MomentumED/src/method/gpu_linear_map.jl
+@@ -6,6 +6,15 @@ Only names and method signatures are defined here; the actual code is in the ext
+ global const CUDA_AVAILABLE = Ref(false)
+ global const CUDA_KRYLOV_INPLACE_RESTART_CHUNKSIZE = Ref{Int64}(262144)
+ global const CUDA_MEMORY_MONITOR = Ref(true)
++# Full GC + pool reclaim after every Lanczos restart (see the shrink! override in
++# the CUDA extension). Safe for one large solve per process; callers that run
++# several concurrent device solves turn it off, since GC.gc() stops every task.
++global const CUDA_KRYLOV_SHRINK_RELEASE = Ref(true)
++# Cheap alternative for concurrent solves: a minor (young-generation) GC at each
++# restart, which frees the Krylov vectors the restart just discarded. Without
++# either, device memory fills with dead vectors until allocation fails
++# (measured: a 1M-state sector with a 6 GB matrix peaked at 13.8 GB).
++global const CUDA_KRYLOV_SHRINK_MINOR_GC = Ref(false)
+ 
+ """
+ CUDA-backed matrix-free linear map. Constructed by the CUDA extension.

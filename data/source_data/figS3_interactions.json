@@ -1,0 +1,120 @@
+{
+ "links": {
+  "kgll-w3-n5": {
+   "links": 101,
+   "share_first_2h": 0.46534653465346537,
+   "peak_hour": 0,
+   "peak_per_hour": 29,
+   "swarm_agents": 5,
+   "last_swarm_activity_h": 18.1411
+  },
+  "kgll-w3-n18": {
+   "links": 579,
+   "share_first_2h": 0.8739205526770294,
+   "peak_hour": 0,
+   "peak_per_hour": 300,
+   "swarm_agents": 18,
+   "last_swarm_activity_h": 9.6772
+  },
+  "kgll-w3-n48": {
+   "links": 757,
+   "share_first_2h": 0.797886393659181,
+   "peak_hour": 0,
+   "peak_per_hour": 390,
+   "swarm_agents": 48,
+   "last_swarm_activity_h": 44.015899999999995
+  },
+  "kgll-p3-n5": {
+   "links": 168,
+   "share_first_2h": 0.5773809523809523,
+   "peak_hour": 1,
+   "peak_per_hour": 53,
+   "swarm_agents": 5,
+   "last_swarm_activity_h": 6.5844
+  },
+  "kgll-p3-n18": {
+   "links": 527,
+   "share_first_2h": 0.5920303605313093,
+   "peak_hour": 0,
+   "peak_per_hour": 165,
+   "swarm_agents": 18,
+   "last_swarm_activity_h": 5.2506
+  },
+  "kgll-p3-n48": {
+   "links": 965,
+   "share_first_2h": 0.5046632124352332,
+   "peak_hour": 0,
+   "peak_per_hour": 324,
+   "swarm_agents": 48,
+   "last_swarm_activity_h": 19.3953
+  }
+ },
+ "tokens": {
+  "kgll-w3-n5": {
+   "swarm": {
+    "tokens_M": 270.993344,
+    "best": 7.0596
+   },
+   "control": {
+    "tokens_M": 127.442417,
+    "best": 3.1965
+   },
+   "swarm_best_at_isolated_budget": 3.4306
+  },
+  "kgll-w3-n18": {
+   "swarm": {
+    "tokens_M": 457.936427,
+    "best": 10.5563
+   },
+   "control": {
+    "tokens_M": 69.660024,
+    "best": 1.738
+   },
+   "swarm_best_at_isolated_budget": 1.3216
+  },
+  "kgll-w3-n48": {
+   "swarm": {
+    "tokens_M": 935.530743,
+    "best": 10.7632
+   },
+   "control": {
+    "tokens_M": 143.219857,
+    "best": 2.3786
+   },
+   "swarm_best_at_isolated_budget": 1.4079
+  },
+  "kgll-p3-n5": {
+   "swarm": {
+    "tokens_M": 172.623305,
+    "best": 16.2907
+   },
+   "control": {
+    "tokens_M": 79.602683,
+    "best": 1.0
+   },
+   "swarm_best_at_isolated_budget": 12.1399
+  },
+  "kgll-p3-n18": {
+   "swarm": {
+    "tokens_M": 422.662891,
+    "best": 15.6201
+   },
+   "control": {
+    "tokens_M": 132.130833,
+    "best": 11.5179
+   },
+   "swarm_best_at_isolated_budget": 10.912
+  },
+  "kgll-p3-n48": {
+   "swarm": {
+    "tokens_M": 978.684069,
+    "best": 16.0493
+   },
+   "control": {
+    "tokens_M": 92.326505,
+    "best": 7.4482
+   },
+   "swarm_best_at_isolated_budget": 1.9229
+  }
+ }
+}
