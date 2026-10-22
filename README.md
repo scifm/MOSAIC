@@ -11,33 +11,13 @@
 
 </div>
 
-This repository is the code and data release for
+## News
 
-> **Agentic Swarms Discover Enhancement of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry**
-> Yitong Zhang\*, Changwen Xu\*, Andrew Boshi Li, Siddhartha Sarkar, Kai Sun, Venkatasubramanian Viswanathan
-> (\*equal contribution)
+- 2026-10-20 -- MOSAIC released.
 
 <p align="center">
-  <img src="assets/fig1_overview.png" alt="Figure 1: agent-driven search for new pathways to enhance the fractional Chern insulator gap" width="820">
+  <img src="assets/fig1_overview.png" width="820">
 </p>
-
-**Figure 1 | Agent-driven search for new pathways to enhance the fractional Chern insulator gap.**
-- **a**, An isolated flat band with Chern number C = 1 can host a ν = 1/3 fractional Chern insulator (FCI) with
-  many-body gap Δ.
-- **b**, Model 1 (γ = 0) has ideal quantum geometry and a momentum-independent envelope h⁽⁰⁾(r). The optimized
-  model adds momentum-dependent amplitude (α_sp) and phase (β_sp) patterns, which keep C = 1 but break ideal
-  geometry.
-- **c**, A swarm of agents shares ideas and results on a common board. ED tests every candidate on the 21-site,
-  4×6 and 5×6 clusters.
-- **d**, Many-body gaps on the 27-site cluster, in units of the lowest-Landau-level gap Δ_LLL. Below: filled-band
-  densities, with the envelope moments M₂⁽⁰⁾ of the γ = 0 bands and ⟨M₂(k)⟩_BZ of the optimized bands. The
-  optimized gaps far exceed the earlier benchmark M₂⁽⁰⁾ Δ_LLL.
-
-It contains three things:
-- **MOSAIC**, a framework in which a swarm of autonomous AI agents works on an open scientific question together;
-- **a GPU-accelerated exact-diagonalization (ED) solver** for fractional Chern insulators in topological flat
-  bands, used as the swarm's referee;
-- **the data behind every figure and table of the paper**, including the full records of the agents' search.
 
 ---
 
@@ -340,17 +320,6 @@ If you use MOSAIC, the solver or the data, please cite the paper:
 }
 ```
 
-The ED solver is built on MomentumED.jl; please also cite it:
-
-```bibtex
-@software{MomentumED.jl,
-  author  = {Zou, Bo},
-  title   = {{MomentumED.jl}: A Julia Package for Exact Diagonalization with Momentum Conservation},
-  year    = {2025},
-  url     = {https://github.com/Zou-Bo/MomentumED.jl}
-}
-```
-
 ## Acknowledgments
 
 **MomentumED.jl.** The ED solver is built on [**MomentumED.jl**](https://github.com/Zou-Bo/MomentumED.jl) by
@@ -359,19 +328,6 @@ Hamiltonian construction, and its Krylov and CUDA eigensolver infrastructure (`M
 reciprocal-lattice conventions follow its Landau-level torus example. We thank Zou Bo for making the package openly
 available under the MIT license. The small patch we apply is described in
 [`julia/patches/README.md`](julia/patches/README.md); see also [`NOTICE`](NOTICE).
-
-**Funding and computing.**
-- V.V., C.X. and A.B.L. acknowledge support from Los Alamos National Laboratory under grant number AWD026741 at
-  the University of Michigan.
-- Y.Z. and K.S. acknowledge support from:
-  - the Office of Naval Research (Grant No. N00014-26-1-2565);
-  - the Air Force Office of Scientific Research MURI program (Grant No. FA9550-23-1-0334);
-  - the National Science Foundation through the University of Michigan Materials Research Science and Engineering
-    Center (Award No. DMR-2309029).
-- S.S. is supported by the Laboratory for Physical Sciences through the Condensed Matter Theory Center.
-- We thank Advanced Research Computing at the University of Michigan for computing resources.
-
-**Agents.** The agents of MOSAIC are Claude Code sessions running Claude Opus 5.5 (Anthropic).
 
 ## License
 
