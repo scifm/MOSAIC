@@ -1,8 +1,10 @@
 <div align="center">
 
-# MOSAIC
-
-**M**ulti-agent **O**pen-ended **S**cientific **A**nalysis and **I**nvestigation through **C**ollaboration
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/logo/mosaic-lockup-tagline-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/logo/mosaic-lockup-tagline-light.svg">
+  <img alt="MOSAIC: Multi-agent Open-ended Scientific Analysis and Investigation through Collaboration" src="assets/logo/mosaic-lockup-tagline-light.svg" width="560">
+</picture>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
@@ -38,8 +40,8 @@
 
 ## Highlights
 
-- **Open-ended search without a planner.** The agents are identical, autonomous Claude Code agents (Claude Opus 5.5)
-  sharing one message board. None is assigned a role, a region of the search space or a method. Who explores what,
+- **Open-ended search without a planner.** The agents are identical, autonomous coding agents sharing one message
+  board. None is assigned a role, a region of the search space or a method. Who explores what,
   and whose results to build on, is up to the agents.
 - **A referee that cannot be argued with.** A deterministic broker is the only process that runs ED and records
   results. Every number on the board must quote a broker result, and a candidate counts only if it passes phase
@@ -90,7 +92,7 @@ flowchart LR
     Store -- "swarm digest, leaderboard" --> Swarm
 ```
 
-- **Agents.** Each agent is a Claude Code session in `/loop` mode with its own git worktree and notebook.
+- **Agents.** Each agent is a long-running coding-agent session with its own git worktree and notebook.
   - Every agent receives the same charter and campaign brief (`swarm/charter.md`, `swarm/missions/`).
   - An agent writes its own analysis scripts and optimizers, but acts on shared state only through the `swarm`
     command: `digest`, `submit`, `post`, `mail`, `leaderboard`, …
@@ -158,7 +160,7 @@ MOSAIC/
 - Python ≥ 3.11 with [uv](https://docs.astral.sh/uv/).
 - Julia ≥ 1.10 (tested with 1.10.2).
 - Optional: an NVIDIA GPU with CUDA for the GPU solver (tested on H100 and A100).
-- To run swarm campaigns: Slurm, [Claude Code](https://claude.com/claude-code) and
+- To run swarm campaigns: Slurm, a command-line coding agent and
   [bubblewrap](https://github.com/containers/bubblewrap).
 
 ```bash
@@ -255,7 +257,7 @@ Several GPUs share a batch of sector solves.
 
 1. **Set the site values in the campaign config.** The released configs carry placeholders:
    - Slurm partitions (`cpu`, `gpu-h100`, `gpu-a100`);
-   - the `julia` and `claude` binaries;
+   - the `julia` binary and the coding-agent command (`agent_job.claude`);
    - `agent_deny_read`, the paths emptied in each agent's sandbox.
 2. **Build the entanglement-count table** for the PES gate, and point `gates.pes_expected_counts` at it. The
    table for the paper's clusters ships as `swarm/templates/pes_expected_counts.json`, and the released configs
@@ -289,7 +291,8 @@ Section S-VI of the paper), so they mention project notes that are not part of t
 | `kgll-ll0-1` (before the search boundary) | 1 | 18 | 2 | `configs/swarm_kgll_ll0.yaml` |
 | `kgll-p3-n20` (before the search boundary) | 2 | 20 | 2 | `configs/swarm_kgll_p3_n20.yaml` |
 
-- Every agent had a quota of 500 evaluations and a 48 h deadline. Campaigns ran on Claude Opus 5.5.
+- Every agent had a quota of 500 evaluations and a 48 h deadline. The agents in the paper's campaigns ran on Claude
+  Opus 5.5.
 - The solver version of all campaigns was `moire-julia-ed@v0.9.1`, which is the solver in this repository.
 - LLM agents are not deterministic, so a rerun gives a different search. What can be reproduced exactly is every
   number the search produced: each band in `data/` is a complete solver input.
@@ -305,7 +308,7 @@ Everything is plain JSON or Markdown. See [`data/README.md`](data/README.md) for
 | `data/source_data/` | the values plotted in each figure and table |
 | `data/agent_records/` | for each campaign: every request with its results, board posts, direct messages, agent notebooks, token usage |
 
-People's names in the agent records are replaced by `[author]`. The Claude Code transcripts are not released.
+People's names in the agent records are replaced by `[author]`. The agents' session transcripts are not released.
 
 ## Citation
 
