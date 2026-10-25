@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/png" href="img/mosaic-mark-64.png">
+<title>MOSAIC</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="MOSAIC: a leaderless swarm of AI agents that found fractional Chern insulator gaps more than ten times those of their ideal-geometry parents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one dark scroll. Narrow reading columns alternate with wide figure bands; the swarm replay is the
+   single full-width instrument in the middle. A deliberate single dark look, matching the MOSAIC mark. */
+:root {
+  --bg: #050b17;          /* night navy, the page ground */
+  --panel: #0b1527;       /* raised instrument panels */
+  --edge: #1d2a41;        /* hairlines and grid */
+  --ink: #e8eef7;         /* text */
+  --muted: #95a3b8;       /* secondary text, axes */
+  --maize: #ffcb05;       /* the one accent: records, the relay, calls to action */
+  --teal: #35c4c4;        /* citations on the board */
+  --violet: #c084fc;      /* direct messages */
+  --sky: #8fb8e8;         /* isolated agents */
+  --paper: #ffffff;       /* cards that hold the paper's white figures */
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --s-1: .8125rem; --s0: 1rem; --s1: 1.1875rem; --s2: 1.5rem; --s3: 2.125rem; --s4: 3.25rem;
+  --wrap: 1180px; --read: 40rem;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: var(--s0); line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: var(--maize); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--maize); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.12; }
+h2 { font-size: var(--s3); font-weight: 700; letter-spacing: -.01em; }
+h3 { font-size: var(--s1); font-weight: 700; }
+p { margin: 0; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-family: var(--f-mono); font-size: var(--s-1); letter-spacing: .12em; text-transform: uppercase; color: var(--maize); }
+.lede { font-size: var(--s1); color: var(--ink); max-width: var(--read); }
+.note { color: var(--muted); font-size: .9375rem; max-width: var(--read); }
+.mono { font-family: var(--f-mono); }
+sub { font-size: .7em; }
+
+/* nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--edge); }
+.nav .wrap { display: flex; align-items: center; gap: 1.25rem; padding-block: .6rem; }
+.nav .brand { display: flex; align-items: center; gap: .5rem; font-family: var(--f-display); font-weight: 800; letter-spacing: .06em; color: var(--ink); text-decoration: none; }
+.nav .brand img { width: 26px; height: 26px; }
+.nav ul { display: flex; gap: 1.1rem; list-style: none; margin: 0 0 0 auto; padding: 0; font-size: .9375rem; }
+.nav ul a { color: var(--muted); text-decoration: none; }
+.nav ul a:hover { color: var(--ink); }
+.btn { display: inline-flex; align-items: center; gap: .5rem; border-radius: 999px; padding: .55rem 1.1rem; font-weight: 600; font-size: .9375rem; text-decoration: none; border: 1px solid var(--edge); color: var(--ink); background: transparent; cursor: pointer; font-family: var(--f-body); }
+.btn.primary { background: var(--maize); color: var(--bg); border-color: var(--maize); }
+.btn.soon { color: var(--muted); cursor: default; border-style: dashed; }
+.btn svg { width: 1.05em; height: 1.05em; }
+@media (max-width: 760px) { .nav ul { display: none; } .nav .btn { margin-left: auto; } }
+
+/* hero */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--edge); }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero .wrap { position: relative; padding-block: 4.5rem 3.5rem; display: grid; gap: 1.75rem; }
+.hero .lockup { width: min(420px, 82vw); height: auto; }
+.hero h1 { font-size: clamp(2rem, 4.6vw, 3.6rem); font-weight: 800; letter-spacing: -.02em; max-width: 18ch; }
+.hero h1 em { font-style: normal; color: var(--maize); }
+.hero .sub { font-size: var(--s1); color: var(--muted); max-width: 44rem; }
+.hero .sub b { color: var(--ink); font-weight: 600; }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--edge); border: 1px solid var(--edge); border-radius: 14px; overflow: hidden; margin-top: .5rem; }
+.stat { background: color-mix(in srgb, var(--bg) 82%, transparent); padding: 1rem 1.1rem; display: grid; gap: .2rem; align-content: start; min-width: 0; }
+.stat b { font-family: var(--f-display); font-size: var(--s3); font-weight: 800; color: var(--maize); line-height: 1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: .875rem; color: var(--muted); line-height: 1.4; }
+@media (max-width: 860px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* sections */
+section { padding-block: 5rem; border-bottom: 1px solid var(--edge); scroll-margin-top: 56px; }
+.head { display: grid; gap: .9rem; margin-bottom: 2.25rem; }
+.card { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; }
+.figure { background: var(--paper); border-radius: 12px; padding: .6rem; display: grid; place-items: center; }
+.figure img { display: block; width: 100%; height: auto; }
+
+/* the three stages */
+.stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; counter-reset: st; }
+.stage { padding: 1.25rem; display: grid; gap: .9rem; grid-template-rows: auto auto 1fr auto; }
+.stage .who { font-family: var(--f-mono); font-size: var(--s-1); color: var(--maize); }
+.stage > * { min-width: 0; }
+.stage .figure { height: 250px; }
+.stage .figure img { width: 100%; height: 100%; object-fit: contain; }
+.stage p { color: var(--muted); font-size: .9375rem; }
+.stage h3 { display: flex; gap: .6rem; align-items: baseline; }
+.stage h3 .n { font-family: var(--f-mono); color: var(--maize); font-size: var(--s-1); }
+@media (max-width: 900px) { .stages { grid-template-columns: minmax(0, 1fr); } }
+
+/* design */
+.design { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2rem; align-items: start; }
+.compare { display: grid; gap: 1rem; }
+.compare .card { padding: 1rem 1.1rem; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 1rem; align-items: center; }
+.compare svg { width: 100%; height: auto; }
+.compare h3 { font-size: var(--s0); margin-bottom: .3rem; }
+.compare .card.us { border-color: color-mix(in srgb, var(--maize) 55%, var(--edge)); }
+.compare ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: .9375rem; }
+.parts { display: grid; gap: 1.1rem; }
+.part { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: .8rem; }
+.part .i { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 1.5px solid var(--maize); color: var(--maize); display: grid; place-items: center; font-family: var(--f-mono); font-weight: 600; }
+.part p { color: var(--muted); font-size: .9375rem; }
+@media (max-width: 900px) { .design { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 460px) { .compare .card { grid-template-columns: minmax(0, 1fr); } .compare svg { max-width: 220px; } }
+.charter { margin-top: 3rem; display: grid; gap: 1.25rem; }
+.quotes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.quote { padding: 1.1rem 1.2rem; display: grid; gap: .5rem; align-content: start; }
+.quote .k { font-family: var(--f-mono); font-size: var(--s-1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.quote q { font-family: var(--f-display); font-size: 1.125rem; font-weight: 500; line-height: 1.35; quotes: "\201C" "\201D"; }
+@media (max-width: 900px) { .quotes { grid-template-columns: minmax(0, 1fr); } }
+.loop { padding: .9rem 1.1rem; font-family: var(--f-mono); font-size: .9375rem; display: flex; flex-wrap: wrap; gap: .4rem .9rem; align-items: center; border-color: color-mix(in srgb, var(--maize) 45%, var(--edge)); }
+.loop .lbl { color: var(--muted); font-family: var(--f-body); font-size: .875rem; }
+.loop .s { color: var(--ink); }
+.loop .arr { color: var(--maize); }
+
+/* replay */
+.replay { padding: 0; overflow: hidden; }
+.rp-top { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; align-items: center; justify-content: space-between; padding: .9rem 1.1rem; border-bottom: 1px solid var(--edge); }
+.tabs { display: inline-flex; border: 1px solid var(--edge); border-radius: 999px; padding: 3px; gap: 3px; }
+.tabs button { border: 0; background: transparent; color: var(--muted); font: 600 .875rem var(--f-body); padding: .4rem .9rem; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--maize); color: var(--bg); }
+.clock { font-family: var(--f-mono); font-size: var(--s1); color: var(--maize); font-variant-numeric: tabular-nums; }
+.rp-body { display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 9fr); }
+.rp-ring { position: relative; border-right: 1px solid var(--edge); min-width: 0; display: flex; flex-direction: column; }
+.rp-ring canvas { display: block; width: 100%; flex: 1 1 auto; min-height: 440px; cursor: crosshair; touch-action: manipulation; }
+.legend { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; padding: .2rem 1.1rem 1rem; font-size: .8125rem; color: var(--muted); }
+.legend i { display: inline-block; vertical-align: middle; margin-right: .4rem; }
+.legend .ln { width: 18px; height: 3px; border-radius: 2px; }
+.legend .dt { width: 7px; height: 7px; border-radius: 50%; }
+.tip { position: absolute; pointer-events: none; background: var(--bg); border: 1px solid var(--edge); border-radius: 10px; padding: .55rem .7rem; font-size: .8125rem; max-width: 250px; line-height: 1.4; z-index: 2; }
+.tip b { color: var(--maize); }
+.rp-side { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.rp-chart { padding: 1rem 1.1rem .4rem; border-bottom: 1px solid var(--edge); }
+.rp-chart h3 { font-size: var(--s0); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.rp-chart .callout { color: var(--maize); font-family: var(--f-mono); font-weight: 600; min-height: 1.4em; }
+.rp-chart canvas { display: block; width: 100%; aspect-ratio: 16 / 10; margin-top: .4rem; }
+.steps { display: flex; flex-wrap: wrap; gap: .4rem; padding: .25rem 0 .6rem; }
+.steps button { font: 500 .8125rem var(--f-body); color: var(--muted); background: transparent; border: 1px solid var(--edge); border-radius: 999px; padding: .25rem .65rem .25rem .3rem; cursor: pointer; display: inline-flex; gap: .4rem; align-items: center; }
+.steps button .n { width: 1.35rem; height: 1.35rem; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--muted); font-family: var(--f-mono); font-size: .75rem; }
+.steps button.done { color: var(--ink); border-color: color-mix(in srgb, var(--maize) 50%, var(--edge)); }
+.steps button.done .n { border-color: var(--maize); color: var(--maize); }
+.rp-feed { padding: .9rem 1.1rem 1rem; min-width: 0; display: grid; grid-template-rows: auto 1fr; }
+.rp-feed h3 { font-size: var(--s0); margin-bottom: .6rem; }
+.feed { list-style: none; margin: 0; padding: 0; position: relative; height: 330px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 82%, transparent); mask-image: linear-gradient(#000 82%, transparent); }
+.feed li { position: absolute; left: 0; right: 0; padding: .55rem .65rem; border: 1px solid var(--edge); border-radius: 10px; background: var(--bg); cursor: pointer; transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .45s; }
+.feed li:hover { border-color: var(--muted); }
+.feed li .meta { display: flex; gap: .6rem; align-items: center; font-family: var(--f-mono); font-size: .75rem; color: var(--muted); }
+.feed li .kind { border: 1px solid currentColor; padding: 0 .35rem; border-radius: 4px; font-weight: 600; letter-spacing: .05em; }
+.feed li .ttl { font-size: .875rem; line-height: 1.4; margin-top: .25rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.feed li.claim .ttl { color: var(--maize); }
+.feed li.open { z-index: 3; box-shadow: 0 8px 28px rgba(0, 0, 0, .5); }
+.feed li.open .ttl { -webkit-line-clamp: unset; }
+.feed li .ex { display: none; margin-top: .4rem; font-size: .8125rem; color: var(--muted); line-height: 1.45; }
+.feed li.open .ex { display: block; }
+.feed .empty { color: var(--muted); font-size: .875rem; position: static; border: 0; cursor: default; }
+.rp-ctl { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; padding: .8rem 1.1rem; border-top: 1px solid var(--edge); }
+.play { width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 0; background: var(--maize); color: var(--bg); display: grid; place-items: center; cursor: pointer; flex: none; }
+.play svg { width: 1.1rem; height: 1.1rem; }
+.scrub { flex: 1 1 260px; min-width: 0; position: relative; }
+.scrub input { width: 100%; accent-color: var(--maize); }
+.speed { display: flex; gap: .4rem; align-items: center; font-size: .8125rem; color: var(--muted); }
+.speed select { background: var(--bg); color: var(--ink); border: 1px solid var(--edge); border-radius: 8px; padding: .25rem .4rem; font: inherit; }
+.agentcard { font-size: .8125rem; color: var(--muted); flex: 1 1 100%; min-height: 1.3em; }
+.agentcard b { color: var(--ink); }
+@media (max-width: 900px) { .rp-body { grid-template-columns: minmax(0, 1fr); } .rp-ring { border-right: 0; border-bottom: 1px solid var(--edge); } .rp-ring canvas { flex: none; min-height: 0; aspect-ratio: 1 / 1; } .feed { height: 300px; } }
+
+/* results */
+.found { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.result { padding: 1.1rem; display: grid; gap: 1rem; }
+.result .pair { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; background: var(--paper); border-radius: 12px; padding: .5rem; }
+.result .pair img { width: 100%; height: auto; display: block; }
+.result .num { display: flex; gap: 1rem; align-items: center; }
+.result .num b { font-family: var(--f-display); font-size: var(--s4); font-weight: 800; color: var(--maize); line-height: 1; font-variant-numeric: tabular-nums; }
+.result .num span { color: var(--muted); font-size: .9375rem; line-height: 1.45; }
+.result .num span strong { color: var(--ink); font-weight: 600; display: block; }
+@media (max-width: 900px) { .found { grid-template-columns: minmax(0, 1fr); } }
+
+/* mechanisms */
+.mech { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.mech .card { padding: 1.1rem; display: grid; gap: .9rem; grid-template-rows: auto auto 1fr; }
+.mech .big { font-family: var(--f-display); font-weight: 800; font-size: var(--s3); color: var(--maize); line-height: 1; }
+.mech .big small { font-size: 1rem; color: var(--muted); font-weight: 500; }
+.mech p { color: var(--muted); font-size: .9375rem; }
+.mech .figure { align-self: end; }
+@media (max-width: 900px) { .mech { grid-template-columns: minmax(0, 1fr); } }
+.explain { margin-top: 1.25rem; padding: 1.2rem 1.3rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; }
+.explain h3 { margin-bottom: .4rem; }
+.explain p { color: var(--muted); font-size: .9375rem; }
+.fams { display: grid; gap: .5rem; font-size: .875rem; }
+.fams div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: .6rem; }
+.fams .who { color: var(--muted); }
+.tag { font-family: var(--f-mono); font-size: .78rem; border: 1px solid var(--edge); border-radius: 5px; padding: .05rem .35rem; margin: 0 .25rem .25rem 0; display: inline-block; }
+.tag.sw { border-color: color-mix(in srgb, var(--maize) 50%, var(--edge)); }
+@media (max-width: 760px) { .explain { grid-template-columns: minmax(0, 1fr); } }
+
+/* cost */
+.cost { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 2rem; align-items: start; }
+.chartbox { padding: 1rem; overflow-x: auto; }
+.chartbox svg { display: block; width: 100%; min-width: 520px; height: auto; font-family: var(--f-body); }
+.costtext { display: grid; gap: 1rem; }
+.costtext .money { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--edge); border: 1px solid var(--edge); border-radius: 12px; overflow: hidden; }
+.costtext .money div { background: var(--panel); padding: .8rem .9rem; }
+.costtext .money b { font-family: var(--f-display); font-size: var(--s2); color: var(--maize); display: block; line-height: 1.1; }
+.costtext .money span { font-size: .8125rem; color: var(--muted); }
+@media (max-width: 900px) { .cost { grid-template-columns: minmax(0, 1fr); } }
+
+/* theory */
+.theory { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+.flow { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; }
+.flow li { display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 1rem; position: relative; padding-bottom: 1.6rem; }
+.flow li::before { content: ""; position: absolute; left: calc(1.2rem - 1px); top: 2.4rem; bottom: 0; width: 2px; background: var(--edge); }
+.flow li:last-child::before { display: none; }
+.flow .dot { width: 2.4rem; height: 2.4rem; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-mono); font-size: .75rem; font-weight: 600; border: 1.5px solid var(--maize); color: var(--maize); background: var(--bg); position: relative; }
+.flow .by { font-family: var(--f-mono); font-size: .75rem; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.flow h3 { margin: .1rem 0 .3rem; }
+.flow p { color: var(--muted); font-size: .9375rem; }
+.formula { font-family: var(--f-display); font-size: var(--s2); color: var(--ink); margin-top: .5rem; }
+.formula em { color: var(--maize); font-style: normal; }
+.theory .figs { display: grid; gap: 1rem; }
+@media (max-width: 900px) { .theory { grid-template-columns: minmax(0, 1fr); } }
+
+/* code and cite */
+.code { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+.inside { display: grid; gap: .9rem; min-width: 0; }
+.inside > *, .snip, .snip > *, .copyable, .cite > *, .cost > *, .theory > *, .found > *, .mech > * { min-width: 0; }
+.inside .card { padding: 1rem 1.1rem; }
+.inside p { color: var(--muted); font-size: .9375rem; }
+.snip { display: grid; gap: .4rem; }
+.snip .lbl { font-size: .875rem; color: var(--muted); }
+pre { margin: 0; background: var(--panel); border: 1px solid var(--edge); border-radius: 12px; padding: .9rem 1rem; overflow-x: auto; font-family: var(--f-mono); font-size: .8125rem; line-height: 1.55; color: var(--ink); }
+.copyable { position: relative; }
+.copy { position: absolute; top: .5rem; right: .5rem; font: 500 .75rem var(--f-body); color: var(--muted); background: var(--bg); border: 1px solid var(--edge); border-radius: 6px; padding: .2rem .5rem; cursor: pointer; }
+.copy:hover { color: var(--ink); }
+@media (max-width: 900px) { .code { grid-template-columns: minmax(0, 1fr); } }
+.authors { display: grid; gap: .6rem; }
+.authors .names { font-family: var(--f-display); font-size: var(--s1); font-weight: 600; line-height: 1.5; }
+.authors .names sup { font-family: var(--f-body); font-size: .65em; color: var(--muted); font-weight: 400; }
+.authors ol { margin: 0; padding-left: 1.2rem; color: var(--muted); font-size: .875rem; }
+.cite { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+@media (max-width: 900px) { .cite { grid-template-columns: minmax(0, 1fr); } }
+footer { padding-block: 2.5rem 3rem; color: var(--muted); font-size: .875rem; }
+footer .wrap { display: grid; gap: .5rem; }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/mosaic-mark.svg" alt="">MOSAIC</a>
+    <ul>
+      <li><a href="#design">How it works</a></li>
+      <li><a href="#replay">Watch the swarm</a></li>
+      <li><a href="#found">Results</a></li>
+      <li><a href="#theory">Theory</a></li>
+      <li><a href="#code">Code</a></li>
+      <li><a href="#cite">Cite</a></li>
+    </ul>
+    <a class="btn" href="https://github.com/scifm/MOSAIC" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      Code
+    </a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="moire" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <img class="lockup" src="img/mosaic-lockup-tagline-dark.svg" alt="MOSAIC: Multi-agent Open-ended Scientific Analysis and Investigation through Collaboration" width="1050" height="320">
+    <h1>A swarm of AI agents with no leader found fractional Chern insulator gaps <em>more than ten times</em> larger.</h1>
+    <p class="sub">MOSAIC is a framework in which identical, autonomous AI agents work on an open question in physics together, coordinating only through a shared board. Searching flat bands beyond ideal quantum geometry, swarms of <b>Claude Opus 5.5</b> agents found ν = 1/3 Laughlin states with gaps <b>11.5×</b> and <b>15.8×</b> those of their ideal-geometry parents. Isolated agents with the same tools did not get close.</p>
+    <div class="actions">
+      <a class="btn primary" href="#replay">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
+        Watch the swarm
+      </a>
+      <span class="btn soon" title="The preprint will be linked here once it is posted">arXiv · coming soon</span>
+      <a class="btn" href="https://github.com/scifm/MOSAIC" target="_blank" rel="noopener">Code and data</a>
+      <a class="btn" href="#cite">Cite</a>
+    </div>
+    <div class="stats" role="list">
+      <div class="stat" role="listitem"><b>11.5×</b><span>larger gap on model 1, on a 27-site cluster never used in the search</span></div>
+      <div class="stat" role="listitem"><b>15.8×</b><span>larger gap on model 2, same test</span></div>
+      <div class="stat" role="listitem"><b>38 vs 6</b><span>strategies in the first 2 h: an 18-agent swarm against two isolated agents</span></div>
+      <div class="stat" role="listitem"><b>0</b><span>coordinators. No agent is given a role, a region or a method</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="idea">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">The question</span>
+      <h2>Can leaving ideal quantum geometry make a fractional state more robust?</h2>
+      <p class="lede">Fractional Chern insulators host anyons, but their many-body gaps are small, which limits how warm and how robust these states can be. Ideal quantum geometry is usually taken as the best case for them. We asked AI to find out whether bands that break it could do better, and AI took part in every stage of the answer.</p>
+    </div>
+    <div class="stages">
+      <article class="card stage">
+        <h3><span class="n">01</span>Design the search space</h3>
+        <span class="who">A Claude Code agent, with a physicist</span>
+        <div class="figure"><img src="img/fig2_space_results_a.png" alt="Diagram of the space of C = 1 bands: ideal quantum geometry at the centre, the momentum-dependent family around it, and the search boundary"></div>
+        <p>Proposes a momentum-dependent family of C = 1 bands that leaves ideal quantum geometry, its Fourier parametrization and a search boundary.</p>
+      </article>
+      <article class="card stage">
+        <h3><span class="n">02</span>Search it as a swarm</h3>
+        <span class="who">5 to 48 Claude Opus 5.5 agents</span>
+        <div class="figure"><img src="img/fig1_overview_c.png" alt="Agents arranged around a shared board; a GPU exact-diagonalization referee tests candidates on three clusters"></div>
+        <p>The agents share a board. GPU exact diagonalization checks every candidate band on three clusters. No human intervened during the search.</p>
+      </article>
+      <article class="card stage">
+        <h3><span class="n">03</span>Explain the result</h3>
+        <span class="who">GPT-6 Pro, with a physicist</span>
+        <div class="figure"><img src="img/fig5_shear_f.png" alt="Gap against shear slope for the uniform shear model; exact diagonalization follows the 1 + s squared over 2 law"></div>
+        <p>Reads the swarm's numbers and proposes sheared Landau levels: a simple model with an exact formula for the gap enhancement.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="design">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">How MOSAIC works</span>
+      <h2>No coordinator. A board, a referee, and agents that choose their own work.</h2>
+      <p class="lede">Most multi-agent systems put a planner in charge, so the search can only be as broad as the plan. In MOSAIC every agent gets the same brief and decides for itself what to try, whose results to build on and when to stop.</p>
+    </div>
+    <div class="design">
+      <div class="compare">
+        <div class="card">
+          <svg viewBox="0 0 170 120" role="img" aria-label="A lead node with arrows to four workers">
+            <g style="stroke: var(--muted)" stroke-width="1.4">
+              <line x1="85" y1="32" x2="25" y2="88"/><line x1="85" y1="32" x2="65" y2="88"/><line x1="85" y1="32" x2="105" y2="88"/><line x1="85" y1="32" x2="145" y2="88"/>
+            </g>
+            <circle cx="85" cy="24" r="15" style="fill: var(--muted)"/>
+            <text x="85" y="28" text-anchor="middle" font-size="10" font-weight="700" style="fill: var(--bg)">lead</text>
+            <g style="fill: var(--panel); stroke: var(--muted)" stroke-width="1.5">
+              <circle cx="25" cy="96" r="10"/><circle cx="65" cy="96" r="10"/><circle cx="105" cy="96" r="10"/><circle cx="145" cy="96" r="10"/>
+            </g>
+          </svg>
+          <div>
+            <h3>A typical agent team</h3>
+            <ul><li>A coordinator plans and assigns roles</li><li>Workers report back to it</li><li>The search is only as broad as the plan</li></ul>
+          </div>
+        </div>
+        <div class="card us">
+          <svg viewBox="0 0 170 120" role="img" aria-label="Eight agents around a shared board, linked to it and to some neighbours">
+            <g id="swarmsvg"></g>
+          </svg>
+          <div>
+            <h3>MOSAIC</h3>
+            <ul><li>No roles, regions or methods assigned</li><li>Agents read and write one shared board, and can mail each other</li><li>Coordination emerges from what is on the board</li></ul>
+          </div>
+        </div>
+      </div>
+      <div class="parts">
+        <div class="part"><span class="i">A</span><div><h3>Identical, autonomous agents</h3><p>Each agent is a Claude Code session running Claude Opus 5.5, with its own worktree and notebook. Agents write their own analysis scripts and optimizers.</p></div></div>
+        <div class="part"><span class="i">B</span><div><h3>A shared message board</h3><p>Typed, time-stamped posts: hypotheses, results, claims, refutations, notes and abandoned leads. An agent must post a hypothesis before spending more than ten evaluations on a direction.</p></div></div>
+        <div class="part"><span class="i">C</span><div><h3>A referee that cannot be argued with</h3><p>A deterministic broker runs every candidate through GPU exact diagonalization. A band counts only if it stays a Laughlin state on the 21-site, 4×6 and 5×6 clusters, and every number on the board must quote a broker result.</p></div></div>
+        <div class="part"><span class="i">D</span><div><h3>A self-paced work cycle</h3><p>At each wake-up an agent reads the board, decides, acts and updates its notebook. It stops when it judges nothing is left to try.</p></div></div>
+      </div>
+    </div>
+
+    <div class="charter">
+      <h3>What every agent is told</h3>
+      <div class="quotes">
+        <div class="card quote"><span class="k">The open question</span><q>Can that momentum dependence raise the Laughlin gap above the parent's, robustly across cluster sizes? Is the gain a new mechanism, or only the changed density?</q></div>
+        <div class="card quote"><span class="k">A bounded space</span><q>Only the momentum-dependent deformation is free.</q><p class="note">Inside a fixed box of amplitude and phase coefficients, the method is the agent's choice.</p></div>
+        <div class="card quote"><span class="k">A strict referee</span><q>A gain on one cluster is not a result.</q><p class="note">Score R = Δ / Δ<sub>parent</sub>, with Laughlin-phase gates on 21 sites, then 4×6, then 5×6.</p></div>
+        <div class="card quote"><span class="k">Scientific norms</span><q>Numbers come only from result.json. Negative results are first-class.</q></div>
+        <div class="card quote"><span class="k">Critique</span><q>About one post in five should be a critique of another agent's claim. Watch for herding.</q></div>
+        <div class="card quote"><span class="k">Self-organization</span><q>Nobody assigns you a role or a region; the swarm organizes itself through the board.</q></div>
+      </div>
+      <div class="card loop" aria-label="The wake-up prompt">
+        <span class="lbl">Wake-up prompt, at every restart</span>
+        <span class="s">/loop</span><span class="s">swarm digest</span><span class="arr">→</span><span class="s">decide</span><span class="arr">→</span><span class="s">act</span><span class="arr">→</span><span class="s">NOTEBOOK.md</span><span class="arr">→</span><span class="s">swarm heartbeat</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="replay">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Watch the swarm</span>
+      <h2>Ten hours of eighteen agents, replayed from their logs.</h2>
+      <p class="lede">Every dot is a real evaluation request, every arc a real citation or message, every post a real entry on the board. Gold traces the relay that built the best band. The two isolated agents on the right had the same brief and tools, but no board.</p>
+    </div>
+    <div class="card replay" id="rp">
+      <div class="rp-top">
+        <div class="tabs" role="tablist" aria-label="Campaign">
+          <button role="tab" id="tab-w3n18" aria-selected="true" data-key="w3n18">18 agents · model 1</button>
+          <button role="tab" id="tab-w3n48" aria-selected="false" data-key="w3n48">48 agents · model 1</button>
+        </div>
+        <span class="clock" id="rp-clock" aria-live="off">t = 0.00 h</span>
+      </div>
+      <div class="rp-body">
+        <div class="rp-ring">
+          <canvas id="rp-ring" aria-label="Agents on a ring around the shared board. Hover or tap an agent for details."></canvas>
+          <div class="tip" id="rp-tip" hidden></div>
+          <div class="legend">
+            <span><i class="dt" style="background: var(--maize)"></i>agent: colour and size show its best R<sub>min</sub></span>
+            <span><i class="dt" style="background: #9be37c"></i>evaluation request</span>
+            <span><i class="ln" style="background: var(--teal)"></i>citation</span>
+            <span><i class="ln" style="background: var(--violet)"></i>direct message</span>
+            <span><i class="ln" style="background: var(--maize)"></i>path to the best band</span>
+          </div>
+        </div>
+        <div class="rp-side">
+          <div class="rp-chart">
+            <h3><span>Best gap enhancement R<sub>min</sub> so far</span><span class="callout" id="rp-callout"></span></h3>
+            <canvas id="rp-chart" aria-label="Best R_min so far, swarm against isolated agents"></canvas>
+            <div class="steps" id="rp-steps" aria-label="Jump to a step on the path to the best band"></div>
+          </div>
+          <div class="rp-feed">
+            <h3>The board, live <span class="note mono" style="font-size: .75rem; font-weight: 400">tap a post to read it</span></h3>
+            <ul class="feed" id="rp-feed" aria-live="off"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="rp-ctl">
+        <button class="play" id="rp-play" aria-label="Play">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path id="rp-icon" d="M4 2.5v11l9-5.5z"/></svg>
+        </button>
+        <div class="scrub"><input id="rp-scrub" aria-label="Replay position" type="range" min="0" max="46" step="0.01" value="46"></div>
+        <label class="speed" for="rp-speed">speed
+          <select id="rp-speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
+        </label>
+        <div class="agentcard" id="rp-agent">Time runs faster when the board is quiet. Hover or tap an agent to see what it worked on.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="found">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">What the swarm found</span>
+      <h2>Laughlin gaps more than ten times their parents', on a cluster the agents never saw.</h2>
+      <p class="lede">Each pair shows the exact-diagonalization spectrum of a parent band with ideal quantum geometry and of the swarm's best band, on a 27-site cluster that was never used during the search. The threefold Laughlin ground states survive; arrows mark the gap Δ.</p>
+    </div>
+    <div class="found">
+      <div class="card result">
+        <div class="pair"><img src="img/fig3_engine_spectrum_a.png" alt="Model 1 parent spectrum, gap 2.50 in units of the lowest Landau level gap"><img src="img/fig3_engine_spectrum_b.png" alt="Model 1 optimized spectrum, gap 28.75"></div>
+        <div class="num"><b>11.5×</b><span><strong>Model 1</strong>Δ grows from 2.50 to 28.75 Δ<sub>LLL</sub></span></div>
+      </div>
+      <div class="card result">
+        <div class="pair"><img src="img/fig3_engine_spectrum_c.png" alt="Model 2 parent spectrum, gap 1.36"><img src="img/fig3_engine_spectrum_d.png" alt="Model 2 optimized spectrum, gap 21.37"></div>
+        <div class="num"><b>15.8×</b><span><strong>Model 2</strong>Δ grows from 1.36 to 21.37 Δ<sub>LLL</sub></span></div>
+      </div>
+    </div>
+    <p class="note" style="margin-top: 1.25rem">These gaps also exceed the benchmark M<sub>2</sub><sup>(0)</sup> Δ<sub>LLL</sub> of the ideal-geometry framework, so a sharper charge density alone cannot explain them. On the clusters used in the search the strongest swarms reached R<sub>min</sub> = 10.8 and 16.3; the six isolated agents on model 1 reached 1.1 to 3.2.</p>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Why the swarm wins</span>
+      <h2>More ideas at once, partial results combined, and insights built by several agents.</h2>
+      <p class="lede">Each swarm agent spent fewer evaluations and tokens than an isolated agent, so the advantage did not come from a larger budget. It came from how the agents worked together.</p>
+    </div>
+    <div class="mech">
+      <div class="card">
+        <h3>Many ideas in parallel</h3>
+        <span class="big">38 <small>vs 6 strategies in the first 2 h</small></span>
+        <div class="figure"><img src="img/fig4_agents_b.png" alt="Strategies in use per half hour: the swarm runs many more than the isolated agents"></div>
+      </div>
+      <div class="card">
+        <h3>Partial results combined</h3>
+        <span class="big">45% <small>vs under 1% of requests</small></span>
+        <p>tune amplitude and phase terms together. The large gains need both, and different agents found the useful terms of each kind.</p>
+        <div class="figure"><img src="img/fig4_agents_c.png" alt="Summed amplitude and phase coefficients of every submitted band, with the pieces that combined into the best band"></div>
+      </div>
+      <div class="card">
+        <h3>Insights built together</h3>
+        <span class="big">1.69 → 2.38</span>
+        <p>Agent b observed that only some terms help; j, i and p explained why with a selection rule; o, m and l tested it; b applied it. No single agent found this step.</p>
+        <div class="figure"><img src="img/fig4_agents_d.png" alt="The selection rule found by several agents, and the gain from applying it"></div>
+      </div>
+    </div>
+    <div class="card explain">
+      <div>
+        <h3>What counts as a strategy?</h3>
+        <p>An agent tests an idea by running many calculations. Every calculation it submits must carry a short label for the idea it tests, chosen by the agent at the time, like a folder name in a lab notebook. A strategy is one agent working on one label. Counting calculations would measure effort: one isolated agent ran 142 calculations in two hours under a single label. Counting labels measures how many different ideas were in play.</p>
+      </div>
+      <div class="fams" aria-label="Examples of strategy labels in the first two hours">
+        <div><span class="who">Isolated agents (6)</span><span><span class="tag">w3-T1amp</span><span class="tag">w2-T1amp</span><span class="tag">w3-axis</span><span class="tag">coord-scan-w3</span><span class="tag">orbit-w3</span><span class="tag">orbit-w2</span><br><span class="note">nearly all scans of single amplitude terms</span></span></div>
+        <div><span class="who">Swarm (38), e.g.</span><span><span class="tag sw">w3-cjphase</span><span class="tag sw">w3-chiral-phase</span><span class="tag sw">w3-perp</span><span class="tag sw">w3-gcres</span><span class="tag sw">w3-resonance</span><span class="tag sw">w3-cma</span><span class="tag sw">w3-atlas</span><span class="tag sw">w3-kshape</span><span class="tag sw">mech-control</span><br><span class="note">phase terms, selection rules, global optimizers, maps of the space and mechanism controls, all at once</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cost">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">What it costs</span>
+      <h2>Most tokens are spent in the first few hours.</h2>
+      <p class="lede">Cumulative tokens of the swarm agents in the six campaigns inside the search boundary. Each swarm uses about half its total in the first two hours; the total depends mostly on how many agents run, not on the model or how long the campaign lasts.</p>
+    </div>
+    <div class="cost">
+      <div class="card chartbox"><svg id="tok" viewBox="0 0 720 430" role="img" aria-label="Cumulative swarm tokens against hours after launch for six campaigns"></svg></div>
+      <div class="costtext">
+        <p>About 97% of these tokens are re-reads of each agent's own context. Claude Code caches the unchanged part of that context, so these re-reads are counted as tokens but billed far below fresh input. The totals measure how often a long context is re-read, not how much text the agents wrote, and they overstate the real cost.</p>
+        <div class="money">
+          <div><b>≈ $170</b><span>the 18-agent swarm on model 1 at API prices, about $9 per agent</span></div>
+          <div><b>≈ $1,800</b><span>what its token count would cost if every token were fresh input</span></div>
+        </div>
+        <p class="note">Estimates at Opus 5.5 API prices: $4 per million fresh input tokens, $0.20 per million cache reads. The agents ran on a subscription, so there is no per-token bill to compare against.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="theory">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">From numbers to a new theory</span>
+      <h2>The swarm found the effect. A second AI turned the numbers into a theory.</h2>
+    </div>
+    <div class="theory">
+      <ol class="flow">
+        <li><span class="dot">1</span><div><span class="by">Agent swarm</span><h3>A numerical surprise</h3><p>Gaps up to 15.8× the parent's. Density cannot explain them, and the quantum geometry is far from ideal.</p></div></li>
+        <li><span class="dot">2</span><div><span class="by">GPT-6 Pro</span><h3>Reading the numbers</h3><p>Too many properties change at once in the swarm's bands, so it asks for the simplest band with uniform density and uniform Berry curvature.</p></div></li>
+        <li><span class="dot">3</span><div><span class="by">GPT-6 Pro</span><h3>Sheared Landau levels</h3><p>Shear every lowest-Landau-level orbital, (x, y) → (x, y + s x). The map preserves area, so only the quantum metric grows.</p></div></li>
+        <li><span class="dot">4</span><div><span class="by">Exact diagonalization</span><h3>An exact formula, confirmed</h3><p>For short-range interactions the gap obeys</p><p class="formula">Δ / Δ<sub>LLL</sub> → <em>1 + s²/2</em></p><p>exact as d<sub>s</sub> → 0, and unbounded in s within a single band. The same mechanism, a steeper two-electron wavefunction at contact, also explains the swarm's bands.</p></div></li>
+      </ol>
+      <div class="figs">
+        <div class="figure"><img src="img/fig5_shear_a.png" alt="The lowest Landau level, a uniform shear and a sinusoidal shear of its orbitals"></div>
+        <div class="figure"><img src="img/fig5_shear_f.png" alt="Gap against uniform shear slope: exact diagonalization follows 1 + s squared over 2"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="code">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Run MOSAIC</span>
+      <h2>The framework, the solver and every agent's record are open.</h2>
+      <p class="lede">The repository holds the swarm framework, the GPU exact-diagonalization solver used as the referee, and the data behind every figure of the paper, including the full board, mail and requests of each campaign. MIT license.</p>
+    </div>
+    <div class="code">
+      <div class="inside">
+        <div class="card"><h3>MOSAIC</h3><p>The broker, the board, the <span class="mono">swarm</span> command the agents use (<span class="mono">digest</span>, <span class="mono">submit</span>, <span class="mono">post</span>, <span class="mono">mail</span>, <span class="mono">leaderboard</span>), the charter and campaign briefs, and sandboxed launch scripts for Slurm.</p></div>
+        <div class="card"><h3>ED solver</h3><p>Exact diagonalization for fractional Chern insulators in topological flat bands, on CPU and GPU, with phase gates for gap splitting, entanglement counting and the many-body Chern number. Built on <a href="https://github.com/Zou-Bo/MomentumED.jl" target="_blank" rel="noopener">MomentumED.jl</a>.</p></div>
+        <div class="card"><h3>Data</h3><p>The optimized bands, their 27-site spectra and the agents' records for every campaign.</p></div>
+        <a class="btn primary" href="https://github.com/scifm/MOSAIC" target="_blank" rel="noopener" style="justify-self: start">github.com/scifm/MOSAIC</a>
+      </div>
+      <div class="inside">
+        <div class="snip"><span class="lbl">Watch a swarm without a cluster: a mock end-to-end run of broker, agents and the promotion ladder</span>
+          <div class="copyable"><pre>uv run pytest tests/swarm -q</pre><button class="copy" type="button">Copy</button></div></div>
+        <div class="snip"><span class="lbl">Evaluate a band on a 4×6 cluster (about 90 s on 8 CPU threads)</span>
+          <div class="copyable"><pre>julia --project=julia -t 8 julia/ed_solver.jl \
+    --config julia/test/data/nk24_p024_a1M_kdep.json --out out.json</pre><button class="copy" type="button">Copy</button></div></div>
+        <div class="snip"><span class="lbl">Re-evaluate the best model-1 band from the paper on 27 sites (GPU recommended)</span>
+          <div class="copyable"><pre>MOIRE_ED_BACKEND=gpu julia --project=julia julia/ed_solver.jl \
+    --config data/bands/model1_optimized_5eda.json --out 5eda.json</pre><button class="copy" type="button">Copy</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cite">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Paper</span>
+      <h2>Agentic Swarms Discover Enhancement of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry</h2>
+    </div>
+    <div class="cite">
+      <div class="authors">
+        <p class="names">Yitong Zhang<sup>1*</sup>, Changwen Xu<sup>2*</sup>, Andrew Boshi Li<sup>3</sup>, Siddhartha Sarkar<sup>4</sup>, Kai Sun<sup>1†</sup>, Venkatasubramanian Viswanathan<sup>2,3†</sup></p>
+        <ol>
+          <li>Department of Physics, University of Michigan, Ann Arbor, MI, USA</li>
+          <li>Department of Mechanical Engineering, University of Michigan, Ann Arbor, MI, USA</li>
+          <li>Department of Aerospace Engineering, University of Michigan, Ann Arbor, MI, USA</li>
+          <li>Condensed Matter Theory Center and Joint Quantum Institute, University of Maryland, College Park, MD, USA</li>
+        </ol>
+        <p class="note">* Equal contribution. † Corresponding authors: <span class="mono">sunkai@umich.edu</span>, <span class="mono">venkvis@umich.edu</span></p>
+        <div class="actions" style="margin-top: .5rem"><span class="btn soon">arXiv · coming soon</span><a class="btn" href="https://github.com/scifm/MOSAIC" target="_blank" rel="noopener">Code and data</a></div>
+      </div>
+      <div class="snip"><span class="lbl">BibTeX (the arXiv identifier will be added when the preprint is posted)</span>
+        <div class="copyable"><pre>@article{zhang2026mosaic,
+  title   = {Agentic Swarms Discover Enhancement of Fractional
+             Chern Insulator Gaps Beyond Ideal Quantum Geometry},
+  author  = {Zhang, Yitong and Xu, Changwen and Li, Andrew Boshi and
+             Sarkar, Siddhartha and Sun, Kai and
+             Viswanathan, Venkatasubramanian},
+  year    = {2026}
+}</pre><button class="copy" type="button">Copy</button></div></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>The agents of MOSAIC are Claude Code sessions running Claude Opus 5.5. The ED solver is built on <a href="https://github.com/Zou-Bo/MomentumED.jl" target="_blank" rel="noopener">MomentumED.jl</a> by Zou Bo. We thank Advanced Research Computing at the University of Michigan for computing resources.</p>
+    <p>MOSAIC is released under the MIT License.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+  const css = getComputedStyle(document.documentElement);
+  const C = k => css.getPropertyValue(k).trim();
+  const COL = { bg: C("--bg"), panel: C("--panel"), edge: C("--edge"), ink: C("--ink"), muted: C("--muted"),
+    maize: C("--maize"), teal: C("--teal"), violet: C("--violet"), sky: C("--sky") };
+  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- hero: two hexagonal line gratings at a small twist make the moiré ---------- */
+  (() => {
+    const cv = document.getElementById("moire"), ctx = cv.getContext("2d");
+    let w = 0, h = 0, visible = true, last = 0;
+    const size = () => {
+      const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+      w = r.width; h = r.height; cv.width = w * d; cv.height = h * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+    };
+    const grating = (theta, a, color) => {
+      const cx = w * .72, cy = h * .45, L = Math.hypot(w, h);
+      ctx.strokeStyle = color; ctx.lineWidth = 1;
+      for (let k = 0; k < 3; k++) {
+        const ph = theta + k * Math.PI / 3, nx = Math.cos(ph), ny = Math.sin(ph);
+        ctx.beginPath();
+        for (let s = -L; s <= L; s += a) {
+          const px = cx + nx * s, py = cy + ny * s;
+          ctx.moveTo(px - ny * L, py + nx * L); ctx.lineTo(px + ny * L, py - nx * L);
+        }
+        ctx.stroke();
+      }
+    };
+    const draw = now => {
+      const tw = (REDUCED ? 0 : Math.sin(now / 9000) * .012) + .055;
+      ctx.clearRect(0, 0, w, h);
+      ctx.globalAlpha = 1;
+      grating(-tw / 2, 15, "rgba(143,184,232,.10)");
+      grating(tw / 2, 15, "rgba(255,203,5,.075)");
+      const g = ctx.createLinearGradient(0, 0, w, 0);
+      g.addColorStop(0, COL.bg); g.addColorStop(.38, "rgba(5,11,23,.86)"); g.addColorStop(1, "rgba(5,11,23,.15)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      const v = ctx.createLinearGradient(0, h * .6, 0, h);
+      v.addColorStop(0, "rgba(5,11,23,0)"); v.addColorStop(1, COL.bg);
+      ctx.fillStyle = v; ctx.fillRect(0, 0, w, h);
+    };
+    const loop = now => {
+      if (visible && now - last > 40) { draw(now); last = now; }
+      if (!REDUCED) requestAnimationFrame(loop);
+    };
+    new ResizeObserver(() => { size(); draw(performance.now()); }).observe(cv);
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
+    requestAnimationFrame(loop);
+  })();
+
+  /* ---------- the small MOSAIC diagram ---------- */
+  (() => {
+    const g = document.getElementById("swarmsvg"), ns = "http://www.w3.org/2000/svg";
+    const el = (n, a, s) => { const e = document.createElementNS(ns, n); for (const k in a) e.setAttribute(k, a[k]); if (s) e.setAttribute("style", s); g.appendChild(e); return e; };
+    const P = Array.from({ length: 8 }, (_, j) => [85 + 64 * Math.cos(2 * Math.PI * j / 8 + .4), 60 + 44 * Math.sin(2 * Math.PI * j / 8 + .4)]);
+    P.forEach(([x, y]) => el("line", { x1: x, y1: y, x2: 85 + .38 * (x - 85), y2: 60 + .38 * (y - 60), "stroke-width": 1.3 }, "stroke: var(--teal)"));
+    [[0, 1], [3, 4], [5, 6]].forEach(([a, b]) => el("line", { x1: P[a][0], y1: P[a][1], x2: P[b][0], y2: P[b][1], "stroke-width": 1.3 }, "stroke: var(--violet)"));
+    el("rect", { x: 63, y: 48, width: 44, height: 24, rx: 6 }, "fill: var(--teal)");
+    const t = el("text", { x: 85, y: 64, "text-anchor": "middle", "font-size": 10, "font-weight": 700 }, "fill: var(--bg)"); t.textContent = "board";
+    P.forEach(([x, y]) => el("circle", { cx: x, cy: y, r: 9, "stroke-width": 1.5 }, "fill: var(--panel); stroke: var(--maize)"));
+  })();
+
+  /* ---------- copy buttons ---------- */
+  document.querySelectorAll(".copy").forEach(b => b.addEventListener("click", () => {
+    const pre = b.parentElement.querySelector("pre"), txt = pre.textContent;
+    const done = () => { b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1600); };
+    const select = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selected"; setTimeout(() => (b.textContent = "Copy"), 1600); };
+    try { navigator.clipboard.writeText(txt).then(done, select); } catch (e) { select(); }
+  }));
+
+  /* ---------- the swarm replay ---------- */
+  const KIND_C = { hypothesis: "#7aa2f7", result: COL.teal, claim: COL.maize, note: "#9aa5b1", abandon: COL.violet,
+    refutation: "#ff6b6b", request: "#9be37c" };
+  const STOPS = ["#1b3a5c", "#2e7fb8", "#35c4c4", "#9be37c", "#ffcb05", "#ff6b6b"].map(h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)));
+  const cmap = b => {
+    let f = (Math.log(Math.max(b, .8)) - Math.log(.8)) / (Math.log(11) - Math.log(.8));
+    f = Math.min(1, Math.max(0, f)) * (STOPS.length - 1);
+    const i = Math.min(STOPS.length - 2, Math.floor(f)), r = f - i;
+    const c = STOPS[i].map((v, k) => Math.round(v + (STOPS[i + 1][k] - v) * r));
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+  };
+  const lum = s => { const m = s.match(/\d+/g).map(Number); return (.299 * m[0] + .587 * m[1] + .114 * m[2]) / 255; };
+  const lowerBound = (arr, x, key) => { let lo = 0, hi = arr.length; while (lo < hi) { const m = (lo + hi) >> 1; if (key(arr[m]) < x) lo = m + 1; else hi = m; } return lo; };
+
+  const ring = document.getElementById("rp-ring"), rctx = ring.getContext("2d");
+  const chart = document.getElementById("rp-chart"), cctx = chart.getContext("2d");
+  const feedEl = document.getElementById("rp-feed"), tip = document.getElementById("rp-tip");
+  const scrub = document.getElementById("rp-scrub"), playBtn = document.getElementById("rp-play"), icon = document.getElementById("rp-icon");
+  const clock = document.getElementById("rp-clock"), callout = document.getElementById("rp-callout");
+  const stepsEl = document.getElementById("rp-steps"), agentEl = document.getElementById("rp-agent");
+  const speedEl = document.getElementById("rp-speed");
+  const cache = {};
+  const S = { d: null, u: 0, playing: false, hover: -1, sel: -1, openPost: -1, shown: [], lastFrame: 0, started: false };
+
+  const prep = d => {
+    const U = d.warp.map(p => p[0]), T = d.warp.map(p => p[1]);
+    d.uEnd = U[U.length - 1];
+    d.tOf = u => { if (u <= 0) return 0; for (let i = 1; i < U.length; i++) if (u <= U[i]) return T[i - 1] + (T[i] - T[i - 1]) * (u - U[i - 1]) / (U[i] - U[i - 1]); return T[T.length - 1]; };
+    d.uOf = t => { if (t <= 0) return 0; for (let i = 1; i < T.length; i++) if (t <= T[i]) return U[i - 1] + (U[i] - U[i - 1]) * (t - T[i - 1]) / (T[i] - T[i - 1]); return d.uEnd; };
+    d.req.forEach(r => (r.u = d.uOf(r[0])));
+    d.posts.forEach(p => (p.u = d.uOf(p.t)));
+    d.mail.forEach(m => (m.u = d.uOf(m[0])));
+    d.swarmCurve.forEach(p => (p.u = d.uOf(p[0])));
+    d.nSwarm = d.agents.filter(a => a.arm === "swarm").length;
+    d.agents.forEach(a => { let m = 1; a.run = a.strong.map(p => (m = Math.max(m, p[1]))); a.ts = a.strong.map(p => p[0]); });
+    d.split = d.tEnd > 20 ? 12 : null;   // long campaigns: linear to 12 h, then compressed 6x
+    return d;
+  };
+  const bestAt = (a, t) => { const i = lowerBound(a.ts, t + 1e-9, x => x) - 1; return i >= 0 ? a.run[i] : 1; };
+
+  const load = async key => {
+    if (!cache[key]) {
+      const r = await fetch(`data/replay_${key}.json`);
+      if (!r.ok) throw new Error(`replay data ${key}: HTTP ${r.status}`);
+      cache[key] = prep(await r.json());
+    }
+    return cache[key];
+  };
+
+  /* geometry, in CSS pixels of the ring canvas */
+  let RW = 0, RH = 0, CW = 0, CH = 0;
+  const fit = (cv, ctx) => { const r = cv.getBoundingClientRect(), dp = Math.min(devicePixelRatio || 1, 2); cv.width = Math.round(r.width * dp); cv.height = Math.round(r.height * dp); ctx.setTransform(dp, 0, 0, dp, 0, 0); return [r.width, r.height]; };
+  const layout = () => {
+    [RW, RH] = fit(ring, rctx); [CW, CH] = fit(chart, cctx);
+    const d = S.d; if (!d) return;
+    const narrow = RW < 560;
+    const cx = RW * (narrow ? .44 : .41), cy = RH * (narrow ? .47 : .5), R = Math.min(RW * (narrow ? .34 : .33), RH * .38);
+    d.geo = { cx, cy, R, narrow };
+    let k = 0;
+    d.agents.forEach((a, i) => {
+      if (a.arm === "swarm") { const th = -Math.PI / 2 + 2 * Math.PI * i / d.nSwarm; a.x = cx + R * Math.cos(th); a.y = cy + R * Math.sin(th); a.ux = Math.cos(th); a.uy = Math.sin(th); }
+      else if (narrow) { a.x = RW - 22 - 34 * (1 - k); a.y = RH - 26; k++; a.ux = 0; a.uy = -1; }
+      else { a.x = RW * .89; a.y = cy + R * (.15 + .42 * k++); a.ux = 0; a.uy = 1; }
+    });
+    d.rscale = d.nSwarm > 30 ? .55 : 1;
+  };
+  const arcPath = (ctx, x0, y0, x1, y1, bend, frac = 1) => {
+    const mx = (x0 + x1) / 2 - bend * (y1 - y0), my = (y0 + y1) / 2 + bend * (x1 - x0);
+    ctx.moveTo(x0, y0);
+    if (frac >= 1) { ctx.quadraticCurveTo(mx, my, x1, y1); return; }
+    const n = 16;
+    for (let i = 1; i <= Math.round(n * frac); i++) { const s = i / n; ctx.lineTo((1 - s) ** 2 * x0 + 2 * (1 - s) * s * mx + s * s * x1, (1 - s) ** 2 * y0 + 2 * (1 - s) * s * my + s * s * y1); }
+  };
+  const nodeR = (d, b) => (9 + 15 * Math.log(Math.max(b, 1)) / Math.log(11)) * d.rscale * Math.min(1.25, Math.max(.7, d.geo.R / 210));
+
+  const drawRing = () => {
+    const d = S.d, u = S.u, t = d.tOf(u), ctx = rctx, { cx, cy, R } = d.geo;
+    ctx.clearRect(0, 0, RW, RH);
+    // board glow follows activity
+    const p0 = lowerBound(d.posts, u - 2, p => p.u), p1 = lowerBound(d.posts, u + 1e-9, p => p.u);
+    const r0 = lowerBound(d.req, u - 1, r => r.u), r1 = lowerBound(d.req, u + 1e-9, r => r.u);
+    const act = Math.min(1, ((p1 - p0) + .15 * (r1 - r0)) / 14);
+    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * (.42 + .25 * act));
+    glow.addColorStop(0, `rgba(53,196,196,${.18 + .22 * act})`); glow.addColorStop(1, "rgba(53,196,196,0)");
+    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, R * .7, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = COL.ink; ctx.font = `700 ${Math.max(12, R * .075)}px ${css.getPropertyValue("--f-display")}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("shared", cx, cy - R * .045); ctx.fillText("board", cx, cy + R * .045);
+    // requests in flight
+    for (let i = r0; i < r1; i++) {
+      const r = d.req[i], f = (u - r.u) / 1, a = d.agents[r[1]];
+      const x = a.arm === "swarm" ? cx + (a.x - cx) * (1 - f) * .92 : a.x - 30 * f - 18, y = a.arm === "swarm" ? cy + (a.y - cy) * (1 - f) * .92 : a.y;
+      ctx.fillStyle = r[3] ? cmap(Math.max(r[2], .8)) : "#3a4558"; ctx.globalAlpha = .9;
+      ctx.beginPath(); ctx.arc(x, y, 2.6, 0, 2 * Math.PI); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // citations and post pulses
+    for (let i = p0; i < p1; i++) {
+      const p = d.posts[i], age = (u - p.u) / 2, a = d.agents[p.a];
+      ctx.lineWidth = 1.6; ctx.strokeStyle = COL.teal; ctx.globalAlpha = .75 * (1 - age);
+      ctx.beginPath(); p.cites.forEach(c => { const b = d.agents[c]; arcPath(ctx, b.x, b.y, a.x, a.y, .2); }); ctx.stroke();
+      ctx.strokeStyle = p.kind === "claim" ? COL.maize : COL.ink; ctx.lineWidth = 1.8; ctx.globalAlpha = .8 * (1 - age);
+      ctx.beginPath(); ctx.arc(a.x, a.y, nodeR(d, 1) + 4 + 26 * age, 0, 2 * Math.PI); ctx.stroke();
+    }
+    // mail
+    const m0 = lowerBound(d.mail, u - 2, m => m.u), m1 = lowerBound(d.mail, u + 1e-9, m => m.u);
+    for (let i = m0; i < m1; i++) {
+      const m = d.mail[i], age = u - m.u, a = d.agents[m[1]], b = d.agents[m[2]];
+      ctx.strokeStyle = COL.violet; ctx.lineWidth = 1.8; ctx.globalAlpha = .8 * (1 - age / 2);
+      ctx.beginPath(); arcPath(ctx, a.x, a.y, b.x, b.y, -.25, Math.min(1, age / .6)); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // the relay stays
+    const onRelay = new Set();
+    ctx.strokeStyle = COL.maize; ctx.lineWidth = 3.6 * Math.max(.7, d.rscale); ctx.lineCap = "round";
+    d.lineage.forEach(([te, s, k]) => {
+      if (te > t) return;
+      onRelay.add(s); onRelay.add(k);
+      const a = d.agents[s], b = d.agents[k];
+      ctx.beginPath(); arcPath(ctx, a.x, a.y, b.x, b.y, .3); ctx.stroke();
+    });
+    // agents
+    const ff = css.getPropertyValue("--f-mono");
+    d.agents.forEach((a, i) => {
+      const b = bestAt(a, t), started = a.first !== null && a.first <= t, retired = a.done !== null && a.done <= t;
+      const col = started ? cmap(b) : "#1c2636", r = nodeR(d, b);
+      const active = !retired && lowerBound(d.req, u - .25, q => q.u) < r1 && d.req.slice(lowerBound(d.req, u - .25, q => q.u), r1).some(q => q[1] === i);
+      if (active) { ctx.fillStyle = col; ctx.globalAlpha = .2; ctx.beginPath(); ctx.arc(a.x, a.y, r * 1.6, 0, 2 * Math.PI); ctx.fill(); }
+      ctx.globalAlpha = retired ? .4 : 1;
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(a.x, a.y, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.lineWidth = i === S.hover || i === S.sel ? 3 : 2.4;
+      ctx.strokeStyle = i === S.sel || i === S.hover ? COL.ink : onRelay.has(i) ? COL.maize : COL.bg; ctx.stroke();
+      ctx.fillStyle = started ? (lum(col) > .45 ? COL.bg : COL.ink) : COL.muted;
+      ctx.font = `600 ${Math.max(9, r * .85)}px ${ff}`; ctx.fillText(a.short, a.x, a.y + .5);
+      ctx.globalAlpha = 1;
+      if (b > 1.05 && (d.rscale === 1 || b > 2 || i === S.hover)) {
+        ctx.fillStyle = COL.muted; ctx.font = `500 ${d.rscale === 1 ? 12 : 10}px ${ff}`;
+        const off = r + 11;
+        ctx.fillText(b.toFixed(1), a.x + a.ux * off, a.y + a.uy * off);
+      }
+    });
+    ctx.fillStyle = COL.muted; ctx.font = `500 12px ${css.getPropertyValue("--f-body")}`;
+    const iso = d.agents.filter(a => a.arm !== "swarm");
+    if (d.geo.narrow) { ctx.textAlign = "right"; ctx.fillText("isolated agents, no board", RW - 8, iso[0].y - nodeR(d, 1) - 26); }
+    else { ctx.fillText("isolated agents", iso[0].x, iso[0].y - nodeR(d, 1) - 26); ctx.fillText("(no board)", iso[0].x, iso[0].y - nodeR(d, 1) - 12); }
+  };
+
+  const drawChart = () => {
+    const d = S.d, t = d.tOf(S.u), ctx = cctx;
+    ctx.clearRect(0, 0, CW, CH);
+    const L = 34, Rr = 10, Tp = 8, B = 28, W = CW - L - Rr, H = CH - Tp - B;
+    const xm = v => d.split && v > d.split ? d.split + (v - d.split) / 6 : v;
+    const xmax = xm(d.tEnd), X = v => L + W * xm(v) / xmax, Y = r => Tp + H * (1 - (r - .6) / (11.8 - .6));
+    const ff = css.getPropertyValue("--f-mono");
+    ctx.font = `400 11px ${ff}`; ctx.fillStyle = COL.muted; ctx.strokeStyle = COL.edge; ctx.lineWidth = 1;
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    [1, 2, 4, 6, 8, 10].forEach(r => { ctx.beginPath(); ctx.moveTo(L, Y(r)); ctx.lineTo(L + W, Y(r)); ctx.stroke(); ctx.fillText(r, L - 6, Y(r)); });
+    ctx.textAlign = "center"; ctx.textBaseline = "top";
+    (d.split ? [0, 4, 8, 12, 24, 36] : [0, 2, 4, 6, 8]).forEach(v => { ctx.beginPath(); ctx.moveTo(X(v), Tp); ctx.lineTo(X(v), Tp + H); ctx.stroke(); ctx.fillText(v + (v ? "" : " h"), X(v), Tp + H + 6); });
+    if (d.split) { ctx.fillText("6× compressed after 12 h", X(d.split) + (L + W - X(d.split)) / 2, Tp + H - 16); }
+    const curve = (pts, color, dash) => {
+      ctx.strokeStyle = color; ctx.lineWidth = 2.6; ctx.setLineDash(dash); ctx.beginPath();
+      let r = 1; ctx.moveTo(X(0), Y(1));
+      for (const p of pts) { if (p[0] > t) break; ctx.lineTo(X(p[0]), Y(r)); r = p[1]; ctx.lineTo(X(p[0]), Y(r)); }
+      ctx.lineTo(X(t), Y(r)); ctx.stroke(); ctx.setLineDash([]);
+      return r;
+    };
+    const ri = curve(d.isoCurve, COL.sky, [6, 4]);
+    const rs = curve(d.swarmCurve, COL.maize, []);
+    ctx.strokeStyle = "rgba(232,238,247,.35)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(t), Tp); ctx.lineTo(X(t), Tp + H); ctx.stroke();
+    d.steps.forEach((s, i) => {
+      if (s.t > t) return;
+      ctx.fillStyle = COL.panel; ctx.strokeStyle = COL.maize; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(s.t), Y(s.R), 9, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = COL.maize; ctx.font = `600 10px ${ff}`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(i + 1, X(s.t), Y(s.R) + .5);
+    });
+    // series labels
+    ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.font = `500 12px ${css.getPropertyValue("--f-body")}`;
+    ctx.fillStyle = COL.maize; ctx.fillText(`swarm · ${rs.toFixed(2)}`, L + 8, Tp + 12);
+    ctx.fillStyle = COL.sky; ctx.fillText(`isolated agents · ${ri.toFixed(2)}`, L + 8, Tp + 30);
+  };
+
+  const fmtH = t => `${t.toFixed(2)} h`;
+  const renderFeed = (animate) => {
+    const d = S.d, t = d.tOf(S.u);
+    const n = lowerBound(d.posts, S.u + 1e-9, p => p.u);
+    const ids = []; for (let i = n - 1; i >= 0 && ids.length < 6; i--) ids.push(i);
+    if (ids.join() === S.shown.join()) return;
+    const prevTop = {};
+    feedEl.querySelectorAll("li[data-i]").forEach(li => (prevTop[li.dataset.i] = li.offsetTop));
+    feedEl.textContent = "";
+    if (!ids.length) { const li = document.createElement("li"); li.className = "empty"; li.textContent = "The board is empty. The first posts arrive within minutes of launch."; feedEl.appendChild(li); S.shown = ids; return; }
+    let y = 0;
+    const made = ids.map(i => {
+      const p = d.posts[i], a = d.agents[p.a], li = document.createElement("li");
+      li.dataset.i = i; li.className = p.kind + (i === S.openPost ? " open" : "");
+      li.tabIndex = 0;
+      li.innerHTML = `<div class="meta"><span class="kind" style="color:${KIND_C[p.kind] || COL.muted}">${p.kind.toUpperCase()}</span><span>agent ${a.short} · ${fmtH(p.t)}</span></div><div class="ttl"></div><div class="ex"></div>`;
+      li.querySelector(".ttl").textContent = p.title;
+      li.querySelector(".ex").textContent = p.excerpt + (p.excerpt.length >= 480 ? "…" : "");
+      const toggle = () => { S.openPost = S.openPost === i ? -1 : i; S.sel = p.a; S.shown = []; renderFeed(false); showAgent(p.a); draw(); };
+      li.addEventListener("click", toggle);
+      li.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+      feedEl.appendChild(li);
+      return li;
+    });
+    made.forEach(li => { li.style.top = y + "px"; y += li.offsetHeight + 8; });
+    if (animate) made.forEach(li => {
+      const old = prevTop[li.dataset.i];
+      const dy = old === undefined ? -li.offsetHeight - 8 : old - li.offsetTop;
+      if (!dy) return;
+      li.style.transition = "none"; li.style.transform = `translateY(${dy}px)`; if (old === undefined) li.style.opacity = "0";
+      requestAnimationFrame(() => requestAnimationFrame(() => { li.style.transition = ""; li.style.transform = ""; li.style.opacity = ""; }));
+    });
+    S.shown = ids;
+  };
+
+  const showAgent = i => {
+    const d = S.d;
+    if (i < 0) { agentEl.textContent = "Time runs faster when the board is quiet. Hover or tap an agent to see what it worked on."; return; }
+    const a = d.agents[i], t = d.tOf(S.u), b = bestAt(a, t);
+    const fam = a.families.slice(0, 5).join(", ") + (a.families.length > 5 ? ` and ${a.families.length - 5} more` : "");
+    agentEl.innerHTML = "";
+    const bb = document.createElement("b"); bb.textContent = a.arm === "swarm" ? `Agent ${a.short}` : `Isolated agent ${a.short.slice(1)}`;
+    agentEl.append(bb, document.createTextNode(` · best R_min so far ${b.toFixed(2)} · ${a.nreq} model-1 requests · ${a.nposts} posts${fam ? " · strategies: " + fam : ""}`));
+  };
+
+  const draw = () => {
+    if (!S.d) return;
+    drawRing(); drawChart();
+    const t = S.d.tOf(S.u);
+    clock.textContent = `t = ${t.toFixed(2)} h`;
+    scrub.value = S.u.toFixed(2);
+    const rec = S.d.swarmCurve.filter(p => p.u <= S.u && S.u - p.u < 2.5).pop();
+    callout.textContent = rec ? `new best ${rec[1].toFixed(2)}` : "";
+    stepsEl.querySelectorAll("button").forEach((b, i) => b.classList.toggle("done", S.d.steps[i].t <= t));
+    renderFeed(S.playing);
+    if (S.sel >= 0 || S.hover >= 0) showAgent(S.hover >= 0 ? S.hover : S.sel);
+  };
+
+  const setPlaying = p => {
+    S.playing = p;
+    icon.setAttribute("d", p ? "M4 2.5h3v11H4zM9 2.5h3v11H9z" : "M4 2.5v11l9-5.5z");
+    playBtn.setAttribute("aria-label", p ? "Pause" : "Play");
+    if (p) { if (S.u >= S.d.uEnd - .01) S.u = 0; S.lastFrame = performance.now(); requestAnimationFrame(tick); }
+  };
+  const tick = now => {
+    if (!S.playing) return;
+    const dt = Math.min(.1, (now - S.lastFrame) / 1000); S.lastFrame = now;
+    S.u = Math.min(S.d.uEnd, S.u + dt * Number(speedEl.value));
+    draw();
+    if (S.u >= S.d.uEnd) { setPlaying(false); return; }
+    requestAnimationFrame(tick);
+  };
+
+  const select = async key => {
+    document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.key === key)));
+    let d;
+    try { d = await load(key); }
+    catch (e) { agentEl.textContent = `Could not load the replay data (${e.message}). Reload the page to try again.`; return; }
+    const was = S.playing; setPlaying(false);
+    S.d = d; S.sel = -1; S.hover = -1; S.openPost = -1; S.shown = [];
+    scrub.max = d.uEnd; S.u = d.uEnd;
+    stepsEl.textContent = "";
+    d.steps.forEach((s, i) => {
+      const b = document.createElement("button"); b.type = "button";
+      b.innerHTML = `<span class="n">${i + 1}</span>`; b.append(document.createTextNode(`${s.text} · ${s.R.toFixed(2)}`));
+      b.title = `agent ${d.agents[s.a].short} at ${s.t.toFixed(2)} h`;
+      b.addEventListener("click", () => { S.u = Math.min(d.uEnd, d.uOf(s.t) + .4); S.sel = s.a; S.shown = []; draw(); });
+      stepsEl.appendChild(b);
+    });
+    layout(); showAgent(-1); draw();
+    if (was || S.started) { S.u = 0; setPlaying(!REDUCED); }
+    else maybeStart();
+  };
+  const maybeStart = () => {
+    if (S.inView && S.d && !S.started) { S.started = true; if (!REDUCED) { S.u = 0; S.shown = []; setPlaying(true); } }
+  };
+
+  document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => select(b.dataset.key)));
+  playBtn.addEventListener("click", () => setPlaying(!S.playing));
+  scrub.addEventListener("input", () => { S.u = Number(scrub.value); S.shown = []; draw(); });
+  scrub.addEventListener("pointerdown", () => setPlaying(false));
+  const pick = e => {
+    const r = ring.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, d = S.d;
+    let best = -1, bd = 1e9;
+    d.agents.forEach((a, i) => { const dd = Math.hypot(a.x - x, a.y - y); if (dd < bd) { bd = dd; best = i; } });
+    return bd < Math.max(16, nodeR(d, 3) + 6) ? [best, x, y] : [-1, x, y];
+  };
+  ring.addEventListener("pointermove", e => {
+    if (!S.d) return;
+    const [i, x, y] = pick(e);
+    if (i !== S.hover) { S.hover = i; if (!S.playing) draw(); }
+    if (i < 0) { tip.hidden = true; if (S.sel < 0) showAgent(-1); return; }
+    const a = S.d.agents[i], t = S.d.tOf(S.u);
+    tip.innerHTML = ""; const b = document.createElement("b"); b.textContent = a.arm === "swarm" ? `agent ${a.short}` : `isolated agent ${a.short.slice(1)}`;
+    tip.append(b, document.createElement("br"), document.createTextNode(`best R_min ${bestAt(a, t).toFixed(2)} · ${a.nreq} requests`));
+    if (a.families.length) { tip.append(document.createElement("br"), document.createTextNode(a.families.slice(0, 3).join(", ") + (a.families.length > 3 ? " …" : ""))); }
+    tip.hidden = false;
+    const tw = tip.offsetWidth; tip.style.left = Math.min(r_w() - tw - 8, x + 14) + "px"; tip.style.top = (y + 14) + "px";
+    showAgent(i);
+  });
+  const r_w = () => ring.getBoundingClientRect().width;
+  ring.addEventListener("pointerleave", () => { S.hover = -1; tip.hidden = true; showAgent(S.sel); if (!S.playing) draw(); });
+  ring.addEventListener("click", e => { if (!S.d) return; const [i] = pick(e); S.sel = i; showAgent(i); draw(); });
+  new ResizeObserver(() => { if (S.d) { layout(); S.shown = []; draw(); } }).observe(ring);
+  // the replay rests on its final frame; it starts from the beginning the first time it scrolls into view
+  new IntersectionObserver(es => {
+    if (es[0].isIntersecting) { S.inView = true; maybeStart(); }
+  }, { threshold: .45 }).observe(document.getElementById("rp"));
+  select("w3n18");
+  document.fonts && document.fonts.ready.then(() => { if (S.d) { S.shown = []; draw(); } });
+
+  /* ---------- tokens against hours after launch ---------- */
+  (async () => {
+    const svg = document.getElementById("tok"), ns = "http://www.w3.org/2000/svg";
+    let data;
+    try { const r = await fetch("data/tokens.json"); if (!r.ok) throw new Error(r.status); data = await r.json(); }
+    catch (e) { svg.insertAdjacentHTML("beforeend", `<text x="20" y="40" style="fill: var(--muted)">Could not load the token data.</text>`); return; }
+    const shades = { "model 1": ["#f6d36b", "#e8a400", "#b46e00"], "model 2": ["#b5d4f2", "#5b9bdc", "#2f6db5"] };
+    const L = 58, R = 92, T = 16, B = 46, W = 720 - L - R, H = 430 - T - B, xmax = 46, ymax = 1000;
+    const X = v => L + W * v / xmax, Y = v => T + H * (1 - v / ymax);
+    const el = (n, a, style, txt) => { const e = document.createElementNS(ns, n); for (const k in a) e.setAttribute(k, a[k]); if (style) e.setAttribute("style", style); if (txt !== undefined) e.textContent = txt; svg.appendChild(e); return e; };
+    [0, 200, 400, 600, 800, 1000].forEach(v => { el("line", { x1: L, x2: L + W, y1: Y(v), y2: Y(v) }, "stroke: var(--edge)"); el("text", { x: L - 8, y: Y(v) + 4, "text-anchor": "end", "font-size": 12 }, "fill: var(--muted)", v); });
+    [0, 10, 20, 30, 40].forEach(v => { el("line", { x1: X(v), x2: X(v), y1: T, y2: T + H }, "stroke: var(--edge)"); el("text", { x: X(v), y: T + H + 18, "text-anchor": "middle", "font-size": 12 }, "fill: var(--muted)", v); });
+    el("text", { x: L + W / 2, y: 424, "text-anchor": "middle", "font-size": 13 }, "fill: var(--muted)", "hours after launch");
+    el("text", { x: 16, y: T + H / 2, "text-anchor": "middle", "font-size": 13, transform: `rotate(-90 16 ${T + H / 2})` }, "fill: var(--muted)", "tokens, millions");
+    const ends = [];
+    data.forEach(c => {
+      const col = shades[c.model][[5, 18, 48].indexOf(c.agents)];
+      c.col = col;
+      el("path", { d: "M" + c.points.map(p => `${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join("L"), fill: "none", "stroke-width": 2.4, "stroke-linejoin": "round" }, `stroke: ${col}`);
+      const e = c.points[c.points.length - 1]; ends.push({ c, x: X(e[0]), y: Y(e[1]), v: e[1] });
+    });
+    ends.sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 15 && Math.abs(ends[i].x - ends[i - 1].x) < 90) ends[i].y = ends[i - 1].y + 15;
+    ends.forEach(e => {
+      el("circle", { cx: e.x, cy: Y(e.v), r: 3 }, `fill: ${e.c.col}`);
+      el("text", { x: e.x + 7, y: e.y + 4, "font-size": 12 }, `fill: ${e.c.col}`, `${e.c.agents} · ${Math.round(e.v)}M`);
+    });
+    // legend
+    [["model 1", "#e8a400"], ["model 2", "#5b9bdc"]].forEach(([m, col], i) => {
+      el("line", { x1: L + W - 210 + i * 110, x2: L + W - 188 + i * 110, y1: T + H - 22, y2: T + H - 22, "stroke-width": 3 }, `stroke: ${col}`);
+      el("text", { x: L + W - 182 + i * 110, y: T + H - 18, "font-size": 12 }, "fill: var(--ink)", m);
+    });
+    el("text", { x: L + W - 210, y: T + H - 40, "font-size": 12 }, "fill: var(--muted)", "labels: agents · total tokens");
+    // hover readout
+    const guide = el("line", { x1: 0, x2: 0, y1: T, y2: T + H, visibility: "hidden" }, "stroke: var(--muted); stroke-dasharray: 3 3");
+    const read = el("text", { x: L + 10, y: T + 16, "font-size": 12, visibility: "hidden" }, "fill: var(--ink)");
+    svg.addEventListener("pointermove", e => {
+      const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+      const q = p.matrixTransform(svg.getScreenCTM().inverse()), h = (q.x - L) / W * xmax;
+      if (h < 0 || h > xmax) { guide.setAttribute("visibility", "hidden"); read.setAttribute("visibility", "hidden"); return; }
+      guide.setAttribute("x1", q.x); guide.setAttribute("x2", q.x); guide.setAttribute("visibility", "visible");
+      const at = c => { let v = 0; for (const pt of c.points) { if (pt[0] > h) break; v = pt[1]; } return v; };
+      read.textContent = "";
+      ["model 1", "model 2"].forEach((m, k) => {
+        const ts = document.createElementNS(ns, "tspan"); ts.setAttribute("x", L + 10); ts.setAttribute("dy", k ? 16 : 0);
+        ts.textContent = (k ? "" : `${h.toFixed(1)} h   `) + m + ": " + data.filter(c => c.model === m).map(c => `${c.agents} agents ${Math.round(at(c))}M`).join(", ");
+        read.appendChild(ts);
+      });
+      read.setAttribute("visibility", "visible");
+    });
+    svg.addEventListener("pointerleave", () => { guide.setAttribute("visibility", "hidden"); read.setAttribute("visibility", "hidden"); });
+  })();
+})();
+</script>
+</body>
+</html>
