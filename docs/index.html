@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Castoro&family=Source+Code+Pro:wght@400;500&display=swap">
 <style>
 /* Layout: the Nerfies academic project page (Park et al., nerfies.github.io, CC BY-SA 4.0): a centred
-   960px column on white, title and authors centred, rounded dark link buttons, a teaser, then sections with
+   960px column on white, title and authors centred, rounded dark link buttons, then sections with
    centred titles. Bulma's grey scale and link blue; a single light look, as on those pages. */
 :root {
   --bg: #ffffff;
@@ -85,7 +85,6 @@ figure { margin: 0; }
 .row .caption { text-align: left; hyphens: manual; }
 /* columns in proportion to each image's aspect ratio, so the images share one height and the captions line up */
 .row.eq { grid-template-columns: var(--cols); align-items: start; }
-.teaser { max-width: 820px; margin: 1rem auto 0; }
 @media (max-width: 760px) { .row.r2, .row.r3, .row.eq { grid-template-columns: minmax(0, 1fr); } .row.r4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .panel-label { font-weight: 600; color: var(--strong); font-size: .95rem; margin-bottom: .35rem; text-align: left; }
 
@@ -265,10 +264,6 @@ footer p { margin: .35rem 0; }
       <p>Can AI agents do open-ended science, where the question is open and nobody knows the route to an answer? Most multi-agent systems put a coordinator in charge, which splits the task and assigns roles, so the search can only be as broad as the coordinator's plan. Research groups work differently. Each researcher follows their own ideas, reads what others report, criticizes it and builds on what works. MOSAIC asks whether AI agents organized the same way can find something that was not known.</p>
       <p>To test this we need a problem whose answer nobody had in advance. Fractional Chern insulators are a good one. They are lattice cousins of the fractional quantum Hall effect and need no magnetic field, but their energy gaps are small, which limits how robust they are. Bands with ideal quantum geometry are usually taken as the best setting for them. Whether bands that leave this limit can do better was an open question, and the space of such bands is too large to search by hand.</p>
     </div>
-    <figure>
-      <img class="fig teaser" src="img/fig1_overview.png" alt="Figure 1 of the paper: a C = 1 flat band hosting a fractional Chern insulator; the model with momentum-dependent amplitude and phase patterns; the agent swarm around a shared board with exact-diagonalization tests; and the resulting many-body gaps on 27 sites" width="2122" height="2203">
-      <p class="caption teaser"><b>Overview.</b> (a) A C = 1 flat band and the ν = 1/3 fractional Chern insulator above it, with many-body gap Δ. (b) Model 1 at ideal geometry (γ = 0) and after optimization, with amplitude and phase terms that depend on both position and momentum. (c) The agent swarm around its shared board, with exact-diagonalization gates on three clusters. (d) Gaps of the parents and the optimized bands on a 27-site cluster.</p>
-    </figure>
   </div>
 </section>
 
@@ -384,6 +379,52 @@ footer p { margin: .35rem 0; }
       <figure><img class="fig" src="img/fig5_shear_f.png" alt="Gap against uniform shear slope" width="806" height="561">
         <p class="caption">The gap against the uniform shear slope s. Exact diagonalization follows 1 + s²/2 as d<sub>s</sub> → 0.</p></figure>
     </div>
+  </div>
+</section>
+
+<section class="section" id="perspective">
+  <div class="container">
+    <h2 class="title">Perspective</h2>
+    <div class="content">
+      <p>A swarm of identical agents with no coordinator made progress on a question whose answer nobody had in advance. Its bands raise the gap of their ideal-geometry parents more than tenfold, and the gain came from how the agents worked together, not from a larger budget per agent. The numbers then led to a theory that explains them. Three choices made this possible, and each points to a next step.</p>
+    </div>
+    <ul class="parts">
+      <li><b>A referee the agents cannot argue with.</b> Every claim had to pass exact diagonalization on three clusters before it counted. Problems with a check that is exact, or at least well controlled, are the natural next targets.</li>
+      <li><b>A search space chosen in advance.</b> A Claude Code agent and a physicist designed the family of bands and its boundary, and the best bands sit on that boundary. Letting the swarm propose and widen its own space is an open step.</li>
+      <li><b>People at the two ends.</b> Humans wrote the brief and checked the theory; the search itself ran without intervention. Closing the loop, so that the theory suggests where the next swarm should look, would let search and explanation drive each other.</li>
+    </ul>
+    <div class="content">
+      <p>The limits are those of the method. The gaps come from finite clusters of up to 27 sites, and token use grows with the number of agents, although caching keeps the cost per agent low.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="code">
+  <div class="container">
+    <h2 class="title">Code and data</h2>
+    <div class="content">
+      <p>The <a href="https://github.com/scifm/MOSAIC" target="_blank" rel="noopener">repository</a> contains the MOSAIC framework (broker, board, the agents' <span class="mono">swarm</span> command, charter and campaign briefs), the GPU exact-diagonalization solver used as the referee, built on <a href="https://github.com/Zou-Bo/MomentumED.jl" target="_blank" rel="noopener">MomentumED.jl</a>, and the data behind every figure, including the full board, mail and requests of each campaign. It is released under the MIT License.</p>
+    </div>
+    <div class="snip"><span class="lbl">Run a mock swarm without a cluster (broker, agents and the full promotion ladder against a synthetic ED):</span>
+      <div class="copyable"><pre>uv run pytest tests/swarm -q</pre><button class="copy" type="button">Copy</button></div></div>
+    <div class="snip"><span class="lbl">Re-evaluate the best model-1 band on the 27-site cluster (GPU recommended):</span>
+      <div class="copyable"><pre>MOIRE_ED_BACKEND=gpu julia --project=julia julia/ed_solver.jl \
+    --config data/bands/model1_optimized_5eda.json --out 5eda.json</pre><button class="copy" type="button">Copy</button></div></div>
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container">
+    <h2 class="title" style="text-align: left">BibTeX</h2>
+    <div class="copyable"><pre>@article{zhang2026mosaic,
+  title   = {Agentic Swarms Discover Enhancement of Fractional
+             Chern Insulator Gaps Beyond Ideal Quantum Geometry},
+  author  = {Zhang, Yitong and Xu, Changwen and Li, Andrew Boshi and
+             Sarkar, Siddhartha and Sun, Kai and
+             Viswanathan, Venkatasubramanian},
+  year    = {2026}
+}</pre><button class="copy" type="button">Copy</button></div>
+    <p class="caption">The arXiv identifier will be added when the preprint is posted.</p>
   </div>
 </section>
 
@@ -751,7 +792,7 @@ footer p { margin: .35rem 0; }
       ends.sort((a, b) => a.y - b.y);
       for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 15 && Math.abs(ends[i].x - ends[i - 1].x) < 110) ends[i].y = ends[i - 1].y + 15;
       ends.forEach(e => el("text", { x: e.x + 7, y: e.y + 4, "font-size": 12 }, `fill: ${e.c.col}`, `${e.c.agents} agents · ${e.v.toFixed(2)}`));
-      const lg = el("g", { transform: `translate(${L + W - 230},${T + H - 46})` });
+      const lg = el("g", { transform: `translate(${L + W - 230},${T + H - 72})` });
       el("line", { x1: 0, x2: 22, y1: 0, y2: 0, "stroke-width": 2.4 }, `stroke: ${shades[model][1]}`, undefined, lg);
       el("text", { x: 28, y: 4, "font-size": 12 }, "fill: var(--strong)", "swarm", lg);
       el("line", { x1: 82, x2: 104, y1: 0, y2: 0, "stroke-width": 1.8, "stroke-dasharray": "5 3" }, `stroke: ${shades[model][1]}`, undefined, lg);
