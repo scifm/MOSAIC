@@ -72,6 +72,10 @@ sub, sup { font-size: .72em; }
 .button:hover { background: #292929; text-decoration: none; }
 .button svg { width: 1.05em; height: 1.05em; fill: currentColor; }
 .button.is-disabled { background: #b5b5b5; cursor: default; }
+.lead { font-size: 1.3rem; font-weight: 600; color: var(--strong); text-align: center; line-height: 1.4; max-width: 760px; margin: -.5rem auto 1.25rem; text-wrap: balance; }
+.flow { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .5rem .75rem; margin: 1.75rem 0 0; font-weight: 600; color: var(--strong); }
+.flow span:not(.arr) { border: 1px solid var(--line); border-radius: 9999px; padding: .35rem .9rem; background: var(--tint); }
+.flow .arr { color: var(--light); }
 .tldr { font-size: 1.125rem; color: var(--strong); max-width: 820px; margin: 1.5rem auto 0; line-height: 1.55; text-align: left; }
 
 /* figures */
@@ -260,9 +264,18 @@ footer p { margin: .35rem 0; }
 <section class="section" id="motivation">
   <div class="container">
     <h2 class="title">Motivation</h2>
+    <p class="lead">Can AI discover new physical principles to overcome long-standing challenges in physics?</p>
     <div class="content">
-      <p>Can AI agents do open-ended science, where the question is open and nobody knows the route to an answer? Most multi-agent systems put a coordinator in charge, which splits the task and assigns roles, so the search can only be as broad as the coordinator's plan. Research groups work differently. Each researcher follows their own ideas, reads what others report, criticizes it and builds on what works. MOSAIC asks whether AI agents organized the same way can find something that was not known.</p>
-      <p>To test this we need a problem whose answer nobody had in advance. Fractional Chern insulators are a good one. They are lattice cousins of the fractional quantum Hall effect and need no magnetic field, but their energy gaps are small, which limits how robust they are. Bands with ideal quantum geometry are usually taken as the best setting for them. Whether bands that leave this limit can do better was an open question, and the space of such bands is too large to search by hand.</p>
+      <p>AI already solves well-posed problems, where the question, the model and the measure of success are fixed. Discovery is open-ended, and it is harder in four ways:</p>
+    </div>
+    <ul class="parts">
+      <li><b>The question is not given.</b> Questions and models have to be formulated before anything can be solved.</li>
+      <li><b>There is no known route.</b> Nobody knows in advance which strategy will work.</li>
+      <li><b>The destination is unclear.</b> What a good answer looks like is part of what must be found.</li>
+      <li><b>Solutions are not enough.</b> The goal is to discover and understand new physical principles.</li>
+    </ul>
+    <div class="content">
+      <p>We test this on a long-standing problem in condensed-matter physics: the small energy gaps of fractional Chern insulators, which limit how robust they are. Bands with ideal quantum geometry are usually taken as the best setting for these states, and whether leaving that limit can do better was an open question.</p>
     </div>
   </div>
 </section>
@@ -385,17 +398,14 @@ footer p { margin: .35rem 0; }
 <section class="section" id="perspective">
   <div class="container">
     <h2 class="title">Perspective</h2>
-    <div class="content">
-      <p>A swarm of identical agents with no coordinator made progress on a question whose answer nobody had in advance. Its bands raise the gap of their ideal-geometry parents more than tenfold, and the gain came from how the agents worked together, not from a larger budget per agent. The numbers then led to a theory that explains them. Three choices made this possible, and each points to a next step.</p>
-    </div>
-    <ul class="parts">
-      <li><b>A referee the agents cannot argue with.</b> Every claim had to pass exact diagonalization on three clusters before it counted. Problems with a check that is exact, or at least well controlled, are the natural next targets.</li>
-      <li><b>A search space chosen in advance.</b> A Claude Code agent and a physicist designed the family of bands and its boundary, and the best bands sit on that boundary. Letting the swarm propose and widen its own space is an open step.</li>
-      <li><b>People at the two ends.</b> Humans wrote the brief and checked the theory; the search itself ran without intervention. Closing the loop, so that the theory suggests where the next swarm should look, would let search and explanation drive each other.</li>
-    </ul>
-    <div class="content">
-      <p>The limits are those of the method. The gaps come from finite clusters of up to 27 sites, and token use grows with the number of agents, although caching keeps the cost per agent low.</p>
-    </div>
+    <p class="lead">What did we learn about open-ended discovery in physics?</p>
+    <ol class="parts">
+      <li><b>A swarm enables broad exploration.</b> In the unknown, nobody knows in advance which approach will work. Each agent chose its own strategies, models and methods, so the swarm explored many possibilities in parallel: 38 strategies in the first two hours against 6 for the isolated agents.</li>
+      <li><b>Communication and collaboration among agents are crucial.</b> Agents shared discoveries on the board, learned from each other's successes and failures, and built on each other's findings. The best band was built by a relay of agents, and isolated agents with the same tools did not reach the swarm's gains.</li>
+      <li><b>Minimize human guidance.</b> We let the agents decide what to explore and how, because human guidance can narrow exploration without anyone meaning it to. No one intervened during the search, and greater autonomy left room for results nobody expected.</li>
+    </ol>
+    <p class="flow"><span>AI designs models</span><span class="arr" aria-hidden="true">→</span><span>AI explores and finds anomalies</span><span class="arr" aria-hidden="true">→</span><span>AI develops physical theories</span></p>
+    <p class="caption" style="text-align: center">Our three-step approach, with AI in each step and physicists alongside.</p>
   </div>
 </section>
 
