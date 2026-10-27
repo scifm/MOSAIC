@@ -6,6 +6,8 @@
   <img alt="MOSAIC: Multi-agent Open-ended Scientific Analysis and Investigation through Collaboration" src="assets/logo/mosaic-lockup-tagline-light.svg" width="560">
 </picture>
 
+**[Project page](https://scifm.github.io/MOSAIC/)**
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
 [![Julia 1.10+](https://img.shields.io/badge/julia-1.10%2B-9558B2.svg)](julia/Project.toml)
@@ -150,6 +152,7 @@ MOSAIC/
 ├── jobs/, scripts/   Slurm templates, agent launcher, login-node session, solver setup
 ├── julia/            the ED solver: CLI, sources, tests, benchmarks, MomentumED.jl patch
 ├── data/             bands, spectra, source data and agent records (see data/README.md)
+├── docs/             the project page (GitHub Pages, served from this folder)
 └── tests/            Python tests, including a mock end-to-end swarm run
 ```
 
