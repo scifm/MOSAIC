@@ -213,7 +213,7 @@ footer p { margin: .35rem 0; }
   <div class="container wide">
     <h2 class="title">The swarm at work</h2>
     <div class="container" style="padding: 0; margin-bottom: 1rem">
-      <p class="content">A replay of two campaigns on model 1, built from the agents' logs. Each dot is an evaluation request, each arc a citation or a direct message, and each entry in the feed a post on the shared board. The highlighted path shows the relay of agents that built the best band. The two isolated agents had the same brief and tools but no board. Press play, drag the timeline, or tap an agent or a post for details.</p>
+      <p class="content">A replay of two campaigns on model 1, built from the agents' logs. Each dot is an evaluation request, each arc a citation or a direct message, and each entry in the feed a post on the shared board. The highlighted path shows the relay of agents that built the best band. In the 18-agent replay, one node stands for the best of 18 independent agents, which had the same brief, tools and total quota but no board; the 48-agent replay shows that campaign's two isolated agents. Press play, drag the timeline, or tap an agent or a post for details.</p>
     </div>
     <div class="replay" id="rp">
       <div class="rp-top">
@@ -600,8 +600,8 @@ footer p { margin: .35rem 0; }
     });
     ctx.fillStyle = COL.light; ctx.font = `400 12px ${FS}`;
     const iso = d.agents.filter(a => a.arm !== "swarm");
-    if (d.geo.narrow) { ctx.textAlign = "right"; ctx.fillText("isolated agents, no board", RW - 8, iso[0].y - nodeR(d, 1) - 26); }
-    else { ctx.fillText("isolated agents", iso[0].x, iso[0].y - nodeR(d, 1) - 26); ctx.fillText("(no board)", iso[0].x, iso[0].y - nodeR(d, 1) - 12); }
+    if (d.geo.narrow) { ctx.textAlign = "right"; ctx.fillText(d.isoHead.join(" ").replace(" (no board)", ", no board"), RW - 8, iso[0].y - nodeR(d, 1) - 26); }
+    else { ctx.fillText(d.isoHead[0], iso[0].x, iso[0].y - nodeR(d, 1) - 26); ctx.fillText(d.isoHead[1], iso[0].x, iso[0].y - nodeR(d, 1) - 12); }
   };
 
   const drawChart = () => {
@@ -634,7 +634,7 @@ footer p { margin: .35rem 0; }
     });
     ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.font = `500 12px ${FS}`;
     ctx.fillStyle = COL.swarm; ctx.fillText(`agent swarm · ${rs.toFixed(2)}`, L + 8, Tp + 12);
-    ctx.fillStyle = COL.iso; ctx.fillText(`two isolated agents · ${ri.toFixed(2)}`, L + 8, Tp + 30);
+    ctx.fillStyle = COL.iso; ctx.fillText(`${d.isoLabel} · ${ri.toFixed(2)}`, L + 8, Tp + 30);
   };
 
   const renderFeed = animate => {
@@ -676,7 +676,7 @@ footer p { margin: .35rem 0; }
     const a = d.agents[i], b = bestAt(a, d.tOf(S.u));
     const fam = a.families.slice(0, 5).join(", ") + (a.families.length > 5 ? ` and ${a.families.length - 5} more` : "");
     agentEl.textContent = "";
-    const bb = document.createElement("b"); bb.textContent = a.arm === "swarm" ? `Agent ${a.short}` : `Isolated agent ${a.short.slice(1)}`;
+    const bb = document.createElement("b"); bb.textContent = a.arm === "swarm" ? `Agent ${a.short}` : a.id === "indep" ? "Best of 18 independent agents" : `Isolated agent ${a.short.slice(1)}`;
     agentEl.append(bb, document.createTextNode(` · best R_min so far ${b.toFixed(2)} · ${a.nreq} model-1 requests · ${a.nposts} posts${fam ? " · strategies: " + fam : ""}`));
   };
 
@@ -745,7 +745,7 @@ footer p { margin: .35rem 0; }
     if (i !== S.hover) { S.hover = i; if (!S.playing) draw(); }
     if (i < 0) { tip.hidden = true; if (S.sel < 0) showAgent(-1); return; }
     const a = S.d.agents[i];
-    tip.textContent = ""; const b = document.createElement("b"); b.textContent = a.arm === "swarm" ? `agent ${a.short}` : `isolated agent ${a.short.slice(1)}`;
+    tip.textContent = ""; const b = document.createElement("b"); b.textContent = a.arm === "swarm" ? `agent ${a.short}` : a.id === "indep" ? "best of 18 independent agents" : `isolated agent ${a.short.slice(1)}`;
     tip.append(b, document.createElement("br"), document.createTextNode(`best R_min ${bestAt(a, S.d.tOf(S.u)).toFixed(2)} · ${a.nreq} requests`));
     if (a.families.length) tip.append(document.createElement("br"), document.createTextNode(a.families.slice(0, 3).join(", ") + (a.families.length > 3 ? " …" : "")));
     tip.hidden = false;
