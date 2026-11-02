@@ -6,6 +6,7 @@
   <img alt="MOSAIC: Multi-agent Open-ended Scientific Analysis and Investigation through Collaboration" src="assets/logo/mosaic-lockup-tagline-light.svg" width="560">
 </picture>
 
+[![arXiv](https://img.shields.io/badge/arXiv-2610.35934-b31b1b.svg)](https://arxiv.org/abs/2610.35934)
 [![Project page](https://img.shields.io/badge/project-page-e36209.svg)](https://scifm.github.io/MOSAIC/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
@@ -15,7 +16,7 @@
 
 ## News
 
-- 2026-10-20 -- Our paper [Agentic Swarms Discover Enhanchment of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry](https://arxiv.org/abs/2610.35934) and agent swarm implementation <strong><em>MOSAIC<strong><em> are released.
+- 2026-10-20 -- Our paper [Agentic Swarms Discover Enhanchment of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry](https://arxiv.org/abs/2610.35934) and agent swarm implementation <strong><em>MOSAIC</em></strong> are released.
 
 <p align="center">
   <img src="assets/fig1_overview.png" width="820">
@@ -309,11 +310,11 @@ People's names in the agent records are replaced by `[author]`. The agents' sess
 If you use MOSAIC, the solver or the data, please cite the paper:
 
 ```bibtex
-@article{zhang2026mosaic,
-  title   = {Agentic Swarms Discover Enhancement of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry},
-  author  = {Zhang, Yitong and Xu, Changwen and Li, Andrew Boshi and Sarkar, Siddhartha and Sun, Kai and
-             Viswanathan, Venkatasubramanian},
-  year    = {2026}
+@article{zhang2026agentic,
+  title={Agentic Swarms Discover Enhanchment of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry},
+  author={Zhang, Yitong and Xu, Changwen and Li, Andrew Boshi and Sarkar, Siddhartha and Sun, Kai and Viswanathan, Venkatasubramanian},
+  journal={arXiv preprint arXiv:2610.35934},
+  year={2026}
 }
 ```
 

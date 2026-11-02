@@ -13,7 +13,11 @@ authors:
   - {family-names: Viswanathan, given-names: Venkatasubramanian}
 preferred-citation:
   type: article
-  title: "Agentic Swarms Discover Enhancement of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry"
+  title: "Agentic Swarms Discover Enhanchment of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry"
+  journal: "arXiv preprint arXiv:2610.35934"
+  url: "https://arxiv.org/abs/2610.35934"
+  identifiers:
+    - {type: other, value: "arXiv:2610.35934", description: "arXiv preprint"}
   authors:
     - {family-names: Zhang, given-names: Yitong}
     - {family-names: Xu, given-names: Changwen}
