@@ -10,13 +10,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
 [![Julia 1.10+](https://img.shields.io/badge/julia-1.10%2B-9558B2.svg)](julia/Project.toml)
-[![Built on MomentumED.jl](https://img.shields.io/badge/built%20on-MomentumED.jl-6f42c1.svg)](https://github.com/Zou-Bo/MomentumED.jl)
 
 </div>
 
 ## News
 
-- 2026-10-20 -- MOSAIC released.
+- 2026-10-20 -- Our paper [Agentic Swarms Discover Enhanchment of Fractional Chern Insulator Gaps Beyond Ideal Quantum Geometry](https://arxiv.org/abs/2610.35934) and agent swarm implementation <strong><em>MOSAIC<strong><em> are released.
 
 <p align="center">
   <img src="assets/fig1_overview.png" width="820">
@@ -56,13 +55,6 @@
   | Model 1 | 2.50 Δ_LLL | **28.75 Δ_LLL** |
   | Model 2 | 1.36 Δ_LLL | **21.37 Δ_LLL** |
 
-- **A measured swarm effect.** Every campaign also ran isolated agents with the same brief, quota and tools, but
-  without the board.
-  - On the clusters used during the search, the strongest swarms raised the gaps by factors of R_min = 10.8
-    (model 1) and 16.3 (model 2).
-  - The isolated agents on model 1 reached 1.1–3.2.
-  - On model 2, three of the six isolated agents found no band that passed every test; the others reached 3.6, 7.5
-    and 11.5.
 - **A faster solver.** The solver keeps the sector Hamiltonians on the GPU and solves them with an on-device Lanczos
   method. One evaluation takes 6.4 s on a 4×6 cluster and 41 s on a 5×6 cluster on one H100. The original
   single-threaded CPU code took 593 s and 3.8 h.
