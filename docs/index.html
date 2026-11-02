@@ -111,57 +111,13 @@ pre { margin: 0; background: var(--tint); border-radius: 6px; padding: 1rem 1.1r
 .snip { margin-bottom: 1rem; }
 .snip .lbl { font-size: .95rem; margin-bottom: .35rem; display: block; }
 
-/* replay */
-.replay { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; text-align: left; }
-.rp-top { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; justify-content: space-between; padding: .6rem .9rem; border-bottom: 1px solid var(--line); background: #fafafa; }
+/* tabs (token chart) */
 .tabs { display: inline-flex; gap: .4rem; }
 .tabs button { border: 1px solid var(--line); background: #fff; color: var(--text); font: 500 .875rem var(--f-sans); padding: .3rem .8rem; border-radius: 9999px; cursor: pointer; }
 .tabs button[aria-selected="true"] { background: var(--strong); border-color: var(--strong); color: #fff; }
-.clock { font-family: var(--f-mono); font-size: 1rem; color: var(--strong); font-variant-numeric: tabular-nums; }
-.rp-body { display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 9fr); }
-.rp-ring { position: relative; border-right: 1px solid var(--line); min-width: 0; display: flex; flex-direction: column; }
-.rp-ring canvas { display: block; width: 100%; flex: 1 1 auto; min-height: 420px; cursor: crosshair; touch-action: manipulation; }
-.legend { display: flex; flex-wrap: wrap; gap: .25rem 1rem; padding: .2rem .9rem .8rem; font-size: .8rem; color: var(--light); }
-.legend i { display: inline-block; vertical-align: middle; margin-right: .35rem; }
-.legend .ln { width: 18px; height: 3px; border-radius: 2px; }
-.legend .dt { width: 8px; height: 8px; border-radius: 50%; }
-.legend .grad { width: 44px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #440154, #3e4989, #26828e, #35b779, #b5de2b, #fde725); }
-.tip { position: absolute; pointer-events: none; background: #fff; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 2px 10px rgba(10, 10, 10, .12); padding: .45rem .6rem; font-size: .8rem; max-width: 250px; line-height: 1.4; z-index: 2; color: var(--text); }
-.tip b { color: var(--strong); }
-.rp-side { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
-.rp-chart { padding: .8rem .9rem .3rem; border-bottom: 1px solid var(--line); }
-.rp-chart h3 { font-size: .95rem; font-weight: 600; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-.rp-chart .callout { color: var(--relay); font-family: var(--f-mono); font-weight: 500; min-height: 1.4em; }
-.rp-chart canvas { display: block; width: 100%; aspect-ratio: 16 / 10; margin-top: .3rem; }
-.steps { display: flex; flex-wrap: wrap; gap: .35rem; padding: .2rem 0 .5rem; }
-.steps button { font: 400 .8rem var(--f-sans); color: var(--light); background: #fff; border: 1px solid var(--line); border-radius: 9999px; padding: .2rem .6rem .2rem .25rem; cursor: pointer; display: inline-flex; gap: .35rem; align-items: center; }
-.steps button .n { width: 1.3rem; height: 1.3rem; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line); font-family: var(--f-mono); font-size: .72rem; }
-.steps button.done { color: var(--strong); border-color: #f0b27a; }
-.steps button.done .n { border-color: var(--relay); color: var(--relay); }
-.rp-feed { padding: .8rem .9rem .9rem; min-width: 0; display: grid; grid-template-rows: auto 1fr; }
-.rp-feed h3 { font-size: .95rem; font-weight: 600; margin-bottom: .5rem; }
-.rp-feed h3 span { font-weight: 400; color: var(--light); font-size: .8rem; margin-left: .4rem; }
-.feed { list-style: none; margin: 0; padding: 0; position: relative; height: 320px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 84%, transparent); mask-image: linear-gradient(#000 84%, transparent); }
-.feed li { position: absolute; left: 0; right: 0; padding: .45rem .6rem; border: 1px solid var(--line); border-radius: 6px; background: #fff; cursor: pointer; transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .45s; }
-.feed li:hover { border-color: #b5b5b5; }
-.feed li .meta { display: flex; gap: .55rem; align-items: center; font-family: var(--f-mono); font-size: .72rem; color: var(--light); }
-.feed li .kind { border: 1px solid currentColor; padding: 0 .3rem; border-radius: 3px; font-weight: 500; letter-spacing: .03em; }
-.feed li .ttl { font-size: .85rem; line-height: 1.4; margin-top: .2rem; color: var(--strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.feed li.open { z-index: 3; box-shadow: 0 6px 22px rgba(10, 10, 10, .16); }
-.feed li.open .ttl { -webkit-line-clamp: unset; }
-.feed li .ex { display: none; margin-top: .35rem; font-size: .8rem; color: var(--text); line-height: 1.45; }
-.feed li.open .ex { display: block; }
-.feed .empty { color: var(--light); font-size: .85rem; position: static; border: 0; cursor: default; }
-.rp-ctl { display: flex; flex-wrap: wrap; gap: .6rem .9rem; align-items: center; padding: .6rem .9rem; border-top: 1px solid var(--line); background: #fafafa; }
-.play { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 0; background: var(--strong); color: #fff; display: grid; place-items: center; cursor: pointer; flex: none; }
-.play svg { width: 1rem; height: 1rem; }
-.scrub { flex: 1 1 240px; min-width: 0; }
-.scrub input { width: 100%; accent-color: var(--strong); }
-.speed { display: flex; gap: .4rem; align-items: center; font-size: .8rem; color: var(--light); }
-.speed select { background: #fff; color: var(--strong); border: 1px solid var(--line); border-radius: 4px; padding: .2rem .35rem; font: inherit; }
-.agentcard { font-size: .8rem; color: var(--light); flex: 1 1 100%; min-height: 1.3em; }
-.agentcard b { color: var(--strong); }
-@media (max-width: 860px) { .rp-body { grid-template-columns: minmax(0, 1fr); } .rp-ring { border-right: 0; border-bottom: 1px solid var(--line); } .rp-ring canvas { flex: none; min-height: 0; aspect-ratio: 1 / 1; } .feed { height: 290px; } }
+
+/* video */
+.video { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: #000; }
 
 /* token chart */
 .chartbox { overflow-x: auto; }
@@ -213,51 +169,12 @@ footer p { margin: .35rem 0; }
   <div class="container wide">
     <h2 class="title">The swarm at work</h2>
     <div class="container" style="padding: 0; margin-bottom: 1rem">
-      <p class="content">A replay of two campaigns on model 1, built from the agents' logs. Each dot is an evaluation request, each arc a citation or a direct message, and each entry in the feed a post on the shared board. The highlighted path shows the relay of agents that built the best band. In the 18-agent replay, one node stands for the best of 18 independent agents, which had the same brief, tools and total quota but no board; the 48-agent replay shows that campaign's two isolated agents. Press play, drag the timeline, or tap an agent or a post for details.</p>
+      <p class="content">A replay of the 18-agent swarm on model 1, rendered from the campaign's recorded requests, board posts and messages. The agents had no assigned roles and coordinated only through the shared board, and they built in turns towards the best band (R<sub>min</sub> = 10.56). The highlighted path shows the agents that built it, and the dashed line is the best of 18 independent agents with the same brief, tools and quota but no board. This is Supplementary Video 1 of the paper.</p>
     </div>
-    <div class="replay" id="rp">
-      <div class="rp-top">
-        <div class="tabs" role="tablist" aria-label="Campaign">
-          <button role="tab" id="tab-w3n18" aria-selected="true" data-key="w3n18">18 agents</button>
-          <button role="tab" id="tab-w3n48" aria-selected="false" data-key="w3n48">48 agents</button>
-        </div>
-        <span class="clock" id="rp-clock" aria-live="off">t = 0.00 h</span>
-      </div>
-      <div class="rp-body">
-        <div class="rp-ring">
-          <canvas id="rp-ring" aria-label="Agents on a ring around the shared board. Hover or tap an agent for details."></canvas>
-          <div class="tip" id="rp-tip" hidden></div>
-          <div class="legend">
-            <span><i class="grad"></i>agent colour and size: best R<sub>min</sub> so far</span>
-            <span><i class="dt" style="background: #35b779"></i>evaluation request</span>
-            <span><i class="ln" style="background: var(--cite)"></i>citation</span>
-            <span><i class="ln" style="background: var(--mail)"></i>direct message</span>
-            <span><i class="ln" style="background: var(--relay)"></i>path to the best band</span>
-          </div>
-        </div>
-        <div class="rp-side">
-          <div class="rp-chart">
-            <h3><span>Best gap enhancement R<sub>min</sub> so far</span><span class="callout" id="rp-callout"></span></h3>
-            <canvas id="rp-chart" aria-label="Best R_min so far, swarm against isolated agents"></canvas>
-            <div class="steps" id="rp-steps" aria-label="Jump to a step on the path to the best band"></div>
-          </div>
-          <div class="rp-feed">
-            <h3>The shared board<span>tap a post to read it</span></h3>
-            <ul class="feed" id="rp-feed" aria-live="off"></ul>
-          </div>
-        </div>
-      </div>
-      <div class="rp-ctl">
-        <button class="play" id="rp-play" aria-label="Play">
-          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path id="rp-icon" d="M4 2.5v11l9-5.5z"/></svg>
-        </button>
-        <div class="scrub"><input id="rp-scrub" type="range" min="0" max="46" step="0.01" value="46" aria-label="Replay position"></div>
-        <label class="speed" for="rp-speed">speed
-          <select id="rp-speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
-        </label>
-        <div class="agentcard" id="rp-agent">Time runs faster when the board is quiet.</div>
-      </div>
-    </div>
+    <video class="video" controls muted playsinline preload="metadata" poster="video/swarm_18_agents_poster.jpg" width="1920" height="1080">
+      <source src="video/swarm_18_agents.mp4" type="video/mp4">
+      Your browser cannot play this video. <a href="video/swarm_18_agents.mp4">Download it (MP4, 28 MB)</a>.
+    </video>
   </div>
 </section>
 
@@ -359,14 +276,14 @@ footer p { margin: .35rem 0; }
 
     <h3 class="subtitle" id="why">Why the swarm wins</h3>
     <div class="content">
-      <p>On the search clusters, the strongest swarms reached R<sub>min</sub> = 10.8 on model 1 and 16.3 on model 2, while the six isolated agents on model 1 reached 1.1 to 3.2. In the 18-agent campaign on model 1 we find three mechanisms.</p>
+      <p>On the search clusters, the strongest swarms reached R<sub>min</sub> = 10.76 on model 1 and 16.29 on model 2. Five independent agents with the same brief, quota, tools and referee, but no board, reached 3.20 and 11.52, although they used more evaluations and tokens than the 5-agent swarms. Following the 18-agent swarm on model 1, which was compared with 18 independent agents, we find three features that made the difference.</p>
     </div>
-    <div class="row eq" style="--cols: 0.80fr 0.82fr 1.28fr">
-      <figure><img class="fig" src="img/fig4_agents_b.png" alt="Strategies in use per half hour, swarm against isolated agents" width="555" height="691">
-        <p class="caption"><b>Breadth.</b> In the first two hours the swarm ran 38 distinct search strategies, against 6 for the two isolated agents together.</p></figure>
-      <figure><img class="fig" src="img/fig4_agents_c.png" alt="Summed amplitude and phase coefficients of every submitted band" width="570" height="696">
-        <p class="caption"><b>Recombination.</b> The large gains need amplitude and phase terms tuned together. 45% of the swarm's requests changed both, against under 1% for the isolated agents.</p></figure>
-      <figure><img class="fig" src="img/fig4_agents_d.png" alt="A selection rule found by several agents and the gain from applying it" width="883" height="692">
+    <div class="row eq" style="--cols: 0.91fr 0.83fr 1.32fr">
+      <figure><img class="fig" src="img/fig4_agents_b.png" alt="21-site screen ratio R against distance from the gamma = 0 band for every request, swarm against independent agents" width="623" height="686">
+        <p class="caption"><b>Searching farther.</b> With 1,145 requests each, the 18 independent agents stayed within a distance of 0.58 from the γ = 0 band and never reached R = 1.5. 37% of the swarm's requests went farther, and 32% reached R &gt; 2.</p></figure>
+      <figure><img class="fig" src="img/fig4_agents_c.png" alt="Summed amplitude and phase coefficients of every submitted band, swarm against independent agents" width="572" height="686">
+        <p class="caption"><b>Recombination.</b> The large gains need amplitude and phase terms tuned together, and different agents found the useful terms of each kind. 45% of the swarm's requests changed both, against 5% for the independent agents.</p></figure>
+      <figure><img class="fig" src="img/fig4_agents_d.png" alt="A selection rule found by several agents and the gain from applying it" width="907" height="686">
         <p class="caption"><b>Shared insight.</b> Agent b observed that only some terms help; j, i and p explained why with a selection rule; o, m and l tested it; b applied it, raising R from 1.69 to 2.38.</p></figure>
     </div>
 
@@ -427,7 +344,7 @@ footer p { margin: .35rem 0; }
   <div class="container">
     <h2 class="title" style="text-align: left">BibTeX</h2>
     <div class="copyable"><pre>@article{zhang2026agentic,
-  title   = {Agentic Swarms Discover Enhanchment of Fractional
+  title   = {Agentic Swarms Discover Enhancement of Fractional
              Chern Insulator Gaps Beyond Ideal Quantum Geometry},
   author  = {Zhang, Yitong and Xu, Changwen and Li, Andrew Boshi and
              Sarkar, Siddhartha and Sun, Kai and
@@ -448,12 +365,6 @@ footer p { margin: .35rem 0; }
 <script>
 (() => {
   "use strict";
-  const css = getComputedStyle(document.documentElement);
-  const C = k => css.getPropertyValue(k).trim();
-  const COL = { strong: C("--strong"), text: C("--text"), light: C("--light"), line: C("--line"), swarm: C("--swarm"),
-    relay: C("--relay"), iso: C("--iso"), cite: C("--cite"), mail: C("--mail") };
-  const FS = C("--f-sans"), FM = C("--f-mono");
-  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- copy buttons ---------- */
   document.querySelectorAll(".copy").forEach(b => b.addEventListener("click", () => {
@@ -462,303 +373,6 @@ footer p { margin: .35rem 0; }
     const select = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selected"; setTimeout(() => (b.textContent = "Copy"), 1600); };
     try { navigator.clipboard.writeText(txt).then(done, select); } catch (e) { select(); }
   }));
-
-  /* ---------- the swarm replay ---------- */
-  const KIND_C = { hypothesis: "#3e6fd8", result: "#0f8a8a", claim: "#c06000", note: "#6b7280", abandon: "#8b5cf6",
-    refutation: "#d9363e", request: "#3a9d23" };
-  // viridis, on a log scale from 0.8 to 11 as in the paper's agent figures
-  const STOPS = ["#440154", "#482878", "#3e4989", "#31688e", "#26828e", "#1f9e89", "#35b779", "#6ece58", "#b5de2b", "#fde725"]
-    .map(h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)));
-  const cmap = b => {
-    let f = (Math.log(Math.max(b, .8)) - Math.log(.8)) / (Math.log(11) - Math.log(.8));
-    f = Math.min(1, Math.max(0, f)) * (STOPS.length - 1);
-    const i = Math.min(STOPS.length - 2, Math.floor(f)), r = f - i;
-    const c = STOPS[i].map((v, k) => Math.round(v + (STOPS[i + 1][k] - v) * r));
-    return `rgb(${c[0]},${c[1]},${c[2]})`;
-  };
-  const lum = s => { const m = s.match(/\d+/g).map(Number); return (.299 * m[0] + .587 * m[1] + .114 * m[2]) / 255; };
-  const lowerBound = (arr, x, key) => { let lo = 0, hi = arr.length; while (lo < hi) { const m = (lo + hi) >> 1; if (key(arr[m]) < x) lo = m + 1; else hi = m; } return lo; };
-
-  const ring = document.getElementById("rp-ring"), rctx = ring.getContext("2d");
-  const chart = document.getElementById("rp-chart"), cctx = chart.getContext("2d");
-  const feedEl = document.getElementById("rp-feed"), tip = document.getElementById("rp-tip");
-  const scrub = document.getElementById("rp-scrub"), playBtn = document.getElementById("rp-play"), icon = document.getElementById("rp-icon");
-  const clock = document.getElementById("rp-clock"), callout = document.getElementById("rp-callout");
-  const stepsEl = document.getElementById("rp-steps"), agentEl = document.getElementById("rp-agent");
-  const speedEl = document.getElementById("rp-speed");
-  const IDLE = "Time runs faster when the board is quiet.";
-  const cache = {};
-  const S = { d: null, u: 0, playing: false, hover: -1, sel: -1, openPost: -1, shown: [], lastFrame: 0, started: false, inView: false };
-
-  const prep = d => {
-    const U = d.warp.map(p => p[0]), T = d.warp.map(p => p[1]);
-    d.uEnd = U[U.length - 1];
-    d.tOf = u => { if (u <= 0) return 0; for (let i = 1; i < U.length; i++) if (u <= U[i]) return T[i - 1] + (T[i] - T[i - 1]) * (u - U[i - 1]) / (U[i] - U[i - 1]); return T[T.length - 1]; };
-    d.uOf = t => { if (t <= 0) return 0; for (let i = 1; i < T.length; i++) if (t <= T[i]) return U[i - 1] + (U[i] - U[i - 1]) * (t - T[i - 1]) / (T[i] - T[i - 1]); return d.uEnd; };
-    d.req.forEach(r => (r.u = d.uOf(r[0])));
-    d.posts.forEach(p => (p.u = d.uOf(p.t)));
-    d.mail.forEach(m => (m.u = d.uOf(m[0])));
-    d.swarmCurve.forEach(p => (p.u = d.uOf(p[0])));
-    d.nSwarm = d.agents.filter(a => a.arm === "swarm").length;
-    d.agents.forEach(a => { let m = 1; a.run = a.strong.map(p => (m = Math.max(m, p[1]))); a.ts = a.strong.map(p => p[0]); });
-    d.split = d.tEnd > 20 ? 12 : null;   // long campaigns: linear to 12 h, then compressed 6x
-    return d;
-  };
-  const bestAt = (a, t) => { const i = lowerBound(a.ts, t + 1e-9, x => x) - 1; return i >= 0 ? a.run[i] : 1; };
-  const load = async key => {
-    if (!cache[key]) {
-      const r = await fetch(`data/replay_${key}.json`);
-      if (!r.ok) throw new Error(`replay data ${key}: HTTP ${r.status}`);
-      cache[key] = prep(await r.json());
-    }
-    return cache[key];
-  };
-
-  let RW = 0, RH = 0, CW = 0, CH = 0;
-  const fit = (cv, ctx) => { const r = cv.getBoundingClientRect(), dp = Math.min(devicePixelRatio || 1, 2); cv.width = Math.round(r.width * dp); cv.height = Math.round(r.height * dp); ctx.setTransform(dp, 0, 0, dp, 0, 0); return [r.width, r.height]; };
-  const layout = () => {
-    [RW, RH] = fit(ring, rctx); [CW, CH] = fit(chart, cctx);
-    const d = S.d; if (!d) return;
-    const narrow = RW < 560;
-    const cx = RW * (narrow ? .44 : .41), cy = RH * (narrow ? .47 : .5), R = Math.min(RW * (narrow ? .34 : .33), RH * .38);
-    d.geo = { cx, cy, R, narrow };
-    let k = 0;
-    d.agents.forEach((a, i) => {
-      if (a.arm === "swarm") { const th = -Math.PI / 2 + 2 * Math.PI * i / d.nSwarm; a.x = cx + R * Math.cos(th); a.y = cy + R * Math.sin(th); a.ux = Math.cos(th); a.uy = Math.sin(th); }
-      else if (narrow) { a.x = RW - 22 - 34 * (1 - k); a.y = RH - 26; k++; a.ux = 0; a.uy = -1; }
-      else { a.x = RW * .89; a.y = cy + R * (.15 + .42 * k++); a.ux = 0; a.uy = 1; }
-    });
-    d.rscale = d.nSwarm > 30 ? .55 : 1;
-  };
-  const arcPath = (ctx, x0, y0, x1, y1, bend, frac = 1) => {
-    const mx = (x0 + x1) / 2 - bend * (y1 - y0), my = (y0 + y1) / 2 + bend * (x1 - x0);
-    ctx.moveTo(x0, y0);
-    if (frac >= 1) { ctx.quadraticCurveTo(mx, my, x1, y1); return; }
-    const n = 16;
-    for (let i = 1; i <= Math.round(n * frac); i++) { const s = i / n; ctx.lineTo((1 - s) ** 2 * x0 + 2 * (1 - s) * s * mx + s * s * x1, (1 - s) ** 2 * y0 + 2 * (1 - s) * s * my + s * s * y1); }
-  };
-  const nodeR = (d, b) => (9 + 15 * Math.log(Math.max(b, 1)) / Math.log(11)) * d.rscale * Math.min(1.25, Math.max(.7, d.geo.R / 210));
-
-  const drawRing = () => {
-    const d = S.d, u = S.u, t = d.tOf(u), ctx = rctx, { cx, cy, R } = d.geo;
-    ctx.clearRect(0, 0, RW, RH);
-    const p0 = lowerBound(d.posts, u - 2, p => p.u), p1 = lowerBound(d.posts, u + 1e-9, p => p.u);
-    const r0 = lowerBound(d.req, u - 1, r => r.u), r1 = lowerBound(d.req, u + 1e-9, r => r.u);
-    const act = Math.min(1, ((p1 - p0) + .15 * (r1 - r0)) / 14);
-    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * (.42 + .25 * act));
-    glow.addColorStop(0, `rgba(0,160,115,${.10 + .14 * act})`); glow.addColorStop(1, "rgba(0,160,115,0)");
-    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, R * .7, 0, 2 * Math.PI); ctx.fill();
-    ctx.fillStyle = COL.strong; ctx.font = `600 ${Math.max(12, R * .07)}px ${FS}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText("shared", cx, cy - R * .045); ctx.fillText("board", cx, cy + R * .045);
-    for (let i = r0; i < r1; i++) {   // requests in flight to the board (isolated agents: to their own queue)
-      const r = d.req[i], f = u - r.u, a = d.agents[r[1]];
-      const x = a.arm === "swarm" ? cx + (a.x - cx) * (1 - f) * .92 : a.x - 30 * f - 18, y = a.arm === "swarm" ? cy + (a.y - cy) * (1 - f) * .92 : a.y;
-      ctx.fillStyle = r[3] ? cmap(Math.max(r[2], .8)) : "#c8c8c8"; ctx.globalAlpha = .9;
-      ctx.beginPath(); ctx.arc(x, y, 2.6, 0, 2 * Math.PI); ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    for (let i = p0; i < p1; i++) {   // citations, and a pulse when an agent posts
-      const p = d.posts[i], age = (u - p.u) / 2, a = d.agents[p.a];
-      ctx.lineWidth = 1.5; ctx.strokeStyle = COL.cite; ctx.globalAlpha = .7 * (1 - age);
-      ctx.beginPath(); p.cites.forEach(c => { const b = d.agents[c]; arcPath(ctx, b.x, b.y, a.x, a.y, .2); }); ctx.stroke();
-      ctx.strokeStyle = p.kind === "claim" ? COL.relay : COL.light; ctx.lineWidth = 1.6; ctx.globalAlpha = .75 * (1 - age);
-      ctx.beginPath(); ctx.arc(a.x, a.y, nodeR(d, 1) + 4 + 26 * age, 0, 2 * Math.PI); ctx.stroke();
-    }
-    const m0 = lowerBound(d.mail, u - 2, m => m.u), m1 = lowerBound(d.mail, u + 1e-9, m => m.u);
-    for (let i = m0; i < m1; i++) {
-      const m = d.mail[i], age = u - m.u, a = d.agents[m[1]], b = d.agents[m[2]];
-      ctx.strokeStyle = COL.mail; ctx.lineWidth = 1.6; ctx.globalAlpha = .75 * (1 - age / 2);
-      ctx.beginPath(); arcPath(ctx, a.x, a.y, b.x, b.y, -.25, Math.min(1, age / .6)); ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    const onRelay = new Set();
-    ctx.strokeStyle = COL.relay; ctx.lineWidth = 3.4 * Math.max(.7, d.rscale); ctx.lineCap = "round";
-    d.lineage.forEach(([te, s, k]) => {
-      if (te > t) return;
-      onRelay.add(s); onRelay.add(k);
-      const a = d.agents[s], b = d.agents[k];
-      ctx.beginPath(); arcPath(ctx, a.x, a.y, b.x, b.y, .3); ctx.stroke();
-    });
-    const recent = lowerBound(d.req, u - .25, q => q.u);
-    d.agents.forEach((a, i) => {
-      const b = bestAt(a, t), started = a.first !== null && a.first <= t, retired = a.done !== null && a.done <= t;
-      const col = started ? cmap(b) : "#e3e3e3", r = nodeR(d, b);
-      if (!retired && d.req.slice(recent, r1).some(q => q[1] === i)) { ctx.fillStyle = col; ctx.globalAlpha = .18; ctx.beginPath(); ctx.arc(a.x, a.y, r * 1.6, 0, 2 * Math.PI); ctx.fill(); }
-      ctx.globalAlpha = retired ? .4 : 1;
-      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(a.x, a.y, r, 0, 2 * Math.PI); ctx.fill();
-      const hl = i === S.hover || i === S.sel;
-      ctx.lineWidth = hl ? 3 : onRelay.has(i) ? 2.8 : 1.5;
-      ctx.strokeStyle = hl ? COL.strong : onRelay.has(i) ? COL.relay : "#ffffff"; ctx.stroke();
-      ctx.fillStyle = started ? (lum(col) > .5 ? COL.strong : "#ffffff") : COL.light;
-      ctx.font = `500 ${Math.max(9, r * .85)}px ${FM}`; ctx.fillText(a.short, a.x, a.y + .5);
-      ctx.globalAlpha = 1;
-      if (b > 1.05 && (d.rscale === 1 || b > 2 || i === S.hover)) {
-        ctx.fillStyle = COL.text; ctx.font = `400 ${d.rscale === 1 ? 12 : 10}px ${FM}`;
-        const off = r + 11;
-        ctx.fillText(b.toFixed(1), a.x + a.ux * off, a.y + a.uy * off);
-      }
-    });
-    ctx.fillStyle = COL.light; ctx.font = `400 12px ${FS}`;
-    const iso = d.agents.filter(a => a.arm !== "swarm");
-    if (d.geo.narrow) { ctx.textAlign = "right"; ctx.fillText(d.isoHead.join(" ").replace(" (no board)", ", no board"), RW - 8, iso[0].y - nodeR(d, 1) - 26); }
-    else { ctx.fillText(d.isoHead[0], iso[0].x, iso[0].y - nodeR(d, 1) - 26); ctx.fillText(d.isoHead[1], iso[0].x, iso[0].y - nodeR(d, 1) - 12); }
-  };
-
-  const drawChart = () => {
-    const d = S.d, t = d.tOf(S.u), ctx = cctx;
-    ctx.clearRect(0, 0, CW, CH);
-    const L = 34, Rr = 10, Tp = 8, B = 28, W = CW - L - Rr, H = CH - Tp - B;
-    const xm = v => d.split && v > d.split ? d.split + (v - d.split) / 6 : v;
-    const xmax = xm(d.tEnd), X = v => L + W * xm(v) / xmax, Y = r => Tp + H * (1 - (r - .6) / (11.8 - .6));
-    ctx.font = `400 11px ${FS}`; ctx.fillStyle = COL.light; ctx.strokeStyle = "#ececec"; ctx.lineWidth = 1;
-    ctx.textAlign = "right"; ctx.textBaseline = "middle";
-    [1, 2, 4, 6, 8, 10].forEach(r => { ctx.beginPath(); ctx.moveTo(L, Y(r)); ctx.lineTo(L + W, Y(r)); ctx.stroke(); ctx.fillText(r, L - 6, Y(r)); });
-    ctx.textAlign = "center"; ctx.textBaseline = "top";
-    (d.split ? [0, 4, 8, 12, 24, 36] : [0, 2, 4, 6, 8]).forEach(v => { ctx.beginPath(); ctx.moveTo(X(v), Tp); ctx.lineTo(X(v), Tp + H); ctx.stroke(); ctx.fillText(v + (v ? "" : " h"), X(v), Tp + H + 6); });
-    if (d.split) ctx.fillText("compressed 6× after 12 h", X(d.split) + (L + W - X(d.split)) / 2, Tp + H - 16);
-    ctx.strokeStyle = COL.line; ctx.beginPath(); ctx.moveTo(L, Tp); ctx.lineTo(L, Tp + H); ctx.lineTo(L + W, Tp + H); ctx.stroke();
-    const curve = (pts, color, dash) => {
-      ctx.strokeStyle = color; ctx.lineWidth = 2.4; ctx.setLineDash(dash); ctx.beginPath();
-      let r = 1; ctx.moveTo(X(0), Y(1));
-      for (const p of pts) { if (p[0] > t) break; ctx.lineTo(X(p[0]), Y(r)); r = p[1]; ctx.lineTo(X(p[0]), Y(r)); }
-      ctx.lineTo(X(t), Y(r)); ctx.stroke(); ctx.setLineDash([]);
-      return r;
-    };
-    const ri = curve(d.isoCurve, COL.iso, [6, 4]);
-    const rs = curve(d.swarmCurve, COL.swarm, []);
-    ctx.strokeStyle = "rgba(54,54,54,.35)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(t), Tp); ctx.lineTo(X(t), Tp + H); ctx.stroke();
-    d.steps.forEach((s, i) => {
-      if (s.t > t) return;
-      ctx.fillStyle = "#fff"; ctx.strokeStyle = COL.relay; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(s.t), Y(s.R), 9, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = COL.relay; ctx.font = `500 10px ${FM}`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(i + 1, X(s.t), Y(s.R) + .5);
-    });
-    ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.font = `500 12px ${FS}`;
-    ctx.fillStyle = COL.swarm; ctx.fillText(`agent swarm · ${rs.toFixed(2)}`, L + 8, Tp + 12);
-    ctx.fillStyle = COL.iso; ctx.fillText(`${d.isoLabel} · ${ri.toFixed(2)}`, L + 8, Tp + 30);
-  };
-
-  const renderFeed = animate => {
-    const d = S.d;
-    const n = lowerBound(d.posts, S.u + 1e-9, p => p.u);
-    const ids = []; for (let i = n - 1; i >= 0 && ids.length < 6; i--) ids.push(i);
-    if (ids.join() === S.shown.join()) return;
-    const prevTop = {};
-    feedEl.querySelectorAll("li[data-i]").forEach(li => (prevTop[li.dataset.i] = li.offsetTop));
-    feedEl.textContent = "";
-    if (!ids.length) { const li = document.createElement("li"); li.className = "empty"; li.textContent = "The board is empty. The first posts arrive within minutes of launch."; feedEl.appendChild(li); S.shown = ids; return; }
-    let y = 0;
-    const made = ids.map(i => {
-      const p = d.posts[i], a = d.agents[p.a], li = document.createElement("li");
-      li.dataset.i = i; li.className = p.kind + (i === S.openPost ? " open" : ""); li.tabIndex = 0;
-      li.innerHTML = `<div class="meta"><span class="kind" style="color:${KIND_C[p.kind] || COL.light}">${p.kind}</span><span>agent ${a.short} · ${p.t.toFixed(2)} h</span></div><div class="ttl"></div><div class="ex"></div>`;
-      li.querySelector(".ttl").textContent = p.title;
-      li.querySelector(".ex").textContent = p.excerpt + (p.excerpt.length >= 480 ? "…" : "");
-      const toggle = () => { S.openPost = S.openPost === i ? -1 : i; S.sel = p.a; S.shown = []; renderFeed(false); showAgent(p.a); draw(); };
-      li.addEventListener("click", toggle);
-      li.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
-      feedEl.appendChild(li);
-      return li;
-    });
-    made.forEach(li => { li.style.top = y + "px"; y += li.offsetHeight + 7; });
-    if (animate) made.forEach(li => {   // the new post slides in and pushes the others down
-      const old = prevTop[li.dataset.i];
-      const dy = old === undefined ? -li.offsetHeight - 7 : old - li.offsetTop;
-      if (!dy) return;
-      li.style.transition = "none"; li.style.transform = `translateY(${dy}px)`; if (old === undefined) li.style.opacity = "0";
-      requestAnimationFrame(() => requestAnimationFrame(() => { li.style.transition = ""; li.style.transform = ""; li.style.opacity = ""; }));
-    });
-    S.shown = ids;
-  };
-
-  const showAgent = i => {
-    const d = S.d;
-    if (i < 0) { agentEl.textContent = IDLE; return; }
-    const a = d.agents[i], b = bestAt(a, d.tOf(S.u));
-    const fam = a.families.slice(0, 5).join(", ") + (a.families.length > 5 ? ` and ${a.families.length - 5} more` : "");
-    agentEl.textContent = "";
-    const bb = document.createElement("b"); bb.textContent = a.arm === "swarm" ? `Agent ${a.short}` : a.id === "indep" ? "Best of 18 independent agents" : `Isolated agent ${a.short.slice(1)}`;
-    agentEl.append(bb, document.createTextNode(` · best R_min so far ${b.toFixed(2)} · ${a.nreq} model-1 requests · ${a.nposts} posts${fam ? " · strategies: " + fam : ""}`));
-  };
-
-  const draw = () => {
-    if (!S.d) return;
-    drawRing(); drawChart();
-    const t = S.d.tOf(S.u);
-    clock.textContent = `t = ${t.toFixed(2)} h`;
-    scrub.value = S.u.toFixed(2);
-    const rec = S.d.swarmCurve.filter(p => p.u <= S.u && S.u - p.u < 2.5).pop();
-    callout.textContent = rec ? `new best ${rec[1].toFixed(2)}` : "";
-    stepsEl.querySelectorAll("button").forEach((b, i) => b.classList.toggle("done", S.d.steps[i].t <= t));
-    renderFeed(S.playing);
-    if (S.sel >= 0 || S.hover >= 0) showAgent(S.hover >= 0 ? S.hover : S.sel);
-  };
-  const setPlaying = p => {
-    S.playing = p;
-    icon.setAttribute("d", p ? "M4 2.5h3v11H4zM9 2.5h3v11H9z" : "M4 2.5v11l9-5.5z");
-    playBtn.setAttribute("aria-label", p ? "Pause" : "Play");
-    if (p) { if (S.u >= S.d.uEnd - .01) S.u = 0; S.lastFrame = performance.now(); requestAnimationFrame(tick); }
-  };
-  const tick = now => {
-    if (!S.playing) return;
-    const dt = Math.min(.1, (now - S.lastFrame) / 1000); S.lastFrame = now;
-    S.u = Math.min(S.d.uEnd, S.u + dt * Number(speedEl.value));
-    draw();
-    if (S.u >= S.d.uEnd) { setPlaying(false); return; }
-    requestAnimationFrame(tick);
-  };
-  const maybeStart = () => {
-    if (S.inView && S.d && !S.started) { S.started = true; if (!REDUCED) { S.u = 0; S.shown = []; setPlaying(true); } }
-  };
-  const select = async key => {
-    document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.key === key)));
-    let d;
-    try { d = await load(key); }
-    catch (e) { agentEl.textContent = `Could not load the replay data (${e.message}). Reload the page to try again.`; return; }
-    const was = S.playing; setPlaying(false);
-    S.d = d; S.sel = -1; S.hover = -1; S.openPost = -1; S.shown = [];
-    scrub.max = d.uEnd; S.u = d.uEnd;
-    stepsEl.textContent = "";
-    d.steps.forEach((s, i) => {
-      const b = document.createElement("button"); b.type = "button";
-      b.innerHTML = `<span class="n">${i + 1}</span>`; b.append(document.createTextNode(`${s.text} · ${s.R.toFixed(2)}`));
-      b.title = `agent ${d.agents[s.a].short} at ${s.t.toFixed(2)} h`;
-      b.addEventListener("click", () => { S.u = Math.min(d.uEnd, d.uOf(s.t) + .4); S.sel = s.a; S.shown = []; draw(); });
-      stepsEl.appendChild(b);
-    });
-    layout(); showAgent(-1); draw();
-    if (was || S.started) { S.u = 0; setPlaying(!REDUCED); } else maybeStart();
-  };
-
-  document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => select(b.dataset.key)));
-  playBtn.addEventListener("click", () => setPlaying(!S.playing));
-  scrub.addEventListener("input", () => { S.u = Number(scrub.value); S.shown = []; draw(); });
-  scrub.addEventListener("pointerdown", () => setPlaying(false));
-  const pick = e => {
-    const r = ring.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, d = S.d;
-    let best = -1, bd = 1e9;
-    d.agents.forEach((a, i) => { const dd = Math.hypot(a.x - x, a.y - y); if (dd < bd) { bd = dd; best = i; } });
-    return bd < Math.max(16, nodeR(d, 3) + 6) ? [best, x, y] : [-1, x, y];
-  };
-  ring.addEventListener("pointermove", e => {
-    if (!S.d) return;
-    const [i, x, y] = pick(e);
-    if (i !== S.hover) { S.hover = i; if (!S.playing) draw(); }
-    if (i < 0) { tip.hidden = true; if (S.sel < 0) showAgent(-1); return; }
-    const a = S.d.agents[i];
-    tip.textContent = ""; const b = document.createElement("b"); b.textContent = a.arm === "swarm" ? `agent ${a.short}` : a.id === "indep" ? "best of 18 independent agents" : `isolated agent ${a.short.slice(1)}`;
-    tip.append(b, document.createElement("br"), document.createTextNode(`best R_min ${bestAt(a, S.d.tOf(S.u)).toFixed(2)} · ${a.nreq} requests`));
-    if (a.families.length) tip.append(document.createElement("br"), document.createTextNode(a.families.slice(0, 3).join(", ") + (a.families.length > 3 ? " …" : "")));
-    tip.hidden = false;
-    tip.style.left = Math.min(ring.getBoundingClientRect().width - tip.offsetWidth - 8, x + 14) + "px"; tip.style.top = (y + 14) + "px";
-    showAgent(i);
-  });
-  ring.addEventListener("pointerleave", () => { S.hover = -1; tip.hidden = true; showAgent(S.sel); if (!S.playing) draw(); });
-  ring.addEventListener("click", e => { if (!S.d) return; const [i] = pick(e); S.sel = i; showAgent(i); draw(); });
-  new ResizeObserver(() => { if (S.d) { layout(); S.shown = []; draw(); } }).observe(ring);
-  // the replay rests on its final frame and plays from the start the first time it scrolls into view
-  new IntersectionObserver(es => { if (es[0].isIntersecting) { S.inView = true; maybeStart(); } }, { threshold: .45 }).observe(document.getElementById("rp"));
-  select("w3n18");
-  document.fonts && document.fonts.ready.then(() => { if (S.d) { S.shown = []; draw(); } });
 
   /* ---------- best R_min against tokens ---------- */
   (async () => {
