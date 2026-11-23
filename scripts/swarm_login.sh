@@ -7,7 +7,7 @@
 set -euo pipefail
 CONFIG="$(realpath "$1")"
 MAIN="$(cd "$(dirname "$0")/.." && pwd)"
-ID=$(uv run --project "$MAIN" --no-sync python -c "import sys; from swarm.config import load_swarm; print(load_swarm(sys.argv[1]).swarm_id)" "$CONFIG")
+ID=$(uv run --project "$MAIN" --no-sync python -c "import sys; from mosaic.swarm.config import load_swarm; print(load_swarm(sys.argv[1]).swarm_id)" "$CONFIG")
 S="swarm-$ID"
 tmux has-session -t "$S" 2>/dev/null && { echo "tmux session $S already exists"; exit 1; }
 # The broker exits 3 on HALT and is then not restarted; any other exit is
