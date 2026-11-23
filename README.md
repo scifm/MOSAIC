@@ -140,7 +140,7 @@ is shown [below](#the-evaluation-ladder-in-the-paper).
   (tested on H100 and A100).
 
 ```bash
-git clone https://github.com/ChangwenXu98/MOSAIC.git
+git clone https://github.com/SciFM/MOSAIC.git
 cd MOSAIC
 uv sync                                  # the swarm (Python)
 scripts/setup_solver.sh                  # the paper's ED solver (Julia); set JULIA=/path/to/julia if needed
