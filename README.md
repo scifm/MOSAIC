@@ -32,7 +32,15 @@
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [The ED solver](#the-ed-solver)
-- [Running a campaign](#running-a-campaign)
+- [Running the agent swarm](#running-the-agent-swarm)
+  - [Prerequisites](#prerequisites)
+  - [1. Configure a campaign](#1-configure-a-campaign)
+  - [2. Prepare the campaign](#2-prepare-the-campaign)
+  - [3. Launch](#3-launch)
+  - [4. Monitor and steer](#4-monitor-and-steer)
+  - [5. Stop, resume and collect](#5-stop-resume-and-collect)
+  - [The `swarm` command](#the-swarm-command)
+  - [A new research question](#a-new-research-question)
 - [Reproducing the paper](#reproducing-the-paper)
 - [Data](#data)
 - [Citation](#citation)
@@ -155,8 +163,8 @@ MOSAIC/
 - Python ≥ 3.11 with [uv](https://docs.astral.sh/uv/).
 - Julia ≥ 1.10 (tested with 1.10.2).
 - Optional: an NVIDIA GPU with CUDA for the GPU solver (tested on H100 and A100).
-- To run swarm campaigns: Slurm, a command-line coding agent and
-  [bubblewrap](https://github.com/containers/bubblewrap).
+- To run swarm campaigns: Slurm, tmux, [Claude Code](https://docs.claude.com/en/docs/claude-code) and
+  [bubblewrap](https://github.com/containers/bubblewrap); see [Running the agent swarm](#running-the-agent-swarm).
 
 ```bash
 git clone https://github.com/ChangwenXu98/MOSAIC.git
@@ -248,34 +256,249 @@ Several GPUs share a batch of sector solves.
 | 4×6 | 593 s | 28 s | **6.4 s** |
 | 5×6 | 3.8 h | 23 min | **41 s** |
 
-## Running a campaign
+## Running the agent swarm
 
-1. **Set the site values in the campaign config.** The released configs carry placeholders:
-   - Slurm partitions (`cpu`, `gpu-h100`, `gpu-a100`);
-   - the `julia` binary and the coding-agent command (`agent_job.claude`);
-   - `agent_deny_read`, the paths emptied in each agent's sandbox.
-2. **Build the entanglement-count table** for the PES gate, and point `gates.pes_expected_counts` at it. The
-   table for the paper's clusters ships as `swarm/templates/pes_expected_counts.json`, and the released configs
-   use it.
-   ```bash
-   uv run python -m mosaic.swarm pes-cases --config configs/swarm_kgll_w3_n18.yaml > cases.json
-   julia --project=julia scripts/pes_expected_counts.jl . cases.json counts.json
-   ```
-3. **Prepare the campaign.** This creates one worktree per agent and renders each agent's charter. It also
-   snapshots the solver at `broker.solver_ref`, together with `julia/deps/`, so every evaluation of the campaign
-   runs the same frozen code.
-   ```bash
-   uv run python -m mosaic.swarm setup --config configs/swarm_kgll_w3_n18.yaml
-   ```
-4. **Start the broker and the supervisor** in a tmux session on a login node. The supervisor submits the agent
-   allocations and resubmits them at each walltime, and agents resume their sessions.
-   ```bash
-   scripts/swarm_login.sh configs/swarm_kgll_w3_n18.yaml
-   ```
+A campaign is one YAML file in `configs/`. It defines one or more **arms** of agents, the **parent** bands the
+agents try to beat, the **clusters** and **stages** of the evaluation ladder, the **gates**, the **search
+boundary**, the **quotas**, and the Slurm resources of the **broker** and the **agents**. All commands below use
+`configs/swarm_kgll_w3_n18.yaml` as the example; replace it with your config.
 
-To point MOSAIC at a new question, write a new brief in `swarm/missions/` and a config with your parents, clusters,
-gates and search boundary. The charter and briefs are released as the agents saw them (they match Supplementary
-Section S-VI of the paper), so they mention project notes that are not part of this repository.
+Three kinds of process run during a campaign:
+
+| Process | Where | Started by | Role |
+|---|---|---|---|
+| broker | login node, tmux window `broker` | `scripts/swarm_login.sh` | validates requests, submits ED pool jobs, applies gates, promotes, writes results and leaderboards |
+| supervisor | login node, tmux window `supervise` | `scripts/swarm_login.sh` | submits each arm's agent allocation, and resubmits it at walltime while agents remain |
+| agents | one Slurm allocation per arm, one tmux window per agent | the supervisor | long-running Claude Code sessions that act through the `swarm` command |
+
+ED evaluations run in **pool jobs** that the broker keeps alive per tier (`broker.tiers`): at most `max_jobs`
+allocations per tier, each with `lanes` workers pulling from a queue, so the swarm stays at a handful of Slurm
+jobs whatever the number of agents.
+
+### Prerequisites
+
+In addition to the [installation](#installation) above (`uv sync` and `scripts/setup_solver.sh`, which the solver
+snapshot requires):
+
+- **Slurm** with `sbatch`, `sacct` and `scontrol` on the node where the broker runs, and **tmux** on the login node
+  and on the compute nodes.
+- **[Claude Code](https://docs.claude.com/en/docs/claude-code)** installed on the compute nodes, and logged in
+  (`claude`, then `/login`) under the account that runs the campaign. The agents use the subscription login by
+  default: `agent_job.unset_api_key: true` unsets any inherited `ANTHROPIC_API_KEY`. Set it to `false` to bill an
+  API key instead.
+- **[bubblewrap](https://github.com/containers/bubblewrap)** (`bwrap`) on the compute nodes. An agent is never
+  launched without its sandbox; if `bwrap` fails, the launcher retries every 5 minutes and logs the failure.
+- Check the tests pass: `uv run pytest tests/swarm -q` runs a broker, agents and the full ladder against a mock ED.
+
+### 1. Configure a campaign
+
+Copy one of the released configs and edit it. The released configs carry site placeholders that you must set:
+
+| Key | What to set |
+|---|---|
+| `broker.tiers.<tier>.partition` (and `reservation`, `qos`) | your CPU and GPU partitions (placeholders: `cpu`, `gpu-h100`, `gpu-a100`) |
+| `broker.tiers.<tier>.lanes`, `threads`, `gpus`, `mem`, `walltime`, `max_jobs` | the size of each ED pool job; for a GPU tier, `gpus` must be a multiple of `lanes` |
+| `broker.julia` | path to the `julia` binary on the compute nodes |
+| `agent_job.partition` (and `reservation`, `qos`, `walltime`) | where the agent sessions run; they need CPU and memory only (`cpus_per_agent`, `mem_per_agent_gb`) |
+| `agent_job.claude`, `agent_job.model` | path to the `claude` binary, and an optional model name (`null` uses the default) |
+| `agent_deny_read` | paths emptied in each agent's sandbox, e.g. other campaigns, analysis folders, other Claude transcript folders |
+
+The other keys you are likely to change:
+
+- `swarm_id`: a short name; it also names the git branches (`swarm/<swarm_id>/<agent>`) and tmux sessions.
+- `root`: where the campaign's state lives (default `runs_swarm/<swarm_id>`, relative to the repository).
+- `worktree_root`: where the agent worktrees are created (default `../mosaic-wt/<swarm_id>`, outside the repository).
+- `arms`: one entry per arm. `mode: shared` gives the arm a common board, mail, roster and leaderboard;
+  `mode: private` isolates every agent (the controls). Agent names must be unique across arms.
+- `quotas`: evaluations charged per agent (first stage only; promotions are free) and requests in flight.
+- `deadline_utc`: after this time the broker refuses new requests (`null` for none).
+- `agent_job.stagger_seconds`: delay between agent launches within an arm, so later agents read earlier plans.
+- `agent_deny_bash`: extra Bash command prefixes the agents may not run (the released configs deny `git`).
+
+The **PES gate** needs a table of the expected Laughlin (1,3) counts for every cluster with `pes_na` set. The table
+for the paper's clusters ships as `swarm/templates/pes_expected_counts.json`, and the released configs use it. For
+new clusters, build one and point `gates.pes_expected_counts` at it:
+
+```bash
+uv run python -m mosaic.swarm pes-cases --config configs/swarm_kgll_w3_n18.yaml > cases.json
+julia --project=julia scripts/pes_expected_counts.jl . cases.json counts.json
+```
+
+The **parents' expected gaps** (`parents.<name>.expected_gap`) are the gaps measured before the campaign on each
+cluster. The broker evaluates every parent first, and halts if its own values disagree beyond `expected_rtol`,
+which catches a changed solver or parent before any agent result is trusted. Remove the entries for a parent or
+cluster you have not measured yet.
+
+### 2. Prepare the campaign
+
+```bash
+uv run python -m mosaic.swarm setup --config configs/swarm_kgll_w3_n18.yaml
+```
+
+`setup` launches nothing and is safe to rerun. It creates:
+
+- the arm directories under `root` (layout below) and each parent's solver input in `<root>/<arm>/parents/`;
+- a **solver snapshot** at `<worktree_root>/solver-<solver_ref>`: a git worktree of `broker.solver_ref` together
+  with a copy of `julia/deps/` and the pinned `Manifest.toml`, so every evaluation of the campaign runs the same
+  frozen code even if the main checkout changes;
+- for each agent, a **git worktree** on branch `swarm/<swarm_id>/<agent>` containing:
+  - `CHARTER.md`, the rendered charter (`swarm/charter.md` with the campaign brief from `mission` inserted);
+  - `NOTEBOOK.md`, the agent's memory across restarts;
+  - `work/`, where the agent writes its own scripts;
+  - `.claude/settings.local.json`, permission guardrails: no edits to `src/`, `julia/`, `configs/`, `docs/`, `jobs/`,
+    `scripts/`, `swarm/` or the campaign root, no reads of other arms (or, in a private arm, of other agents), and no
+    `sbatch`, `srun`, `salloc`, `scancel`, `git commit` or `git push`;
+- a fixed Claude Code session id per agent (`<root>/<arm>/agents/<agent>/session.json`), so an agent resumes the
+  same conversation after every restart;
+- the agent allocation script of each arm, `<root>/<arm>/agents_job.sbatch`.
+
+`--no-worktrees` and `--no-solver` skip those two steps, which is useful to validate a config.
+
+Before launching, it is worth running the broker for one tick, which builds the parents and checks the config
+end to end, and asking the supervisor what it would submit:
+
+```bash
+uv run python -m mosaic.swarm broker --config configs/swarm_kgll_w3_n18.yaml --once
+uv run python -m mosaic.swarm supervise --config configs/swarm_kgll_w3_n18.yaml --dry-run
+```
+
+### 3. Launch
+
+On a login node, from the repository root:
+
+```bash
+scripts/swarm_login.sh configs/swarm_kgll_w3_n18.yaml
+```
+
+This starts the tmux session `swarm-<swarm_id>` with two windows:
+
+- `broker`: the broker, ticking every `broker.tick_seconds`. It submits the parents' evaluations first, then
+  accepts agent requests. If it exits for any reason other than a halt, it restarts after 60 s; its state is all
+  on disk.
+- `supervise`: every 120 s, submits each arm's agent allocation if none is pending or running and some agent has
+  not finished. The allocation is sized to the agents still running.
+
+Each agent allocation (`jobs/swarm_agents.sbatch`) starts a tmux server on its compute node with one window per
+agent. Each window runs `scripts/swarm_agent.sh`, which:
+
+1. puts the `swarm` command on `PATH` and moves into the agent's worktree;
+2. builds the bubblewrap sandbox, in which the `agent_deny_read` paths appear empty;
+3. starts Claude Code with the charter appended to its system prompt and a `/loop` prompt: each wakeup the agent
+   runs `swarm digest`, decides, acts, writes to `NOTEBOOK.md`, runs `swarm heartbeat` and paces its next wakeup;
+4. on any exit before the agent has written `done`, resumes the same session after 30 s.
+
+The allocation ends when every agent of the arm has run `swarm done`, or at walltime, after which the supervisor
+resubmits it and the agents resume.
+
+### 4. Monitor and steer
+
+**Watch the agents.** Attach to an arm's agent sessions (the job id is in `<root>/<arm>/agents_jobs.json` or
+`squeue`):
+
+```bash
+srun --jobid=<job_id> --overlap --pty tmux -L swarm-<swarm_id>-<arm> attach -t <arm>
+```
+
+Switch windows with tmux's `Ctrl-b n` / `Ctrl-b p`, or `Ctrl-b w` to pick an agent; detach with `Ctrl-b d`.
+Detaching does not stop anything.
+
+**Watch the broker:** `tmux attach -t swarm-<swarm_id>` on the login node.
+
+**Read the campaign state.** Everything is plain files under `<root>/<arm>/`:
+
+```
+<root>/<arm>/
+├── leaderboard.md, leaderboard.json   ranked requests per parent, other phases, controls, budget
+├── board/                             every post (private arm: board/<agent>/)
+├── mail/<agent>/                      directed mail (shared arm only)
+├── agents/<agent>/                    status.json (roster), session.json, launches.log, leaderboard (private arm), done
+├── inbox/<agent>/<req_id>/            request.json, ed_input.json; accepted.json and result.json from the broker
+├── store/                             index.db and runs/<hash>/ (solver input and output of every evaluation)
+├── pool/<tier>/, jobs/<tier>/         queued evaluations, pool job scripts and logs
+├── parents/, parents.json             parent inputs and their measured gaps
+└── agents_<job_id>.log                agent allocation log
+```
+
+To see what an agent sees, run the agent commands with its identity:
+
+```bash
+export SWARM_CONFIG=$(realpath configs/swarm_kgll_w3_n18.yaml) SWARM_AGENT=swarm-a PATH=$PWD/swarm/bin:$PATH
+swarm leaderboard
+swarm digest --no-mark      # --no-mark: do not mark the agent's posts and mail as read
+swarm status
+```
+
+**Answer the agents.** Agents escalate physics questions with `request` posts addressed to the human. Answer on
+the board (shared arm), or on one agent's own board in a private arm (`--to` required there):
+
+```bash
+uv run python -m mosaic.swarm human --config configs/swarm_kgll_w3_n18.yaml --arm swarm \
+    --title "Re: matched-density control" --to swarm-c --ref <post_id> < answer.md
+```
+
+With `--to` in a shared arm, the post also goes to that agent's mail.
+
+### 5. Stop, resume and collect
+
+- **Halts.** The broker writes `<root>/HALT` with a reason and stops when something invalidates the campaign: a
+  parent gap that disagrees with `expected_gap`, a parent failing its own gates, or an output from a solver other
+  than `broker.solver_version_prefix`. Agents see the halt at the top of their digest and stop submitting; the
+  supervisor stops resubmitting allocations. Fix the cause, delete `<root>/HALT`, and run
+  `scripts/swarm_login.sh` again (kill the old tmux session first: `tmux kill-session -t swarm-<swarm_id>`).
+- **Stopping by hand.** Create `<root>/HALT` with a reason. The supervisor will not resubmit agent allocations and
+  agents stop submitting; stop the running pieces with `tmux kill-session -t swarm-<swarm_id>` and `scancel` on
+  the agent and pool jobs.
+- **Restarting.** Every step is keyed on content hashes and recorded on disk, so the broker, the supervisor and
+  the agents can be killed and restarted at any time without losing or rerunning evaluations. A pool job that
+  died while holding a run is detected and the run is requeued.
+- **Ending.** An agent ends by running `swarm done` with a final summary; it is not relaunched afterwards. The
+  supervisor exits when every agent of every arm is done. The broker keeps running to finish queued promotions;
+  stop it with `tmux kill-session` once the leaderboard no longer changes.
+- **Collecting.** The results are in `<root>/<arm>/` (store, board, mail, leaderboards) and each agent's notebook
+  and scripts in its worktree. `data/agent_records/` in this repository has the same records for the paper's
+  campaigns.
+
+### The `swarm` command
+
+Agents act on shared state only through `swarm` (`swarm/bin/swarm`, which runs `python -m mosaic.swarm` from the
+main checkout). Agent commands read `SWARM_CONFIG` and `SWARM_AGENT` from the environment, which the launcher sets.
+
+| Command | Purpose |
+|---|---|
+| `swarm digest` | what changed since the last look: halts, parents, budget, roster, new posts, unread mail, own requests, leaderboard |
+| `swarm reference` | parents and their gaps, pinning, gates, the stage ladder, claim thresholds |
+| `swarm template --parent P [--out F]` | a parent's solver input to start from |
+| `swarm check INPUT.json --parent P` | validate exactly as the broker will (pinning, admissibility, search boundary) |
+| `swarm submit INPUT.json --family F --parent P [--note N] [--builds-on REQ_ID]` | queue a request on the first stage; promotion is automatic |
+| `swarm submit ... --diagnostic` | a probe: first stage only, never promoted or ranked |
+| `swarm submit ... --control [--clusters r46,r56]` | a mechanism control: static density not pinned, never ranked |
+| `swarm submit-batch DIR --family F --parent P` | submit every `*.json` in a directory (for optimizer loops) |
+| `swarm withdraw REQ_ID ...` | stop promoting own requests; their queued runs go to the back |
+| `swarm status [REQ_ID]`, `swarm show REQ_ID` | own requests and results; any visible request's input and result |
+| `swarm post --kind K --family F --title T [--ref ID] < body.md` | an immutable board post; kinds: `hypothesis`, `result`, `claim`, `refutation`, `abandon`, `request`, `note` |
+| `swarm mail --to AGENT --subject S < body.md`, `swarm read ID` | a directed message (shared arm only); the full text of a post or mail |
+| `swarm heartbeat --family F [--state active\|waiting] [--note N]` | update the agent's roster entry |
+| `swarm leaderboard` | the leaderboard visible to the agent |
+| `swarm done < summary.md` | post a final summary and stop |
+
+Operator commands take `--config`: `setup`, `broker [--once]`, `supervise [--once] [--dry-run]`, `human`,
+`pes-cases`. Run `uv run python -m mosaic.swarm <command> --help` for every option.
+
+### A new research question
+
+MOSAIC's broker, ladder and tools are generic over parents, clusters and gates; the physics the agents see comes
+from two files:
+
+- the **charter**, `swarm/charter.md`: the rules, scoring and tools, shared by every campaign (placeholders such as
+  `{agent}`, `{quota}` and `{mission}` are filled in by `setup`);
+- the **campaign brief**, a Markdown file in `swarm/missions/` named by the config's `mission` key: the question,
+  the fixed setup, the parents and what counts as a result.
+
+To point MOSAIC at a new question, write a new brief and a config with your parents (`ed_input` files or shell
+weights), clusters, stages, claims, gates and search boundary. `directions` can optionally give individual agents
+a starting direction; by default agents choose their own scope on the board. The charter and briefs are released
+as the agents saw them (they match Supplementary Section S-VI of the paper), so they mention project notes that
+are not part of this repository; edit those references for a new campaign.
 
 ## Reproducing the paper
 
