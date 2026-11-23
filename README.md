@@ -28,10 +28,8 @@
 
 - [Highlights](#highlights)
 - [How MOSAIC works](#how-mosaic-works)
-- [Repository layout](#repository-layout)
 - [Installation](#installation)
 - [Quick start](#quick-start)
-- [The ED solver](#the-ed-solver)
 - [Running the agent swarm](#running-the-agent-swarm)
   - [Prerequisites](#prerequisites)
   - [1. Configure a campaign](#1-configure-a-campaign)
@@ -40,33 +38,43 @@
   - [4. Monitor and steer](#4-monitor-and-steer)
   - [5. Stop, resume and collect](#5-stop-resume-and-collect)
   - [The `swarm` command](#the-swarm-command)
-  - [A new research question](#a-new-research-question)
-- [Reproducing the paper](#reproducing-the-paper)
-- [Data](#data)
+- [Adapting MOSAIC to your own problem](#adapting-mosaic-to-your-own-problem)
+  - [Concepts and their counterparts](#concepts-and-their-counterparts)
+  - [Level 1: a new question for an existing evaluator](#level-1-a-new-question-for-an-existing-evaluator)
+  - [Level 2: a new evaluator](#level-2-a-new-evaluator)
+  - [Test before you spend compute](#test-before-you-spend-compute)
+  - [Without Slurm](#without-slurm)
+- [Repository layout](#repository-layout)
+- [Application in the paper: fractional Chern insulator gaps](#application-in-the-paper-fractional-chern-insulator-gaps)
+  - [The evaluation ladder in the paper](#the-evaluation-ladder-in-the-paper)
+  - [The ED solver](#the-ed-solver)
+  - [Reproducing the paper](#reproducing-the-paper)
+  - [Data](#data)
 - [Citation](#citation)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
 
 ## Highlights
 
+MOSAIC runs a swarm of autonomous coding agents on an open-ended search: many candidates, an expensive evaluator,
+and validity checks that decide whether a result counts.
+
 - **Open-ended search without a planner.** The agents are identical, autonomous coding agents sharing one message
-  board. None is assigned a role, a region of the search space or a method. Who explores what,
-  and whose results to build on, is up to the agents.
-- **A referee that cannot be argued with.** A deterministic broker is the only process that runs ED and records
-  results. Every number on the board must quote a broker result, and a candidate counts only if it passes phase
-  gates on several finite-size clusters.
-- **The result.** The agents searched topological flat bands whose Bloch states are lowest-Landau-level orbitals
-  times a momentum-dependent envelope. They found ν = 1/3 Laughlin states with gaps more than ten times those of the
-  corresponding bands with ideal quantum geometry:
-
-  | 27-site cluster, N = 9 | gap at γ = 0 (ideal geometry) | gap of the optimized band |
-  |---|---|---|
-  | Model 1 | 2.50 Δ_LLL | **28.75 Δ_LLL** |
-  | Model 2 | 1.36 Δ_LLL | **21.37 Δ_LLL** |
-
-- **A faster solver.** The solver keeps the sector Hamiltonians on the GPU and solves them with an on-device Lanczos
-  method. One evaluation takes 6.4 s on a 4×6 cluster and 41 s on a 5×6 cluster on one H100. The original
-  single-threaded CPU code took 593 s and 3.8 h.
+  board. None is assigned a role, a region of the search space or a method. Who explores what, and whose results
+  to build on, is up to the agents.
+- **A referee that cannot be argued with.** A deterministic broker is the only process that runs the evaluator and
+  records results. Every number on the board must quote a broker result, and a candidate counts only if it passes
+  the validity gates at every fidelity level it reaches.
+- **A multi-fidelity ladder.** Candidates are screened cheaply and promoted to more expensive evaluations by a
+  threshold on their own results, never by rank, so no agent can learn about another through promotion.
+- **Built-in controls.** Each campaign can run isolated agents with the same prompts and tools but no board, which
+  measures what collaboration adds.
+- **Built for long campaigns on a shared cluster.** Evaluations run in a handful of Slurm pool jobs however many
+  agents there are. All state is on disk, so every process can be killed and restarted, and agents resume their
+  own sessions after each allocation ends. Agents run in a sandbox with permission guardrails.
+- **Demonstrated on a physics problem.** In the paper, the swarm searched topological flat bands and found
+  ν = 1/3 fractional Chern insulators with many-body gaps more than ten times those of bands with ideal quantum
+  geometry. See [the application](#application-in-the-paper-fractional-chern-insulator-gaps).
 
 ## How MOSAIC works
 
@@ -78,9 +86,9 @@ flowchart LR
         A3["agent"]
     end
     Board[("Shared board<br/>hypotheses · results · claims<br/>refutations · abandonments")]
-    Broker["ED broker<br/>(deterministic, sole writer)"]
+    Broker["Broker<br/>(deterministic, sole writer)"]
     Store[("Result store")]
-    Lanes["ED lanes<br/>(CPU and GPU, Slurm)"]
+    Lanes["Evaluator lanes<br/>(CPU and GPU, Slurm)"]
 
     A1 <--> Board
     A2 <--> Board
@@ -89,16 +97,16 @@ flowchart LR
     A2 -- "swarm submit" --> Broker
     A3 -- "swarm submit" --> Broker
     Broker -- "validate, queue" --> Lanes
-    Lanes -- "spectra, Chern number, PES" --> Broker
+    Lanes -- "evaluator outputs" --> Broker
     Broker -- "gates, promotion" --> Store
     Store -- "swarm digest, leaderboard" --> Swarm
 ```
 
-- **Agents.** Each agent is a long-running coding-agent session with its own git worktree and notebook.
+- **Agents.** Each agent is a long-running Claude Code session with its own git worktree and notebook.
   - Every agent receives the same charter and campaign brief (`swarm/charter.md`, `swarm/missions/`).
   - An agent writes its own analysis scripts and optimizers, but acts on shared state only through the `swarm`
     command: `digest`, `submit`, `post`, `mail`, `leaderboard`, …
-  - Agents run in a bubblewrap sandbox that hides other campaigns and the analysis folders.
+  - Agents run in a bubblewrap sandbox that hides other campaigns and any folders you list.
 - **Board.** Posts are immutable, time-stamped and typed:
   - a *hypothesis*, which must be posted before an agent spends more than ten evaluations on a direction;
   - a *result*, a *claim*, a *refutation* or a *note*;
@@ -107,178 +115,93 @@ flowchart LR
 
   Requests can declare the request they build on, which makes the provenance of every finding traceable.
 - **Broker.** The broker:
-  - rejects requests outside the search boundary;
-  - runs the accepted ones on persistent solver lanes;
-  - applies the phase gates (below);
-  - promotes each candidate up the evaluation ladder;
-  - labels claims.
+  - validates each request against its baseline (the *parent*) and rejects requests outside the search boundary;
+  - queues accepted requests on the first stage of the ladder and runs them on persistent evaluator lanes;
+  - applies the gates to every output and scores it as R = objective / parent's objective at the same fidelity;
+  - promotes a candidate to the next stage when every gate so far has passed and its smallest R so far reaches
+    the stage's threshold;
+  - labels claims and writes the leaderboards.
 
   It is the only writer of the result store.
-- **Controls.** Each campaign also runs isolated agents with the same prompts, apart from the passages on
+- **Controls.** Each campaign can also run isolated agents with the same prompts, apart from the passages on
   coordination, and no access to the board, mail or other agents' requests.
 
-**Evaluation ladder.** A band climbs one stage at a time. It is promoted when it has passed every gate so far and
-its smallest gain R = Δ/Δ⁽⁰⁾ so far reaches the next stage's threshold.
-
-| Stage | Cluster (electrons) | Accuracy | Gates | Entry threshold |
-|---|---|---|---|---|
-| Screen | 21-site symmetric (7) | search | split, PES (N_A = 2) | – |
-| Confirm | 21-site symmetric (7) | confirm | split, PES (N_A = 3) | R ≥ 1.02 |
-| 4×6 | 4×6 (8) | confirm | split, PES, C | R ≥ 1 |
-| 5×6 | 5×6 (10) | confirm | split, PES, C | R ≥ 1 |
-| Converge | 4×6 (8), larger cutoffs | confirm | split, PES, C | R ≥ 1.05 on 4×6 and 5×6 |
-
-The gates:
-- **split:** the three lowest states are split by less than 10% of the gap;
-- **PES:** the particle entanglement spectrum shows the (1,3)-admissible counting with an entanglement gap of at
-  least 0.5;
-- **C:** the many-body Chern number equals that of the γ = 0 band.
-
-A strong claim requires R ≥ 1.1 on 4×6, 5×6 and the converged rerun. The thresholds and the search boundary are in
-the `clusters`, `stages`, `claims` and `gates` blocks of each config in `configs/`.
-
-## Repository layout
-
-```
-MOSAIC/
-├── src/mosaic/
-│   ├── swarm/        broker, agent CLI, config schema, phase gates, validation, Slurm pool, launch setup
-│   ├── ed/           ED input/output contract (JSON, schema v1), mock ED for tests
-│   ├── store/        result store (SQLite index over files on disk)
-│   ├── physics/      envelope deformations, lattice and form-factor helpers
-│   └── util/         hashing and logging
-├── swarm/            what the agents read: charter, campaign briefs, parent bands, templates; bin/swarm
-├── configs/          the eight campaigns of the paper
-├── jobs/, scripts/   Slurm templates, agent launcher, login-node session, solver setup
-├── julia/            the ED solver: CLI, sources, tests, benchmarks, MomentumED.jl patch
-├── data/             bands, spectra, source data and agent records (see data/README.md)
-├── docs/             the project page (GitHub Pages, served from this folder)
-└── tests/            Python tests, including a mock end-to-end swarm run
-```
+The stages, gates, thresholds, claims and search boundary are all set in the campaign config; the paper's ladder
+is shown [below](#the-evaluation-ladder-in-the-paper).
 
 ## Installation
 
 **Requirements**
 - Linux.
 - Python ≥ 3.11 with [uv](https://docs.astral.sh/uv/).
-- Julia ≥ 1.10 (tested with 1.10.2).
-- Optional: an NVIDIA GPU with CUDA for the GPU solver (tested on H100 and A100).
-- To run swarm campaigns: Slurm, tmux, [Claude Code](https://docs.claude.com/en/docs/claude-code) and
-  [bubblewrap](https://github.com/containers/bubblewrap); see [Running the agent swarm](#running-the-agent-swarm).
+- To run campaigns: Slurm, tmux, [Claude Code](https://docs.claude.com/en/docs/claude-code) and
+  [bubblewrap](https://github.com/containers/bubblewrap); see [Prerequisites](#prerequisites).
+- For the paper's evaluator only: Julia ≥ 1.10 (tested with 1.10.2), and optionally an NVIDIA GPU with CUDA
+  (tested on H100 and A100).
 
 ```bash
 git clone https://github.com/ChangwenXu98/MOSAIC.git
 cd MOSAIC
-
-uv sync                                  # Python environment
-scripts/setup_solver.sh                  # Julia environment; set JULIA=/path/to/julia if julia is not on PATH
+uv sync                                  # the swarm (Python)
+scripts/setup_solver.sh                  # the paper's ED solver (Julia); set JULIA=/path/to/julia if needed
+uv run pytest                            # 141 tests, about a minute, mock evaluator
 ```
 
-`scripts/setup_solver.sh` does three things:
-- clones [MomentumED.jl](https://github.com/Zou-Bo/MomentumED.jl) into `julia/deps/` at commit `40400d4`;
-- applies a small patch (`julia/patches/`);
-- instantiates `julia/` from the shipped `Manifest.toml`, which pins every package at the version used for the paper.
-
-To check the installation:
-
-```bash
-uv run pytest                                      # 141 tests, about a minute, mock ED
-julia --project=julia julia/test/runtests.jl       # solver tests; the GPU test runs only where CUDA is functional
-```
+`scripts/setup_solver.sh` is needed only for the paper's evaluator; see [The ED solver](#the-ed-solver).
 
 ## Quick start
 
-**Evaluate a band.** This test input is a 4×6 cluster with a momentum-dependent envelope, and takes about 90 s on
-8 CPU threads:
-
-```bash
-julia --project=julia -t 8 julia/ed_solver.jl \
-    --config julia/test/data/nk24_p024_a1M_kdep.json --out out.json
-uv run python -c "import json; o = json.load(open('out.json')); print(o['status'], o['gap_top_indirect_solver'], o['chern_solver'])"
-```
-
-**Re-evaluate a band from the paper** on the 27-site cluster, and compare with the stored result. A GPU is
-recommended:
-
-```bash
-MOIRE_ED_BACKEND=gpu julia --project=julia julia/ed_solver.jl \
-    --config data/bands/model1_optimized_5eda.json --out 5eda.json
-# compare with data/spectra/sym27/5eda/ed_output.json
-```
-
-**Watch a swarm without a cluster.** The mock end-to-end test runs a broker, agents and the full promotion
-ladder against a synthetic ED:
+**1. Watch a swarm without a cluster.** The mock end-to-end tests run a broker, agents and the full promotion
+ladder against a synthetic evaluator, including broker crashes, dead jobs and quota limits:
 
 ```bash
 uv run pytest tests/swarm -q
 ```
 
-## The ED solver
-
-The solver projects a gate-screened Coulomb interaction onto a single Chern band and diagonalizes it in every
-total-momentum sector of a finite cluster.
-- **The band** is a superposition of Landau levels with coefficients `a_n`, times a periodic envelope with density
-  Fourier coefficients `W_G`. An optional deformation block (α_sp, β_sp) makes the envelope momentum-dependent.
-- **The output** reports:
-  - the many-body gap;
-  - the low-lying spectrum of every sector;
-  - the many-body Chern number, from a glued twisted-boundary lattice;
-  - optionally, the particle entanglement spectrum.
-
-**Interface.** JSON in, JSON out. The schema is the pydantic models `EDInput` and `EDOutput` in
-`src/mosaic/ed/contract.py`. Two entry points:
+**2. Look at a campaign as an agent sees it.** Prepare the directories of one of the paper's campaigns, without
+worktrees or a solver snapshot, and use the agent commands with an agent's identity:
 
 ```bash
-# one evaluation per process
-julia --project=julia julia/ed_solver.jl --config ed_input.json --out ed_output.json
+uv run python -m mosaic.swarm setup --config configs/swarm_kgll_w3_n18.yaml --no-worktrees --no-solver
 
-# a persistent lane: evaluates every <root>/<glob>/ed_input.json without an ed_output.json,
-# claiming each run directory atomically, so compilation is paid once per lane
-julia --project=julia julia/ed_batch.jl <root> '<glob>'
+export SWARM_CONFIG=$(realpath configs/swarm_kgll_w3_n18.yaml) SWARM_AGENT=swarm-a PATH=$PWD/swarm/bin:$PATH
+swarm reference                          # parents, gates, the stage ladder, claim thresholds
+swarm template --parent w3 --out cand.json
+swarm check cand.json --parent w3        # validated exactly as the broker will
+swarm digest                             # what the agent reads at every wakeup
 ```
 
-**Options.**
+This writes the campaign's state to `runs_swarm/kgll-w3-n18/`; delete it afterwards.
 
-| Setting | Values |
-|---|---|
-| `extra.ed_accuracy` | `search`: Krylov tolerance 1e-6, m+1 levels per sector. `confirm` (default): 1e-12, 6 levels. The two agree to \|Δgap\| ≤ 7e-15 with the same Chern number. |
-| `extra.nk1`, `extra.nk2` / `extra.symcluster` | rectangular clusters / symmetric 21- and 27-site clusters |
-| `extra.pes` | particle entanglement spectrum (`NA`, cut and counting options) |
-| `MOIRE_ED_BACKEND` | `cpu`, `gpu` or `auto` (default). `auto` uses a GPU when `CUDA_VISIBLE_DEVICES` is set and the largest sector has ≥ 20k states. |
+**3. Run a campaign** on a Slurm cluster: [Running the agent swarm](#running-the-agent-swarm).
 
-The GPU path keeps each sector matrix on the device when it fits, and falls back to a matrix-free map otherwise.
-Several GPUs share a batch of sector solves.
-
-**Performance** (one evaluation, many-body gap and Chern number; source data `data/source_data/fig3_speedup.json`):
-
-| Cluster | Original code, 1 CPU thread | This solver, 16 CPU threads | This solver, 1 H100 |
-|---|---|---|---|
-| 4×6 | 593 s | 28 s | **6.4 s** |
-| 5×6 | 3.8 h | 23 min | **41 s** |
+**4. Point MOSAIC at your own problem:** [Adapting MOSAIC to your own problem](#adapting-mosaic-to-your-own-problem).
 
 ## Running the agent swarm
 
-A campaign is one YAML file in `configs/`. It defines one or more **arms** of agents, the **parent** bands the
-agents try to beat, the **clusters** and **stages** of the evaluation ladder, the **gates**, the **search
-boundary**, the **quotas**, and the Slurm resources of the **broker** and the **agents**. All commands below use
-`configs/swarm_kgll_w3_n18.yaml` as the example; replace it with your config.
+A campaign is one YAML file. It defines one or more **arms** of agents, the **parents** (baselines) the agents
+try to beat, the **clusters** (fidelity levels) and **stages** of the evaluation ladder, the **gates**, the
+**search boundary**, the **quotas**, and the Slurm resources of the **broker** and the **agents**. The commands
+below use the paper's `configs/swarm_kgll_w3_n18.yaml` as the example; replace it with your config. To write a
+config and brief for your own question, or to plug in your own evaluator, see
+[Adapting MOSAIC to your own problem](#adapting-mosaic-to-your-own-problem).
 
 Three kinds of process run during a campaign:
 
 | Process | Where | Started by | Role |
 |---|---|---|---|
-| broker | login node, tmux window `broker` | `scripts/swarm_login.sh` | validates requests, submits ED pool jobs, applies gates, promotes, writes results and leaderboards |
+| broker | login node, tmux window `broker` | `scripts/swarm_login.sh` | validates requests, submits evaluator pool jobs, applies gates, promotes, writes results and leaderboards |
 | supervisor | login node, tmux window `supervise` | `scripts/swarm_login.sh` | submits each arm's agent allocation, and resubmits it at walltime while agents remain |
 | agents | one Slurm allocation per arm, one tmux window per agent | the supervisor | long-running Claude Code sessions that act through the `swarm` command |
 
-ED evaluations run in **pool jobs** that the broker keeps alive per tier (`broker.tiers`): at most `max_jobs`
+Evaluations run in **pool jobs** that the broker keeps alive per tier (`broker.tiers`): at most `max_jobs`
 allocations per tier, each with `lanes` workers pulling from a queue, so the swarm stays at a handful of Slurm
 jobs whatever the number of agents.
 
 ### Prerequisites
 
-In addition to the [installation](#installation) above (`uv sync` and `scripts/setup_solver.sh`, which the solver
-snapshot requires):
+In addition to the [installation](#installation) above (`uv sync`, and for the paper's evaluator
+`scripts/setup_solver.sh`):
 
 - **Slurm** with `sbatch`, `sacct` and `scontrol` on the node where the broker runs, and **tmux** on the login node
   and on the compute nodes.
@@ -288,7 +211,7 @@ snapshot requires):
   API key instead.
 - **[bubblewrap](https://github.com/containers/bubblewrap)** (`bwrap`) on the compute nodes. An agent is never
   launched without its sandbox; if `bwrap` fails, the launcher retries every 5 minutes and logs the failure.
-- Check the tests pass: `uv run pytest tests/swarm -q` runs a broker, agents and the full ladder against a mock ED.
+- Check the tests pass: `uv run pytest tests/swarm -q` runs a broker, agents and the full ladder against a mock evaluator.
 
 ### 1. Configure a campaign
 
@@ -297,8 +220,8 @@ Copy one of the released configs and edit it. The released configs carry site pl
 | Key | What to set |
 |---|---|
 | `broker.tiers.<tier>.partition` (and `reservation`, `qos`) | your CPU and GPU partitions (placeholders: `cpu`, `gpu-h100`, `gpu-a100`) |
-| `broker.tiers.<tier>.lanes`, `threads`, `gpus`, `mem`, `walltime`, `max_jobs` | the size of each ED pool job; for a GPU tier, `gpus` must be a multiple of `lanes` |
-| `broker.julia` | path to the `julia` binary on the compute nodes |
+| `broker.tiers.<tier>.lanes`, `threads`, `gpus`, `mem`, `walltime`, `max_jobs` | the size of each evaluator pool job; for a GPU tier, `gpus` must be a multiple of `lanes` |
+| `broker.julia` | path to the `julia` binary on the compute nodes (paper's evaluator) |
 | `agent_job.partition` (and `reservation`, `qos`, `walltime`) | where the agent sessions run; they need CPU and memory only (`cpus_per_agent`, `mem_per_agent_gb`) |
 | `agent_job.claude`, `agent_job.model` | path to the `claude` binary, and an optional model name (`null` uses the default) |
 | `agent_deny_read` | paths emptied in each agent's sandbox, e.g. other campaigns, analysis folders, other Claude transcript folders |
@@ -315,7 +238,7 @@ The other keys you are likely to change:
 - `agent_job.stagger_seconds`: delay between agent launches within an arm, so later agents read earlier plans.
 - `agent_deny_bash`: extra Bash command prefixes the agents may not run (the released configs deny `git`).
 
-The **PES gate** needs a table of the expected Laughlin (1,3) counts for every cluster with `pes_na` set. The table
+The paper's **PES gate** needs a table of the expected Laughlin (1,3) counts for every cluster with `pes_na` set. The table
 for the paper's clusters ships as `swarm/templates/pes_expected_counts.json`, and the released configs use it. For
 new clusters, build one and point `gates.pes_expected_counts` at it:
 
@@ -324,9 +247,9 @@ uv run python -m mosaic.swarm pes-cases --config configs/swarm_kgll_w3_n18.yaml 
 julia --project=julia scripts/pes_expected_counts.jl . cases.json counts.json
 ```
 
-The **parents' expected gaps** (`parents.<name>.expected_gap`) are the gaps measured before the campaign on each
-cluster. The broker evaluates every parent first, and halts if its own values disagree beyond `expected_rtol`,
-which catches a changed solver or parent before any agent result is trusted. Remove the entries for a parent or
+The **parents' expected values** (`parents.<name>.expected_gap`) are the parents' objectives measured before the
+campaign on each cluster. The broker evaluates every parent first, and halts if its own values disagree beyond
+`expected_rtol`, which catches a changed evaluator or parent before any agent result is trusted. Remove the entries for a parent or
 cluster you have not measured yet.
 
 ### 2. Prepare the campaign
@@ -484,23 +407,252 @@ main checkout). Agent commands read `SWARM_CONFIG` and `SWARM_AGENT` from the en
 Operator commands take `--config`: `setup`, `broker [--once]`, `supervise [--once] [--dry-run]`, `human`,
 `pes-cases`. Run `uv run python -m mosaic.swarm <command> --help` for every option.
 
-### A new research question
+## Adapting MOSAIC to your own problem
 
-MOSAIC's broker, ladder and tools are generic over parents, clusters and gates; the physics the agents see comes
-from two files:
+MOSAIC fits problems with this shape: candidates that can be written down as a file, an evaluator that is
+deterministic and expensive enough that its budget matters, a baseline to beat, and checks that decide whether an
+improvement is real. Materials and molecular design, simulation-based optimization and model or algorithm search
+are examples.
 
-- the **charter**, `swarm/charter.md`: the rules, scoring and tools, shared by every campaign (placeholders such as
-  `{agent}`, `{quota}` and `{mission}` are filled in by `setup`);
-- the **campaign brief**, a Markdown file in `swarm/missions/` named by the config's `mission` key: the question,
-  the fixed setup, the parents and what counts as a result.
+The coordination layer (board, mail, roster, quotas, the ladder, claims, controls, Slurm pool jobs, agent
+launch and supervision, the sandbox) is domain-independent. The domain enters at a few well-defined places.
+In this release those places are written for the paper's ED solver, so a new evaluator means replacing them, as
+described in Level 2 below.
 
-To point MOSAIC at a new question, write a new brief and a config with your parents (`ed_input` files or shell
-weights), clusters, stages, claims, gates and search boundary. `directions` can optionally give individual agents
-a starting direction; by default agents choose their own scope on the board. The charter and briefs are released
-as the agents saw them (they match Supplementary Section S-VI of the paper), so they mention project notes that
-are not part of this repository; edit those references for a new campaign.
+### Concepts and their counterparts
 
-## Reproducing the paper
+| MOSAIC | Config / code | In the paper | In your problem |
+|---|---|---|---|
+| **request** | `swarm submit INPUT.json` | a band: a complete solver input | a candidate: any JSON input your evaluator accepts |
+| **parent** | `parents` | the γ = 0 bands the search starts from | the baseline(s) a candidate must beat; every request names one |
+| **cluster** | `clusters` | a finite-size cluster at an accuracy mode | a fidelity level or test condition: system size, mesh, dataset, seed set, … |
+| **stage** | `stages` | screen → confirm → 4×6 → 5×6 → converge | your multi-fidelity ladder, cheapest first |
+| **gate** | `gates`, `swarm/gates.py` | clean ground manifold, Chern number, entanglement counting | checks that must pass for a result to count (constraints, sanity, phase or stability checks) |
+| **score R** | `broker.py` (`_row`) | R = Δ / Δ_parent on the same cluster | your objective divided by the parent's at the same fidelity; higher is better |
+| **claim** | `claims` | strong, robust positive, suggestive | the tiers of finding you will report |
+| **search boundary** | `gates.boundary`, `swarm/validate.py` | bounds on the envelope's coefficients | the allowed search space |
+| **brief** | `mission` → `swarm/missions/` | does momentum dependence raise the gap? | your question |
+| **arms** | `arms` | an 18-agent swarm and 2 isolated controls | as many shared and private arms as your study needs |
+
+### Level 1: a new question for an existing evaluator
+
+If the evaluator, its input format and the gates stay the same, no code changes:
+
+1. **Write the brief** in `swarm/missions/<name>/mission.md`. Agents read it on every start, so state:
+   - the question, and what a positive and a negative answer would each look like;
+   - what is fixed (enforced by the broker) and what the agents may change;
+   - the parents and why each is a meaningful baseline;
+   - what counts as a result, and which follow-up checks a candidate needs;
+   - when to stop and ask the human (`request` posts).
+
+   The briefs in `swarm/missions/` are worked examples. They mark which rules the broker enforces (**[broker]**)
+   and which are the agents' responsibility (**[you]**).
+2. **Write the config**: copy a file from `configs/`, then set `mission`, the `parents` (full input files via
+   `ed_input`, or shell weights), the `clusters` and `stages` of your ladder, the `claims`, the `gates` and the
+   search `boundary`, `quotas`, `arms`, and what agents may change (`regime.pin_static`, `agent_free_extra`).
+3. **Measure the parents** on every cluster before the campaign and record their values in
+   `parents.<name>.expected_gap`. The broker re-evaluates them first and halts on any disagreement.
+4. **Optionally steer the start**: `directions` maps an agent to a Markdown file with a starting direction. By
+   default agents choose their own scope on the board, which is how the paper's campaigns ran.
+5. Run it as in [Running the agent swarm](#running-the-agent-swarm).
+
+### Level 2: a new evaluator
+
+The swarm talks to the evaluator through files: for each evaluation, the broker writes `ed_input.json` into a run
+directory and a pool lane runs the evaluator, which writes `ed_output.json` next to it. Everything
+domain-specific sits behind that exchange. To bring your own evaluator, change these places:
+
+1. **The evaluator command.** A lane runs, per evaluation (`lane_mode: per_eval`):
+
+   ```bash
+   "{julia}" "{solver}" --config "$d/ed_input.json" --out "$d/ed_output.json"
+   ```
+
+   This line is in `jobs/swarm_pool.sbatch`, and `render_pool_script` in `src/mosaic/swarm/pool.py` fills in its
+   placeholders. Replace it with your command; keep the `per_eval` lane mode unless you also write a batch runner
+   with the claim protocol of `julia/ed_batch.jl`. Set the CPU, GPU, memory and walltime of each pool in
+   `broker.tiers`, and `est_run_seconds` to a typical evaluation time, so a lane never starts what it cannot
+   finish. Your output must:
+   - echo the input's `config_hash`;
+   - set `status` to `completed`, `failed_logical` (a valid failure, which counts as a failed gate) or
+     `failed_transient` (retried up to `broker.max_retries` times);
+   - set a version string that starts with `broker.solver_version_prefix`; the broker halts on any other version,
+     so a campaign never mixes evaluator versions;
+   - report `compute_seconds`.
+
+   `swarm setup` freezes the evaluator by checking out `broker.solver_ref` into a separate worktree, with the
+   Julia environment pinned (`setup.py`: `setup`, `pin_manifest`). Keep your evaluator in the repository so it is
+   frozen the same way, and adapt `pin_manifest` to your own environment.
+2. **The input and output schema.** `EDInput` and `EDOutput` in `src/mosaic/ed/contract.py` are pydantic
+   models. Replace their physics fields with yours, keeping the identity fields of the input (`config_hash`,
+   `campaign_id`, `seed`) and the status fields of the output above. An evaluation's identity is the hash of its
+   input (`validate.config_hash`), so identical requests are evaluated once and charged once. The models are used
+   in `swarm/validate.py`, `swarm/parents.py`, `swarm/broker.py`, `swarm/agent.py`, `swarm/pool.py`,
+   `swarm/rehearsal.py` and `store/store.py`.
+3. **Validation**, in `src/mosaic/swarm/validate.py`:
+   - `normalise(raw, parent, cfg)` decides what an agent may change relative to its parent, and enforces the
+     search boundary. Raise `RequestRejected("reason")`: the reason is what the agent sees from `swarm check`
+     and `swarm submit`, so make it actionable.
+   - `expand(base, cluster, campaign_id)` writes a cluster's fidelity settings into the input (the keys in
+     `CLUSTER_KEYS` belong to the broker) and computes the hash. Add your fidelity fields to `ClusterSpec` in
+     `src/mosaic/swarm/config.py`.
+4. **Gates and score**, in `src/mosaic/swarm/gates.py`. `evaluate(out, cluster, gates, …)` returns a dict with
+   `verdict` (`PASS`, `AMBIGUOUS` or `FAIL`), human-readable `reasons`, and `gap`, the objective. The broker scores
+   R = `gap` / parent's `gap` on the same cluster (`ArmBroker._row`), and the ladder, claims and leaderboards use
+   R and the verdicts unchanged. The objective must therefore be positive with higher meaning better; for a
+   quantity to minimize, return its reciprocal or change `_row`. Put your gate thresholds in `GateSpec`
+   (`config.py`).
+5. **Parents.** Give each parent as a complete input file (`parents.<name>.ed_input`). The shell-weight form and
+   the `regime` block are specific to the paper (`swarm/parents.py`).
+6. **What the agents read.**
+   - `swarm/charter.md` is the system prompt of every agent. Keep the scoring, the tool list and the rules, and
+     rewrite the physics: the opening paragraph (it cites project notes that are not in this repository) and
+     "What you may change". Its `{placeholders}` are filled by `render_charter` in `swarm/setup.py`, where
+     `SHARED_RULES` also names the critique topics (finite size, gates) to adapt.
+   - `reference_report` and `template` in `swarm/agent.py` print the parents, pinned fields and units that agents
+     see from `swarm reference` and `swarm template`.
+   - The brief, as in Level 1.
+
+The broker's protocol (acceptance, quotas, retries, dead-job recovery, priorities, promotion, claims), the board,
+the pool scheduling and the launch scripts need no changes.
+
+### Test before you spend compute
+
+- **Unit level.** `MockPool(evaluator=fn)` in `src/mosaic/swarm/pool.py` runs any Python function
+  `fn(input) -> output` in place of Slurm and the evaluator. `tests/swarm/conftest.py` and
+  `tests/swarm/test_swarm_mock.py` build a two-arm campaign in a temporary directory and drive the broker tick by
+  tick with `run(config, once=True, backend=MockPool(...))`; copy them for your evaluator.
+- **Dress rehearsal.** Run real agent sessions against a cheap synthetic landscape before the real campaign.
+  `src/mosaic/swarm/rehearsal.py` is the one used for the paper: it has a true optimum, a finite-size artifact that
+  only the minimum over clusters exposes, and a region where the gates fail. Set `broker.backend: mock`,
+  `broker.mock_evaluator: synthetic` and a `rehearsal_note`, which is shown at the top of every charter so agents
+  know the numbers mean nothing. A rehearsal finds unclear rules in the charter and brief, tool friction and
+  budget problems cheaply.
+
+### Without Slurm
+
+- **Agents** do not need Slurm: after `swarm setup`, `scripts/swarm_agent.sh CONFIG AGENT` runs and restarts one agent anywhere
+  Claude Code and bubblewrap are available. Start one per agent, e.g. one tmux window each, instead of
+  `swarm supervise`.
+- **Evaluations** go through a `PoolBackend` (`src/mosaic/swarm/pool.py`), which has two methods: `submit(tier,
+  script)` returns a job id, and `states(job_ids)` returns Slurm-style states (`PENDING`, `RUNNING`,
+  `COMPLETED`, …). `SlurmPool` and `MockPool` implement it; another scheduler needs a backend of its own,
+  selected in `make_backend` in `swarm/broker.py`.
+
+## Repository layout
+
+```
+MOSAIC/
+├── src/mosaic/
+│   ├── swarm/        the swarm: broker, agent CLI, config schema, gates, validation, Slurm pool, launch setup
+│   ├── store/        result store (SQLite index over files on disk)
+│   ├── ed/           evaluator input/output contract (the paper's ED, JSON schema v1), mock evaluator
+│   ├── physics/      paper-specific: envelope deformations, lattice and form-factor helpers
+│   └── util/         hashing and logging
+├── swarm/            what the agents read: charter, campaign briefs, parent bands, templates; bin/swarm
+├── jobs/, scripts/   Slurm templates, agent launcher, login-node session, solver setup
+├── configs/          the eight campaigns of the paper
+├── julia/            the paper's ED solver: CLI, sources, tests, benchmarks, MomentumED.jl patch
+├── data/             the paper's bands, spectra, source data and agent records (see data/README.md)
+├── docs/             the project page (GitHub Pages, served from this folder)
+└── tests/            Python tests, including mock end-to-end swarm runs
+```
+
+## Application in the paper: fractional Chern insulator gaps
+
+The paper's campaigns searched topological flat bands whose Bloch states are lowest-Landau-level orbitals times a
+momentum-dependent envelope, starting from bands with ideal quantum geometry (γ = 0). The evaluator was exact
+diagonalization (ED) of the ν = 1/3 many-body problem on finite clusters, and the objective was the many-body gap.
+The agents found ν = 1/3 Laughlin states with gaps more than ten times those of the corresponding γ = 0 bands:
+
+| 27-site cluster, N = 9 | gap at γ = 0 (ideal geometry) | gap of the optimized band |
+|---|---|---|
+| Model 1 | 2.50 Δ_LLL | **28.75 Δ_LLL** |
+| Model 2 | 1.36 Δ_LLL | **21.37 Δ_LLL** |
+
+Everything in this section is specific to that application: the Julia solver in `julia/`, the helpers in
+`src/mosaic/physics/` and `src/mosaic/ed/`, the configs in `configs/`, the briefs in `swarm/missions/` and the
+data in `data/`.
+
+### The evaluation ladder in the paper
+
+A band climbs one stage at a time. It is promoted when it has passed every gate so far and its smallest gain
+R = Δ/Δ⁽⁰⁾ so far reaches the next stage's threshold.
+
+| Stage | Cluster (electrons) | Accuracy | Gates | Entry threshold |
+|---|---|---|---|---|
+| Screen | 21-site symmetric (7) | search | split, PES (N_A = 2) | – |
+| Confirm | 21-site symmetric (7) | confirm | split, PES (N_A = 3) | R ≥ 1.02 |
+| 4×6 | 4×6 (8) | confirm | split, PES, C | R ≥ 1 |
+| 5×6 | 5×6 (10) | confirm | split, PES, C | R ≥ 1 |
+| Converge | 4×6 (8), larger cutoffs | confirm | split, PES, C | R ≥ 1.05 on 4×6 and 5×6 |
+
+The gates:
+- **split:** the three lowest states are split by less than 10% of the gap;
+- **PES:** the particle entanglement spectrum shows the (1,3)-admissible counting with an entanglement gap of at
+  least 0.5;
+- **C:** the many-body Chern number equals that of the γ = 0 band.
+
+A strong claim requires R ≥ 1.1 on 4×6, 5×6 and the converged rerun. The thresholds and the search boundary are in
+the `clusters`, `stages`, `claims` and `gates` blocks of each config in `configs/`.
+
+### The ED solver
+
+The solver projects a gate-screened Coulomb interaction onto a single Chern band and diagonalizes it in every
+total-momentum sector of a finite cluster.
+- **The band** is a superposition of Landau levels with coefficients `a_n`, times a periodic envelope with density
+  Fourier coefficients `W_G`. An optional deformation block (α_sp, β_sp) makes the envelope momentum-dependent.
+- **The output** reports:
+  - the many-body gap;
+  - the low-lying spectrum of every sector;
+  - the many-body Chern number, from a glued twisted-boundary lattice;
+  - optionally, the particle entanglement spectrum.
+
+**Interface.** JSON in, JSON out. The schema is the pydantic models `EDInput` and `EDOutput` in
+`src/mosaic/ed/contract.py`. Two entry points:
+
+```bash
+# one evaluation per process
+julia --project=julia julia/ed_solver.jl --config ed_input.json --out ed_output.json
+
+# a persistent lane: evaluates every <root>/<glob>/ed_input.json without an ed_output.json,
+# claiming each run directory atomically, so compilation is paid once per lane
+julia --project=julia julia/ed_batch.jl <root> '<glob>'
+```
+
+**Setup.** `scripts/setup_solver.sh` clones [MomentumED.jl](https://github.com/Zou-Bo/MomentumED.jl) into
+`julia/deps/` at commit `40400d4`, applies a small patch (`julia/patches/`), and instantiates `julia/` from the
+shipped `Manifest.toml`, which pins every package at the version used for the paper. Test it with
+`julia --project=julia julia/test/runtests.jl` (the GPU test runs only where CUDA is functional).
+
+**Examples.** A 4×6 cluster with a momentum-dependent envelope, about 90 s on 8 CPU threads; and a band from the
+paper on the 27-site cluster (a GPU is recommended), to compare with `data/spectra/sym27/5eda/ed_output.json`:
+
+```bash
+julia --project=julia -t 8 julia/ed_solver.jl --config julia/test/data/nk24_p024_a1M_kdep.json --out out.json
+MOIRE_ED_BACKEND=gpu julia --project=julia julia/ed_solver.jl --config data/bands/model1_optimized_5eda.json --out 5eda.json
+```
+
+**Options.**
+
+| Setting | Values |
+|---|---|
+| `extra.ed_accuracy` | `search`: Krylov tolerance 1e-6, m+1 levels per sector. `confirm` (default): 1e-12, 6 levels. The two agree to \|Δgap\| ≤ 7e-15 with the same Chern number. |
+| `extra.nk1`, `extra.nk2` / `extra.symcluster` | rectangular clusters / symmetric 21- and 27-site clusters |
+| `extra.pes` | particle entanglement spectrum (`NA`, cut and counting options) |
+| `MOIRE_ED_BACKEND` | `cpu`, `gpu` or `auto` (default). `auto` uses a GPU when `CUDA_VISIBLE_DEVICES` is set and the largest sector has ≥ 20k states. |
+
+The GPU path keeps each sector matrix on the device when it fits, and falls back to a matrix-free map otherwise.
+Several GPUs share a batch of sector solves.
+
+**Performance** (one evaluation, many-body gap and Chern number; source data `data/source_data/fig3_speedup.json`):
+
+| Cluster | Original code, 1 CPU thread | This solver, 16 CPU threads | This solver, 1 H100 |
+|---|---|---|---|
+| 4×6 | 593 s | 28 s | **6.4 s** |
+| 5×6 | 3.8 h | 23 min | **41 s** |
+
+### Reproducing the paper
 
 | Campaign | Model | Swarm agents | Isolated agents | Config |
 |---|---|---|---|---|
@@ -515,7 +667,7 @@ are not part of this repository; edit those references for a new campaign.
 - LLM agents are not deterministic, so a rerun gives a different search. What can be reproduced exactly is every
   number the search produced: each band in `data/` is a complete solver input.
 
-## Data
+### Data
 
 Everything is plain JSON or Markdown. See [`data/README.md`](data/README.md) for the file-by-file guide.
 
